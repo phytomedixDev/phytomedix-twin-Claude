@@ -1,0 +1,1153 @@
+https://script.google.com/macros/s/AKfycbxh9hnMHOeWMNrl4c38DOaEM7PCejbWY-146WtF0i0ggn15I24-AocgogVY023tOg3Q/exec
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phytomedix | Digital Twin v28.2</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════
+   PHYTOMEDIX DESIGN SYSTEM v28.0
+   Typography: Syne (display) + Outfit (body) + DM Mono (data)
+═══════════════════════════════════════════════════ */
+:root {
+  --forest:    #1a3d2b;
+  --green:     #2e7d4f;
+  --leaf:      #4caf71;
+  --mint:      #e6f5ec;
+  --mint-dark: #c8e6d5;
+  --gold:      #c8a84b;
+  --amber:     #d97706;
+  --ink:       #1a2332;
+  --slate:     #4a5568;
+  --mist:      #f4f7f5;
+  --white:     #ffffff;
+  --border:    #dde5e0;
+  --red:       #c53030;
+  --blue:      #2563eb;
+
+  /* Evolution */
+  --improving:  #166534;
+  --stable:     #1d4ed8;
+  --declining:  #991b1b;
+  --baseline:   #6b7280;
+
+  /* Responsiveness */
+  --acc-color:  #166534;
+  --neu-color:  #1d4ed8;
+  --slow-color: #92400e;
+  --stag-color: #991b1b;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--mist);
+  color: var(--ink);
+  min-height: 100vh;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ─── HEADER ─── */
+.site-header {
+  width: 100%; max-width: 700px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 0 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 19px;
+  color: var(--forest); letter-spacing: -0.3px;
+}
+.logo span { color: var(--leaf); }
+.header-right { display: flex; align-items: center; gap: 8px; }
+.engine-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; font-weight: 500;
+  color: var(--green); background: var(--mint);
+  border: 1px solid var(--mint-dark);
+  padding: 4px 10px; border-radius: 20px; letter-spacing: 0.5px;
+}
+
+.container { width: 100%; max-width: 700px; }
+
+/* ─── TABS ─── */
+.tab-bar {
+  display: flex; gap: 4px;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 14px; padding: 4px;
+  margin-bottom: 20px;
+}
+.tab-btn {
+  flex: 1; padding: 10px 14px;
+  border: none; background: none;
+  font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600;
+  color: var(--slate); cursor: pointer;
+  border-radius: 10px; transition: all 0.18s;
+}
+.tab-btn.active {
+  background: var(--forest); color: var(--white);
+}
+.tab-btn .tab-icon { font-size: 14px; margin-right: 6px; }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--white); border-radius: 16px;
+  padding: 24px; box-shadow: 0 1px 8px rgba(0,0,0,0.05), 0 0 0 1px var(--border);
+  margin-bottom: 14px;
+}
+.card-title {
+  font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--slate); margin-bottom: 18px;
+}
+
+/* ─── FORM ─── */
+#assessTab h2 {
+  font-family: 'Syne', sans-serif; font-size: 21px; font-weight: 800;
+  color: var(--forest); margin-bottom: 5px;
+}
+.subtitle { font-size: 13px; color: var(--slate); margin-bottom: 22px; font-weight: 400; }
+
+.field-row { display: grid; gap: 12px; margin-bottom: 14px; }
+.field-row.two-col { grid-template-columns: 1fr 1fr; }
+.field-label {
+  display: block; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.6px; color: var(--slate); margin-bottom: 6px; text-transform: uppercase;
+}
+
+input[type="text"], input[type="number"], input[type="email"], select {
+  width: 100%; padding: 11px 14px;
+  border: 1.5px solid var(--border); border-radius: 10px;
+  font-family: 'Outfit', sans-serif; font-size: 14px; color: var(--ink);
+  background: var(--white); transition: border-color 0.15s; -webkit-appearance: none;
+}
+input:focus, select:focus { outline: none; border-color: var(--green); }
+
+.signals-label {
+  font-size: 10px; font-weight: 700; color: var(--slate);
+  text-transform: uppercase; letter-spacing: 0.6px;
+  margin-bottom: 10px; display: block;
+}
+.signal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.signal-label {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 10px;
+  font-size: 13px; color: var(--ink); cursor: pointer;
+  transition: all 0.15s; background: var(--white); user-select: none;
+}
+.signal-label:hover { background: var(--mint); border-color: var(--mint-dark); }
+.signal-label input[type="checkbox"] { display: none; }
+.signal-label .dot {
+  width: 16px; height: 16px; border: 2px solid var(--border);
+  border-radius: 4px; flex-shrink: 0; transition: all 0.15s; position: relative;
+}
+.signal-label input:checked ~ .dot { background: var(--green); border-color: var(--green); }
+.signal-label input:checked ~ .dot::after {
+  content: ''; position: absolute; left: 3px; top: 1px;
+  width: 6px; height: 9px; border: 2px solid white;
+  border-top: none; border-left: none; transform: rotate(45deg);
+}
+.signal-label:has(input:checked) { border-color: var(--green); background: var(--mint); }
+
+.carb-row {
+  display: flex; align-items: center; gap: 10px; padding: 11px 14px;
+  border: 1.5px solid var(--border); border-radius: 10px;
+  cursor: pointer; font-size: 13px; color: var(--slate);
+  transition: all 0.15s; margin-bottom: 20px; user-select: none;
+}
+.carb-row:has(input:checked) { border-color: var(--amber); background: #fffbf0; color: var(--ink); }
+.carb-row input { display: none; }
+.carb-check {
+  width: 16px; height: 16px; border: 2px solid var(--border);
+  border-radius: 4px; flex-shrink: 0;
+}
+.carb-row:has(input:checked) .carb-check { background: var(--amber); border-color: var(--amber); }
+
+.cta-btn {
+  width: 100%; padding: 15px; background: var(--forest);
+  color: white; border: none; border-radius: 12px;
+  font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
+  cursor: pointer; letter-spacing: 0.3px; transition: all 0.2s;
+}
+.cta-btn:hover { background: var(--green); transform: translateY(-1px); }
+.cta-btn:active { transform: translateY(0); }
+.cta-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+/* ─── LOADING ─── */
+#loadingOverlay {
+  display: none; text-align: center; padding: 48px 20px;
+}
+.spinner-dna {
+  font-size: 52px; animation: dna-pulse 1.8s ease-in-out infinite;
+  display: inline-block; margin-bottom: 18px;
+}
+@keyframes dna-pulse {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.15) rotate(8deg); }
+}
+.loading-stage { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--green); letter-spacing: 0.5px; min-height: 20px; }
+.loading-bar-wrap { width: 200px; height: 3px; background: var(--border); border-radius: 2px; margin: 14px auto 0; }
+.loading-bar { height: 100%; background: var(--green); border-radius: 2px; width: 0; transition: width 0.7s ease; }
+.loading-sub { font-size: 11px; color: var(--slate); margin-top: 8px; }
+
+/* ─── DASHBOARD ─── */
+#dashboard { display: none; animation: fadeUp 0.45s ease; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Coach bar */
+.coach-bar {
+  background: linear-gradient(135deg, var(--forest) 0%, #1e5035 100%);
+  color: white; padding: 18px 20px; border-radius: 14px;
+  margin-bottom: 14px; display: flex; gap: 12px; align-items: flex-start;
+}
+.coach-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+.coach-text { font-size: 13px; line-height: 1.7; color: rgba(255,255,255,0.9); font-weight: 400; }
+
+/* Evolution badge row */
+.badge-lifecycle-row {
+  display: flex; align-items: center; gap: 8px;
+  flex-wrap: wrap; margin-bottom: 14px;
+}
+.evo-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 12px; border-radius: 20px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
+}
+.evo-badge.baseline  { background: #f3f4f6; color: var(--baseline); border: 1px solid #d1d5db; }
+.evo-badge.improving { background: #dcfce7; color: var(--improving); border: 1px solid #bbf7d0; }
+.evo-badge.stable    { background: #dbeafe; color: var(--stable);   border: 1px solid #bfdbfe; }
+.evo-badge.declining { background: #fee2e2; color: var(--declining); border: 1px solid #fecaca; }
+
+.lifecycle-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 12px; border-radius: 20px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+  background: var(--mint); color: var(--green); border: 1px solid var(--mint-dark);
+}
+.lifecycle-pill.recovery  { background: #fee2e2; color: var(--declining); border-color: #fecaca; }
+.lifecycle-pill.recalib   { background: #fff7ed; color: var(--amber); border-color: #fed7aa; }
+
+/* Responsiveness badge */
+.resp-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 12px; border-radius: 20px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+  font-family: 'DM Mono', monospace;
+}
+.resp-badge.accelerating { background: #dcfce7; color: var(--acc-color);  border: 1px solid #bbf7d0; }
+.resp-badge.neutral      { background: #dbeafe; color: var(--neu-color);  border: 1px solid #bfdbfe; }
+.resp-badge.slowed       { background: #fff7ed; color: var(--slow-color); border: 1px solid #fed7aa; }
+.resp-badge.stagnating   { background: #fee2e2; color: var(--stag-color); border: 1px solid #fecaca; }
+
+/* Primary stats */
+.stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.stat-tile {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px 12px; text-align: center;
+  position: relative; overflow: hidden;
+}
+.stat-tile::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3px; background: var(--border);
+}
+.stat-tile.improving::after { background: var(--leaf); }
+.stat-tile.stable::after    { background: var(--blue); }
+.stat-tile.declining::after { background: var(--red); }
+.stat-tile.baseline::after  { background: var(--slate); }
+.stat-label { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--slate); font-weight: 700; margin-bottom: 7px; }
+.stat-value { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; color: var(--forest); line-height: 1; }
+.stat-sub { font-size: 10px; color: var(--slate); margin-top: 5px; }
+
+/* Secondary (meta) stats */
+.meta-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+.meta-tile {
+  background: var(--mint); border: 1px solid var(--mint-dark);
+  border-radius: 12px; padding: 11px 10px; text-align: center;
+}
+.meta-label { font-size: 8px; letter-spacing: 1px; text-transform: uppercase; color: var(--green); font-weight: 700; margin-bottom: 4px; }
+.meta-value { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; color: var(--forest); }
+
+/* Narrative panel */
+.narrative-card {
+  background: #f9fbf9; border: 1px solid var(--border);
+  border-left: 4px solid var(--green);
+  border-radius: 14px; padding: 18px 20px; margin-bottom: 14px;
+}
+.narrative-title { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--green); margin-bottom: 12px; }
+.narrative-main { font-size: 13px; line-height: 1.75; color: var(--ink); margin-bottom: 10px; }
+.narrative-sub { font-size: 12px; color: var(--slate); line-height: 1.65; border-top: 1px solid var(--border); padding-top: 10px; display: flex; flex-direction: column; gap: 5px; }
+.narrative-sub span { display: block; }
+
+/* Radar */
+.chart-wrap {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 16px; padding: 20px; margin-bottom: 14px;
+}
+.chart-wrap canvas { max-height: 260px; }
+
+/* Protocol stacks */
+.stack-header {
+  font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--forest);
+  padding: 0 0 10px; border-bottom: 1px solid var(--border); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.supp-card {
+  border: 1px solid var(--border); border-radius: 12px;
+  padding: 14px; margin-bottom: 10px; position: relative; overflow: hidden;
+  transition: box-shadow 0.15s;
+}
+.supp-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+.supp-card::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--green);
+}
+.supp-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 5px; }
+.supp-name { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--ink); }
+.supp-dose-tag {
+  background: var(--mint); color: var(--forest); padding: 3px 8px;
+  border-radius: 6px; font-family: 'DM Mono', monospace;
+  font-size: 10px; font-weight: 500; white-space: nowrap; flex-shrink: 0;
+}
+.supp-hero { font-size: 12px; color: var(--green); font-style: italic; margin-bottom: 7px; display: block; line-height: 1.45; }
+.supp-ing  { font-size: 11px; color: var(--slate); margin-bottom: 10px; display: block; }
+details.clinical-details { background: var(--mist); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+details.clinical-details summary {
+  cursor: pointer; padding: 8px 12px;
+  font-size: 11px; font-weight: 600; color: var(--green); letter-spacing: 0.3px;
+  list-style: none; display: flex; align-items: center; gap: 6px; user-select: none;
+}
+details.clinical-details summary::-webkit-details-marker { display: none; }
+details.clinical-details summary::before { content: '▶'; font-size: 8px; transition: transform 0.15s; }
+details[open].clinical-details summary::before { transform: rotate(90deg); }
+.clinical-body { padding: 11px 12px; display: grid; gap: 6px; }
+.clinical-row { font-size: 11px; color: var(--ink); line-height: 1.5; }
+.clinical-row strong { color: var(--slate); }
+.clinical-row.warn { color: var(--red); }
+.empty-stack { padding: 14px; text-align: center; font-size: 13px; color: var(--slate); font-style: italic; }
+
+/* Lifestyle */
+.life-card {
+  background: #fffbf0; border: 1px solid #f3e0a8;
+  border-radius: 12px; padding: 14px 16px; margin-bottom: 10px;
+}
+.life-cat { font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 500; color: var(--amber); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 5px; }
+.life-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
+.life-text { font-size: 12px; color: var(--slate); line-height: 1.65; }
+
+/* Reset */
+.reset-btn {
+  width: 100%; padding: 12px; background: none;
+  border: 1px solid var(--border); border-radius: 10px;
+  color: var(--slate); font-size: 13px; cursor: pointer;
+  margin-top: 6px; transition: all 0.15s; font-family: 'Outfit', sans-serif;
+}
+.reset-btn:hover { background: var(--mist); border-color: var(--slate); }
+
+/* ─── MICRO CHECK-IN TAB ─── */
+#checkinTab { display: none; }
+#checkinTab h2 {
+  font-family: 'Syne', sans-serif; font-size: 21px; font-weight: 800;
+  color: var(--forest); margin-bottom: 5px;
+}
+
+/* Slider inputs */
+.slider-group { margin-bottom: 18px; }
+.slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.slider-label { font-size: 12px; font-weight: 600; color: var(--ink); text-transform: uppercase; letter-spacing: 0.4px; font-family: 'Outfit', sans-serif; }
+.slider-value { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; color: var(--green); }
+input[type="range"] {
+  width: 100%; height: 4px; -webkit-appearance: none; appearance: none;
+  background: var(--border); border-radius: 4px; outline: none; cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 20px; height: 20px;
+  border-radius: 50%; background: var(--green);
+  border: 3px solid var(--white); box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+.slider-ticks { display: flex; justify-content: space-between; margin-top: 4px; }
+.slider-ticks span { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--slate); }
+
+/* Behaviour preview strip */
+.preview-card {
+  background: linear-gradient(135deg, var(--forest) 0%, #1e5035 100%);
+  border-radius: 14px; padding: 18px 20px; margin-bottom: 18px;
+  color: white;
+}
+.preview-title {
+  font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.6);
+  margin-bottom: 14px;
+}
+.preview-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.preview-tile { text-align: center; }
+.preview-tile-label { font-size: 9px; letter-spacing: 0.8px; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 5px; }
+.preview-tile-val { font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 500; color: white; }
+.preview-tile-sub { font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 3px; }
+.preview-stmt {
+  margin-top: 14px; font-size: 12px; color: rgba(255,255,255,0.8);
+  line-height: 1.65; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 12px;
+}
+
+/* Checkin email hint */
+.email-note {
+  background: var(--mint); border: 1px solid var(--mint-dark);
+  border-radius: 10px; padding: 12px 14px; margin-bottom: 18px;
+  font-size: 12px; color: var(--forest);
+}
+.email-note strong { font-weight: 700; }
+
+/* Responsive */
+@media (max-width: 520px) {
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .stats-row .stat-tile:last-child { grid-column: span 2; }
+  .meta-row { grid-template-columns: 1fr 1fr; }
+  .signal-grid { grid-template-columns: 1fr; }
+  .field-row.two-col { grid-template-columns: 1fr; }
+  .preview-grid { grid-template-columns: 1fr; gap: 8px; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo">PHYTO<span>MEDIX</span></div>
+  <div class="header-right">
+    <span class="engine-badge">ENGINE v28.2</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- ══ TAB BAR ══ -->
+  <div class="tab-bar" id="tabBar">
+    <button class="tab-btn active" id="tab_assess" onclick="switchTab('assess')">
+      <span class="tab-icon">🧬</span> Full Assessment
+    </button>
+    <button class="tab-btn" id="tab_checkin" onclick="switchTab('checkin')">
+      <span class="tab-icon">🔄</span> Micro Check-in
+    </button>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- TAB 1 — FULL ASSESSMENT                   -->
+  <!-- ══════════════════════════════════════════ -->
+  <div id="assessTab">
+
+    <!-- Form -->
+    <div class="card" id="formCard">
+      <h2>Twin Calibration</h2>
+      <p class="subtitle">6-Domain analysis · ERP-integrated · Behaviour-adaptive · v28.2</p>
+
+      <div class="field-row">
+        <div>
+          <label class="field-label">Email address</label>
+          <input type="email" id="a_email" placeholder="your@email.com">
+        </div>
+      </div>
+      <div class="field-row two-col">
+        <div>
+          <label class="field-label">Age</label>
+          <input type="number" id="a_age" placeholder="35" value="35" min="18" max="100">
+        </div>
+        <div>
+          <label class="field-label">Biological sex</label>
+          <select id="a_gender">
+            <option value="Female">Female</option>
+            <option value="Male">Male</option>
+          </select>
+        </div>
+      </div>
+
+      <span class="signals-label">Clinical signals — select all that apply</span>
+      <div class="signal-grid">
+        <label class="signal-label">
+          <input type="checkbox" id="sym_diabetes" value="Diabetes Type 2">
+          <span class="dot"></span><span>🩸 High Blood Sugar</span>
+        </label>
+        <label class="signal-label">
+          <input type="checkbox" id="sym_bp" value="Hypertension">
+          <span class="dot"></span><span>❤️ High Blood Pressure</span>
+        </label>
+        <label class="signal-label">
+          <input type="checkbox" id="sym_brain" value="Brain Fog">
+          <span class="dot"></span><span>🧠 Brain Fog / Focus</span>
+        </label>
+        <label class="signal-label">
+          <input type="checkbox" id="sym_joints" value="Joint Pain">
+          <span class="dot"></span><span>🦴 Joint Inflammation</span>
+        </label>
+        <label class="signal-label">
+          <input type="checkbox" id="sym_gut" value="IBS">
+          <span class="dot"></span><span>🌿 IBS / Bloating</span>
+        </label>
+        <label class="signal-label">
+          <input type="checkbox" id="sym_hormone" value="Hormonal Imbalance">
+          <span class="dot"></span><span>⚡ Hormonal / Libido</span>
+        </label>
+      </div>
+
+      <label class="carb-row">
+        <input type="checkbox" id="sym_carb">
+        <span class="carb-check"></span>
+        I eat a high carbohydrate diet
+      </label>
+
+      <button class="cta-btn" id="generateBtn" onclick="runAssessment()">
+        Generate Digital Twin Protocol
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div id="loadingOverlay" class="card">
+      <div class="spinner-dna">🧬</div>
+      <div class="loading-stage" id="loadingStage">Initializing engine...</div>
+      <div class="loading-bar-wrap"><div class="loading-bar" id="loadingBar"></div></div>
+      <div class="loading-sub">Engine v28.2 · Behaviour-adaptive · ERP catalog</div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard">
+
+      <!-- Coach bar -->
+      <div class="coach-bar">
+        <div class="coach-icon">🤖</div>
+        <div class="coach-text" id="disp_coach">—</div>
+      </div>
+
+      <!-- Badge row: evolution + lifecycle + responsiveness -->
+      <div class="badge-lifecycle-row" id="badge_row"></div>
+
+      <!-- Primary stats -->
+      <div class="stats-row">
+        <div class="stat-tile" id="tile_score">
+          <div class="stat-label">Functional Score</div>
+          <div class="stat-value" id="disp_score">—</div>
+          <div class="stat-sub">/100</div>
+        </div>
+        <div class="stat-tile" id="tile_bioage">
+          <div class="stat-label">Biological Age</div>
+          <div class="stat-value" id="disp_bioage">—</div>
+          <div class="stat-sub">years</div>
+        </div>
+        <div class="stat-tile" id="tile_momentum">
+          <div class="stat-label">Momentum</div>
+          <div class="stat-value" id="disp_momentum">—</div>
+          <div class="stat-sub" id="disp_momentum_sub">vs last cycle</div>
+        </div>
+      </div>
+
+      <!-- Meta stats: cycle, projection, multiplier, responsiveness factor -->
+      <div class="meta-row">
+        <div class="meta-tile">
+          <div class="meta-label">Cycle</div>
+          <div class="meta-value" id="disp_cycle">—</div>
+        </div>
+        <div class="meta-tile">
+          <div class="meta-label">90d Proj.</div>
+          <div class="meta-value" id="disp_proj">—</div>
+        </div>
+        <div class="meta-tile">
+          <div class="meta-label">Multiplier</div>
+          <div class="meta-value" id="disp_mult">—</div>
+        </div>
+        <div class="meta-tile">
+          <div class="meta-label">Responsiveness</div>
+          <div class="meta-value" id="disp_resp">—</div>
+        </div>
+      </div>
+
+      <!-- Narrative -->
+      <div class="narrative-card" id="narrativeCard">
+        <div class="narrative-title">🧬 Twin Evolution Summary</div>
+        <div class="narrative-main" id="narr_main">—</div>
+        <div class="narrative-sub" id="narr_sub"></div>
+      </div>
+
+      <!-- Radar chart -->
+      <div class="chart-wrap">
+        <div class="card-title">6-Domain Load Map</div>
+        <canvas id="twinRadar"></canvas>
+      </div>
+
+      <!-- AM Stack -->
+      <div class="card">
+        <div class="stack-header">☀️ Morning Stack (AM)</div>
+        <div id="am_list"></div>
+      </div>
+
+      <!-- PM Stack -->
+      <div class="card">
+        <div class="stack-header">🌙 Evening Stack (PM)</div>
+        <div id="pm_list"></div>
+      </div>
+
+      <!-- Lifestyle -->
+      <div class="card">
+        <div class="stack-header">🥗 Lifestyle Engine</div>
+        <div id="life_list"></div>
+      </div>
+
+      <button class="reset-btn" onclick="location.reload()">↩ New Assessment</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- TAB 2 — MICRO CHECK-IN                    -->
+  <!-- ══════════════════════════════════════════ -->
+  <div id="checkinTab">
+    <div class="card">
+      <h2>Recalibrate My Twin</h2>
+      <p class="subtitle">Behaviour signals — influence your trajectory without a full assessment</p>
+
+      <div class="email-note">
+        <strong>Same email as your assessment</strong> — the engine links this check-in to your existing Twin State and increments your cycle.
+      </div>
+
+      <div class="field-row" style="margin-bottom:20px;">
+        <div>
+          <label class="field-label">Email</label>
+          <input type="email" id="ci_email" placeholder="your@email.com">
+        </div>
+      </div>
+
+      <!-- Behaviour preview (live) -->
+      <div class="preview-card" id="previewCard">
+        <div class="preview-title">Today's Twin Response — Live Preview</div>
+        <div class="preview-grid">
+          <div class="preview-tile">
+            <div class="preview-tile-label">Responsiveness</div>
+            <div class="preview-tile-val" id="prev_resp">1.0</div>
+            <div class="preview-tile-sub" id="prev_resp_label">Neutral</div>
+          </div>
+          <div class="preview-tile">
+            <div class="preview-tile-label">Momentum Effect</div>
+            <div class="preview-tile-val" id="prev_mfx">→ Steady</div>
+            <div class="preview-tile-sub">Trajectory modifier</div>
+          </div>
+          <div class="preview-tile">
+            <div class="preview-tile-label">Trajectory</div>
+            <div class="preview-tile-val" id="prev_traj">↗</div>
+            <div class="preview-tile-sub" id="prev_traj_label">Forward</div>
+          </div>
+        </div>
+        <div class="preview-stmt" id="prev_stmt">
+          If you submit today: your Twin will recalibrate with a Neutral trajectory.
+        </div>
+      </div>
+
+      <!-- Sliders -->
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-label">⚡ Daily Energy</span>
+          <span class="slider-value" id="lbl_energy">7 / 10</span>
+        </div>
+        <input type="range" id="ci_energy" min="1" max="10" value="7" oninput="updatePreview()">
+        <div class="slider-ticks"><span>1</span><span>5</span><span>10</span></div>
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-label">🌙 Sleep Quality</span>
+          <span class="slider-value" id="lbl_sleep">7 / 10</span>
+        </div>
+        <input type="range" id="ci_sleep" min="1" max="10" value="7" oninput="updatePreview()">
+        <div class="slider-ticks"><span>1</span><span>5</span><span>10</span></div>
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-label">😮‍💨 Stress Level</span>
+          <span class="slider-value" id="lbl_stress">4 / 10</span>
+        </div>
+        <input type="range" id="ci_stress" min="1" max="10" value="4" oninput="updatePreview()">
+        <div class="slider-ticks"><span>1</span><span>5</span><span>10</span></div>
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-label">💊 Protocol Adherence</span>
+          <span class="slider-value" id="lbl_adherence">80 %</span>
+        </div>
+        <input type="range" id="ci_adherence" min="1" max="10" value="8" oninput="updatePreview()">
+        <div class="slider-ticks"><span>10%</span><span>50%</span><span>100%</span></div>
+      </div>
+
+      <button class="cta-btn" id="checkinBtn" onclick="runCheckin()">
+        Recalibrate My Twin
+      </button>
+
+      <!-- Check-in loading -->
+      <div id="ci_loading" style="display:none; text-align:center; padding:30px 0;">
+        <div class="spinner-dna" style="font-size:36px;">🔄</div>
+        <div class="loading-stage" id="ci_stage">Recalibrating...</div>
+      </div>
+
+      <!-- Check-in result -->
+      <div id="ci_result" style="display:none;" class="card" style="margin-top:14px;">
+        <div class="card-title">Twin Recalibrated</div>
+        <div id="ci_result_body" style="font-size:13px; line-height:1.7; color:var(--ink);"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ════════════════════════════════════════════════
+// CONFIG — v28.2
+// Fixes: radar memory leak, narrative behaviour override,
+//        lifecycle CSS helper, projection null guard,
+//        check-in dashboard refresh, calcResponsiveness alignment
+// ════════════════════════════════════════════════
+var API_URL = "https://script.google.com/macros/s/AKfycbxh9hnMHOeWMNrl4c38DOaEM7PCejbWY-146WtF0i0ggn15I24-AocgogVY023tOg3Q/exec";
+
+// [v28.2 Fix 1] Global radar instance — destroyed before each new chart creation
+var radarChart = null;
+
+// [v28.2 Fix 3] Lifecycle → CSS class — explicit mapping; update here if label wording changes in engine
+function lifecycleClassMap(lc) {
+  if (lc === "Recovery Needed") return " recovery";
+  if (lc === "Recalibrating")   return " recalib";
+  return "";
+}
+
+// [v28.2 Fix 6] calcResponsiveness() is kept byte-identical to calcAdherenceResponsiveness()
+// in the engine. Any change to engine thresholds MUST be mirrored here.
+// Thresholds: >=90 → 1.1 | >=70 → 1.0 | >=50 → 0.8 | <50 → 0.6
+
+
+var STAGES = [
+  "Loading clinical profiles...",
+  "Running 6-domain scoring...",
+  "Querying PRODUCT_CATALOG_DB...",
+  "Applying safety vetoes...",
+  "Applying tier multipliers...",
+  "Calculating Twin State...",
+  "Writing TWIN_STATE + SNAPSHOTS...",
+  "Generating coach message..."
+];
+var stageIdx = 0, stageTimer;
+
+function startStages() {
+  stageIdx = 0;
+  document.getElementById("loadingStage").textContent = STAGES[0];
+  document.getElementById("loadingBar").style.width = "5%";
+  stageTimer = setInterval(function() {
+    stageIdx = (stageIdx + 1) % STAGES.length;
+    document.getElementById("loadingStage").textContent = STAGES[stageIdx];
+    document.getElementById("loadingBar").style.width = Math.round((stageIdx / STAGES.length) * 90 + 5) + "%";
+  }, 700);
+}
+function stopStages() {
+  clearInterval(stageTimer);
+  document.getElementById("loadingBar").style.width = "100%";
+}
+
+// ════════════════════════════════════════════════
+// TAB SWITCHING
+// ════════════════════════════════════════════════
+function switchTab(tab) {
+  document.getElementById("assessTab").style.display  = tab === "assess"  ? "" : "none";
+  document.getElementById("checkinTab").style.display = tab === "checkin" ? "" : "none";
+  document.getElementById("tab_assess").classList.toggle("active",  tab === "assess");
+  document.getElementById("tab_checkin").classList.toggle("active", tab === "checkin");
+}
+
+// ════════════════════════════════════════════════
+// ASSESSMENT ENGINE CALL
+// ════════════════════════════════════════════════
+function runAssessment() {
+  var email  = document.getElementById("a_email").value.trim();
+  var age    = document.getElementById("a_age").value;
+  var gender = document.getElementById("a_gender").value;
+  if (!email) { alert("Please enter your email address."); return; }
+
+  var q10 = [];
+  if (document.getElementById("sym_diabetes").checked) q10.push("Diabetes Type 2");
+  if (document.getElementById("sym_bp").checked)       q10.push("Hypertension");
+  if (document.getElementById("sym_brain").checked)    q10.push("Brain Fog");
+  if (document.getElementById("sym_joints").checked)   q10.push("Joint Pain");
+  if (document.getElementById("sym_gut").checked)      q10.push("IBS");
+  if (document.getElementById("sym_hormone").checked)  q10.push("Hormonal Imbalance");
+
+  var payload = {
+    email:   email,
+    age:     age,
+    "Q-002": gender,
+    "Q-010": q10.join("; "),
+    "Q-006": document.getElementById("sym_carb").checked ? "High carb" : "Balanced"
+  };
+
+  document.getElementById("formCard").style.display = "none";
+  document.getElementById("loadingOverlay").style.display = "block";
+  startStages();
+  jsonpCall(payload, function(data) {
+    stopStages();
+    document.getElementById("loadingOverlay").style.display = "none";
+    if (data.status === "success") {
+      renderDashboard(data.output);
+      // Pre-fill check-in email
+      document.getElementById("ci_email").value = email;
+    } else {
+      document.getElementById("formCard").style.display = "block";
+      alert("Engine error: " + (data.message || "Unknown error"));
+    }
+  }, function() {
+    stopStages();
+    document.getElementById("loadingOverlay").style.display = "none";
+    document.getElementById("formCard").style.display = "block";
+    alert("Network error. Check your Apps Script URL and deployment settings.");
+  });
+}
+
+// ════════════════════════════════════════════════
+// MICRO CHECK-IN CALL — v28.1
+// [v28.1-1] Sends action:"checkin" → engine routes to runCheckin()
+//           which reads stored TwinState (no Q-010 / domain recalc)
+// [v28.1-2] All 4 behaviour signals sent — engine stores them
+// [v28.1-3] Full adaptive response returned in single call
+// ════════════════════════════════════════════════
+function runCheckin() {
+  var email = document.getElementById("ci_email").value.trim();
+  if (!email) { alert("Please enter your email (same as your assessment)."); return; }
+
+  var adherenceSlider = parseInt(document.getElementById("ci_adherence").value) || 8;
+  var adherence100    = adherenceSlider * 10;  // Convert 1-10 slider to 0-100
+
+  // action:"checkin" routes to runCheckin() — no age/gender/Q-010 needed
+  // runCheckin() reads stored TwinState scores; no domain regression possible
+  var payload = {
+    action:        "checkin",
+    email:         email,
+    adherence:     adherence100,
+    energy_score:  document.getElementById("ci_energy").value,
+    sleep_quality: document.getElementById("ci_sleep").value,
+    stress_level:  document.getElementById("ci_stress").value
+  };
+
+  document.getElementById("checkinBtn").style.display = "none";
+  document.getElementById("ci_loading").style.display = "block";
+  document.getElementById("ci_result").style.display  = "none";
+
+  jsonpCall(payload, function(data) {
+    document.getElementById("ci_loading").style.display = "none";
+    document.getElementById("checkinBtn").style.display = "block";
+    if (data.status === "success") {
+      var out      = data.output;
+      var resp     = parseFloat(out.responsiveness) || 1.0;
+      var respInfo = respToLabel(resp);
+      var mom      = parseFloat(out.momentum) || 0;
+      var momSign  = mom >= 0 ? "+" : "";
+
+      document.getElementById("ci_result_body").innerHTML =
+        "<strong>Cycle " + (out.cycleNumber || "—") + " recorded.</strong><br><br>" +
+        "<table style='width:100%;border-collapse:collapse;font-size:12px;'>" +
+        "<tr><td style='padding:5px 0;color:#4a5568;'>Responsiveness</td>" +
+        "    <td style='padding:5px 0;font-weight:700;color:#2e7d4f;'>" + resp.toFixed(1) + "x — " + respInfo.label + "</td></tr>" +
+        "<tr><td style='padding:5px 0;color:#4a5568;'>Lifecycle</td>" +
+        "    <td style='padding:5px 0;font-weight:700;'>" + esc(out.lifecycle || "—") + "</td></tr>" +
+        "<tr><td style='padding:5px 0;color:#4a5568;'>Momentum</td>" +
+        "    <td style='padding:5px 0;font-weight:700;'>" + momSign + mom + "</td></tr>" +
+        "<tr><td style='padding:5px 0;color:#4a5568;'>90-day projection</td>" +
+        "    <td style='padding:5px 0;font-weight:700;'>" + (out.projection90d || "—") + "/100</td></tr>" +
+        "<tr><td style='padding:5px 0;color:#4a5568;'>Adherence stored</td>" +
+        "    <td style='padding:5px 0;font-weight:700;'>" + (out.adherence_score || adherence100) + "%</td></tr>" +
+        "</table><br>" +
+        "<em style='font-size:12px;color:#4a5568;'>" + esc(out.coachMessage || "") + "</em>";
+
+      document.getElementById("ci_result").style.display = "block";
+
+      // [v28.2 Fix 5] Refresh the dashboard and switch back so user sees updated
+      // evolution badges, momentum, lifecycle, projection, AND radar (scores returned
+      // by runCheckin() v28.2 engine). Twin state visible change = retention signal.
+      if (out.scores && document.getElementById("dashboard").style.display !== "none") {
+        renderDashboard(out);
+        setTimeout(function() { switchTab("assess"); }, 1200);
+      }
+
+    } else {
+      alert("Check-in error: " + (data.message || "Unknown error"));
+    }
+  }, function() {
+    document.getElementById("ci_loading").style.display = "none";
+    document.getElementById("checkinBtn").style.display = "block";
+    alert("Network error. Check your Apps Script deployment URL.");
+  });
+}
+
+// ════════════════════════════════════════════════
+// JSONP TRANSPORT
+// ════════════════════════════════════════════════
+function jsonpCall(payload, onSuccess, onError) {
+  var callbackName = "cb_" + Math.floor(Math.random() * 1e9);
+  var script = document.createElement("script");
+
+  window[callbackName] = function(data) {
+    delete window[callbackName];
+    document.body.removeChild(script);
+    onSuccess(data);
+  };
+
+  script.onerror = function() {
+    delete window[callbackName];
+    if (document.body.contains(script)) document.body.removeChild(script);
+    if (onError) onError();
+  };
+
+  script.src = API_URL + "?payload=" + encodeURIComponent(JSON.stringify(payload)) + "&callback=" + callbackName;
+  document.body.appendChild(script);
+}
+
+// ════════════════════════════════════════════════
+// BEHAVIOUR PREVIEW (live, no API call)
+// ════════════════════════════════════════════════
+function updatePreview() {
+  var energyVal   = parseInt(document.getElementById("ci_energy").value);
+  var sleepVal    = parseInt(document.getElementById("ci_sleep").value);
+  var stressVal   = parseInt(document.getElementById("ci_stress").value);
+  var adherenceVal = parseInt(document.getElementById("ci_adherence").value);
+  var adherence100 = adherenceVal * 10;
+
+  document.getElementById("lbl_energy").textContent    = energyVal + " / 10";
+  document.getElementById("lbl_sleep").textContent     = sleepVal  + " / 10";
+  document.getElementById("lbl_stress").textContent    = stressVal + " / 10";
+  document.getElementById("lbl_adherence").textContent = adherence100 + " %";
+
+  var resp = calcResponsiveness(adherence100);
+  var info = respToLabel(resp);
+
+  document.getElementById("prev_resp").textContent       = resp.toFixed(1);
+  document.getElementById("prev_resp_label").textContent = info.label;
+
+  document.getElementById("prev_mfx").textContent  = info.mfx;
+  document.getElementById("prev_traj").textContent = info.traj;
+  document.getElementById("prev_traj_label").textContent = info.trajLabel;
+  document.getElementById("prev_stmt").textContent =
+    "If you submit today: your Twin will recalibrate with a " + info.label + " trajectory.";
+}
+
+function calcResponsiveness(adherence100) {
+  if (adherence100 >= 90) return 1.1;
+  if (adherence100 >= 70) return 1.0;
+  if (adherence100 >= 50) return 0.8;
+  return 0.6;
+}
+
+function respToLabel(resp) {
+  if (resp >= 1.1) return { label: "Accelerating", mfx: "↑ Compounding", traj: "↗", trajLabel: "Improving" };
+  if (resp >= 1.0) return { label: "Neutral",      mfx: "→ Steady",      traj: "→", trajLabel: "Stable"    };
+  if (resp >= 0.8) return { label: "Slowed",       mfx: "↓ Drag",        traj: "→", trajLabel: "Slowing"   };
+  return                   { label: "Stagnating",  mfx: "⬇ Blocked",     traj: "↘", trajLabel: "At Risk"   };
+}
+
+// ════════════════════════════════════════════════
+// DASHBOARD RENDER
+// ════════════════════════════════════════════════
+function renderDashboard(twin) {
+  document.getElementById("dashboard").style.display = "block";
+
+  // Coach
+  document.getElementById("disp_coach").textContent = twin.coachMessage || "";
+
+  // Badge row: evolution + lifecycle + responsiveness
+  var evo      = (twin.evolutionStatus || "baseline").toLowerCase();
+  var lifecycle = twin.lifecycle || "";
+  var resp     = parseFloat(twin.responsiveness) || 1.0;
+  var respInfo = respToLabel(resp);
+
+  var evoBadgeMap = {
+    baseline:  { icon: "◎", label: "BASELINE" },
+    improving: { icon: "↑", label: "IMPROVING" },
+    stable:    { icon: "→", label: "STABLE" },
+    declining: { icon: "↓", label: "DECLINING" }
+  };
+  var badge = evoBadgeMap[evo] || evoBadgeMap.baseline;
+
+  var lifecycleClass = lifecycleClassMap(lifecycle);  // [v28.2 Fix 3]
+
+  var respClass = "";
+  if (resp >= 1.1) respClass = "accelerating";
+  else if (resp >= 1.0) respClass = "neutral";
+  else if (resp >= 0.8) respClass = "slowed";
+  else respClass = "stagnating";
+
+  document.getElementById("badge_row").innerHTML =
+    '<span class="evo-badge ' + evo + '">' + badge.icon + " " + badge.label + "</span>" +
+    (lifecycle ? '<span class="lifecycle-pill' + lifecycleClass + '">⬡ ' + esc(lifecycle) + "</span>" : "") +
+    '<span class="resp-badge ' + respClass + '">⚡ ' + resp.toFixed(1) + "x " + respInfo.label + "</span>";
+
+  // Primary stats
+  document.getElementById("disp_score").textContent  = twin.overallScore;
+  document.getElementById("disp_bioage").textContent = twin.biologicalAge;
+  document.getElementById("tile_score").className    = "stat-tile " + evo;
+  document.getElementById("tile_bioage").className   = "stat-tile " + evo;
+
+  var mom = parseFloat(twin.momentum) || 0;
+  var momEl = document.getElementById("disp_momentum");
+  if (evo === "baseline") {
+    momEl.textContent = "—";
+    document.getElementById("disp_momentum_sub").textContent = "first run";
+  } else {
+    var arrow = mom > 3 ? "↑" : (mom < -3 ? "↓" : "→");
+    momEl.textContent = arrow + " " + (mom > 0 ? "+" : "") + mom;
+    momEl.style.color = mom > 3 ? "var(--improving)" : (mom < -3 ? "var(--declining)" : "var(--stable)");
+    document.getElementById("tile_momentum").className = "stat-tile " + evo;
+  }
+
+  // Meta stats
+  document.getElementById("disp_cycle").textContent = "C" + (twin.cycleNumber || 1);
+  var projVal = twin.projection90d;                                    // [v28.2 Fix 4]
+  document.getElementById("disp_proj").textContent  = projVal ? projVal + "/100" : "—";
+  document.getElementById("disp_mult").textContent  = (twin.multiplier || 1.0).toFixed(1) + "x";
+  document.getElementById("disp_resp").textContent  = resp.toFixed(1) + "x";
+
+  // Narrative panel
+  renderNarrative(evo, mom, resp, twin.projection90d, twin.overallScore);
+
+  // Radar
+  if (twin.scores) renderRadar(twin.scores);
+
+  // Protocol
+  if (twin.protocol) {
+    renderStack(twin.protocol.AM, "am_list");
+    renderStack(twin.protocol.PM, "pm_list");
+  }
+
+  // Lifestyle
+  renderLifestyle(twin.lifestyle || []);
+}
+
+function renderNarrative(evo, momentum, resp, projection90d, score) {
+  var main = {
+    baseline:  "Your Digital Twin has been initialized. Initial biological load patterns are now mapped. The system will begin tracking functional change across future cycles.",
+    improving: "Your recent inputs indicate positive functional adaptation. Current trajectory suggests ongoing improvement supported by consistent engagement.",
+    stable:    "Your system is maintaining functional stability. Future gains will depend on sustained adherence and environmental inputs.",
+    declining: "Your recent trajectory suggests emerging biological stress. The system has adjusted guidance to stabilize future progress."
+  };
+  document.getElementById("narr_main").textContent = main[evo] || main.baseline;
+
+  var behaviourText = "";
+  if (resp >= 1.1) behaviourText = "High consistency is amplifying your improvement potential.";
+  else if (resp >= 1.0) behaviourText = "Your current consistency is maintaining steady progress.";
+  else if (resp >= 0.8) behaviourText = "Reduced adherence may be slowing optimization.";
+  else behaviourText = "Low engagement is limiting adaptive gains.";
+
+  // [v28.2 Fix 2] Behaviour-sensitive momentum narrative:
+  // If responsiveness is low but momentum is near-zero, the system hasn't declined
+  // physiologically — only behaviour is suppressing trajectory. Use behaviour-specific
+  // language to avoid implying clinical recalibration when physiology is unchanged.
+  var momentumText = "";
+  if (resp < 0.8 && Math.abs(momentum) < 3) {
+    momentumText = "Trajectory is suppressed due to reduced engagement, not physiological decline.";
+  } else if (momentum > 3) {
+    momentumText = "Functional gains are accelerating.";
+  } else if (momentum < -3) {
+    momentumText = "System is entering physiological recalibration phase.";
+  } else {
+    momentumText = "System remains in stabilization phase.";
+  }
+
+  var projText = "";
+  if (projection90d > score)       projText = "Projected trajectory indicates forward improvement.";
+  else if (projection90d === score) projText = "Projected trajectory remains stable.";
+  else                              projText = "Projected trajectory suggests intervention may be required.";
+
+  document.getElementById("narr_sub").innerHTML =
+    "<span>⚡ " + behaviourText + "</span>" +
+    "<span>📈 " + momentumText + "</span>" +
+    "<span>🎯 " + projText + "</span>";
+}
+
+function renderRadar(scores) {
+  var ctx = document.getElementById("twinRadar").getContext("2d");
+  // [v28.2 Fix 1] Destroy previous chart instance to prevent memory leak + visual overlay
+  if (radarChart) { radarChart.destroy(); }
+  radarChart = new Chart(ctx, {
+    type: "radar",
+    data: {
+      labels: ["Metabolic", "Cardio", "Cognitive", "Joints", "Gut", "Hormonal"],
+      datasets: [{
+        label: "Domain Load",
+        data: [scores.metabolic, scores.cardio, scores.cognitive, scores.joints, scores.gut, scores.hormonal],
+        backgroundColor: "rgba(46,125,79,0.13)",
+        borderColor: "#2e7d4f",
+        pointBackgroundColor: "#2e7d4f",
+        pointBorderColor: "#fff",
+        pointHoverBackgroundColor: "#fff",
+        pointHoverBorderColor: "#2e7d4f",
+        borderWidth: 2, pointRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        r: {
+          min: 0, max: 100,
+          ticks: { display: false, stepSize: 25 },
+          grid: { color: "rgba(0,0,0,0.06)" },
+          pointLabels: { font: { family: "Outfit", size: 11, weight: "600" }, color: "#4a5568" }
+        }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
+}
+
+function renderStack(list, containerId) {
+  var el = document.getElementById(containerId);
+  if (!list || list.length === 0) {
+    el.innerHTML = '<div class="empty-stack">No items for this time block.</div>';
+    return;
+  }
+  el.innerHTML = list.map(function(item) {
+    var doseParts = [item.dose || ""];
+    if (item.final_dose_mg) doseParts.push(item.final_dose_mg + "mg");
+    return '<div class="supp-card">' +
+      '<div class="supp-top"><span class="supp-name">' + esc(item.name) + '</span>' +
+      '<span class="supp-dose-tag">' + esc(doseParts.join(" · ")) + '</span></div>' +
+      (item.hero ? '<span class="supp-hero">&ldquo;' + esc(item.hero) + '&rdquo;</span>' : '') +
+      (item.ingredients ? '<span class="supp-ing">🧪 ' + esc(item.ingredients) + '</span>' : '') +
+      '<details class="clinical-details"><summary>Clinical rationale</summary>' +
+      '<div class="clinical-body">' +
+      (item.why ? '<div class="clinical-row"><strong>Mechanism:</strong> ' + esc(item.why) + '</div>' : '') +
+      (item.safety ? '<div class="clinical-row warn"><strong>Safety note:</strong> ' + esc(item.safety) + '</div>' : '') +
+      (item.contraindications && item.contraindications !== "None" ? '<div class="clinical-row warn"><strong>Contraindications:</strong> ' + esc(item.contraindications) + '</div>' : '') +
+      '</div></details></div>';
+  }).join("");
+}
+
+function renderLifestyle(list) {
+  var el = document.getElementById("life_list");
+  if (!list || list.length === 0) { el.innerHTML = ""; return; }
+  el.innerHTML = list.map(function(l) {
+    return '<div class="life-card">' +
+      '<span class="life-cat">' + esc(l.category || "") + '</span>' +
+      '<div class="life-title">' + esc(l.title || "") + '</div>' +
+      '<div class="life-text">' + esc(l.text || "") + '</div></div>';
+  }).join("");
+}
+
+function esc(str) {
+  return String(str || "")
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+// Init preview on load
+updatePreview();
+</script>
+</body>
+</html>
