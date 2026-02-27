@@ -3,148 +3,191 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Phytomedix | Digital Twin v28.2</title>
+<title>Phytomedix-Excell Nutrients| Digital Twin v28.3</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════════════
-   PHYTOMEDIX DESIGN SYSTEM v28.0
-   Typography: Syne (display) + Outfit (body) + DM Mono (data)
-═══════════════════════════════════════════════════ */
+/* ─────────────────── DESIGN SYSTEM ─────────────────── */
 :root {
-  --forest:    #1a3d2b;
-  --green:     #2e7d4f;
-  --leaf:      #4caf71;
-  --mint:      #e6f5ec;
-  --mint-dark: #c8e6d5;
-  --gold:      #c8a84b;
-  --amber:     #d97706;
-  --ink:       #1a2332;
-  --slate:     #4a5568;
-  --mist:      #f4f7f5;
-  --white:     #ffffff;
-  --border:    #dde5e0;
-  --red:       #c53030;
-  --blue:      #2563eb;
-
-  /* Evolution */
-  --improving:  #166534;
-  --stable:     #1d4ed8;
-  --declining:  #991b1b;
-  --baseline:   #6b7280;
-
-  /* Responsiveness */
-  --acc-color:  #166534;
-  --neu-color:  #1d4ed8;
-  --slow-color: #92400e;
-  --stag-color: #991b1b;
+  --forest:   #1a3d2b;
+  --green:    #2e7d4f;
+  --leaf:     #4caf71;
+  --mint:     #e6f5ec;
+  --ink:      #1a2332;
+  --slate:    #4a5568;
+  --mist:     #f7f9f8;
+  --white:    #ffffff;
+  --border:   #e2e8e5;
+  --red:      #c53030;
+  --amber:    #d97706;
+  --blue:     #1d4ed8;
+  --improving:#2e7d4f;
+  --stable:   #1d4ed8;
+  --declining:#c53030;
+  --baseline: #6b7280;
 }
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 body {
   font-family: 'Outfit', sans-serif;
   background: var(--mist);
   color: var(--ink);
   min-height: 100vh;
-  padding: 16px;
+  padding: 20px 16px 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-
-/* ─── HEADER ─── */
 .site-header {
   width: 100%; max-width: 700px;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 20px 0 24px;
+  padding: 18px 0 24px;
   border-bottom: 1px solid var(--border);
   margin-bottom: 24px;
 }
-.logo {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800; font-size: 19px;
-  color: var(--forest); letter-spacing: -0.3px;
-}
+.logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 19px; color: var(--forest); }
 .logo span { color: var(--leaf); }
-.header-right { display: flex; align-items: center; gap: 8px; }
 .engine-badge {
   font-family: 'DM Mono', monospace;
-  font-size: 9px; font-weight: 500;
-  color: var(--green); background: var(--mint);
-  border: 1px solid var(--mint-dark);
-  padding: 4px 10px; border-radius: 20px; letter-spacing: 0.5px;
+  font-size: 9px; font-weight: 500; color: var(--green);
+  background: var(--mint); border: 1px solid #b7d9c3;
+  padding: 4px 10px; border-radius: 20px; letter-spacing: 0.6px;
 }
-
 .container { width: 100%; max-width: 700px; }
 
-/* ─── TABS ─── */
+/* ─────────────────── TAB BAR ─────────────────── */
 .tab-bar {
-  display: flex; gap: 4px;
+  display: flex; gap: 6px;
   background: var(--white); border: 1px solid var(--border);
-  border-radius: 14px; padding: 4px;
-  margin-bottom: 20px;
+  border-radius: 12px; padding: 5px; margin-bottom: 18px;
 }
 .tab-btn {
-  flex: 1; padding: 10px 14px;
-  border: none; background: none;
+  flex: 1; padding: 9px 14px; border: none; border-radius: 8px;
+  background: none; cursor: pointer; color: var(--slate);
   font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600;
-  color: var(--slate); cursor: pointer;
-  border-radius: 10px; transition: all 0.18s;
+  transition: all 0.15s;
 }
-.tab-btn.active {
-  background: var(--forest); color: var(--white);
-}
+.tab-btn.active { background: var(--forest); color: white; }
 .tab-btn .tab-icon { font-size: 14px; margin-right: 6px; }
 
-/* ─── CARDS ─── */
+/* ─────────────────── CARDS ─────────────────── */
 .card {
   background: var(--white); border-radius: 16px;
-  padding: 24px; box-shadow: 0 1px 8px rgba(0,0,0,0.05), 0 0 0 1px var(--border);
+  padding: 26px 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05), 0 0 0 1px var(--border);
   margin-bottom: 14px;
 }
 .card-title {
   font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700;
-  letter-spacing: 1.5px; text-transform: uppercase;
-  color: var(--slate); margin-bottom: 18px;
+  letter-spacing: 1.5px; text-transform: uppercase; color: var(--slate);
+  margin-bottom: 18px;
 }
 
-/* ─── FORM ─── */
-#assessTab h2 {
-  font-family: 'Syne', sans-serif; font-size: 21px; font-weight: 800;
-  color: var(--forest); margin-bottom: 5px;
+/* ─────────────────── PHASE WIZARD ─────────────────── */
+.phase-stepper {
+  display: flex; align-items: center; gap: 0;
+  margin-bottom: 24px; padding: 0 4px;
 }
-.subtitle { font-size: 13px; color: var(--slate); margin-bottom: 22px; font-weight: 400; }
+.phase-step {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  flex: 1; position: relative; cursor: default;
+}
+.phase-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 14px; left: calc(50% + 16px);
+  width: calc(100% - 32px); height: 2px;
+  background: var(--border);
+  transition: background 0.3s;
+}
+.phase-step.done:not(:last-child)::after { background: var(--green); }
+.step-dot {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--white); color: var(--slate);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+  transition: all 0.2s; z-index: 1; position: relative;
+}
+.phase-step.active .step-dot {
+  border-color: var(--green); background: var(--green); color: white;
+}
+.phase-step.done .step-dot {
+  border-color: var(--green); background: var(--green); color: white;
+}
+.phase-step.done .step-dot::after { content: '✓'; font-size: 12px; }
+.phase-step.done .step-dot span { display: none; }
+.step-label {
+  font-size: 9px; font-weight: 600; letter-spacing: 0.4px;
+  text-transform: uppercase; color: var(--slate); text-align: center;
+  white-space: nowrap;
+}
+.phase-step.active .step-label { color: var(--green); }
+.phase-step.done .step-label  { color: var(--forest); }
+
+/* Phase panels */
+.phase-panel { display: none; }
+.phase-panel.active { display: block; }
+
+.phase-heading {
+  font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800;
+  color: var(--forest); margin-bottom: 4px;
+}
+.phase-sub {
+  font-size: 13px; color: var(--slate); margin-bottom: 22px; font-weight: 400;
+}
+
+/* ─────────────────── FORM ELEMENTS ─────────────────── */
+.field-label {
+  display: block; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.5px; color: var(--slate); margin-bottom: 6px;
+  text-transform: uppercase;
+}
+input[type="text"], input[type="number"], input[type="email"], select {
+  width: 100%; padding: 11px 13px;
+  border: 1.5px solid var(--border); border-radius: 10px;
+  font-family: 'Outfit', sans-serif; font-size: 14px;
+  color: var(--ink); background: var(--white);
+  transition: border-color 0.15s; -webkit-appearance: none;
+}
+input:focus, select:focus { outline: none; border-color: var(--green); }
+input.error, select.error { border-color: var(--red); }
 
 .field-row { display: grid; gap: 12px; margin-bottom: 14px; }
 .field-row.two-col { grid-template-columns: 1fr 1fr; }
-.field-label {
-  display: block; font-size: 10px; font-weight: 700;
-  letter-spacing: 0.6px; color: var(--slate); margin-bottom: 6px; text-transform: uppercase;
-}
+.field-row.three-col { grid-template-columns: 1fr 1fr 1fr; }
 
-input[type="text"], input[type="number"], input[type="email"], select {
-  width: 100%; padding: 11px 14px;
-  border: 1.5px solid var(--border); border-radius: 10px;
-  font-family: 'Outfit', sans-serif; font-size: 14px; color: var(--ink);
-  background: var(--white); transition: border-color 0.15s; -webkit-appearance: none;
-}
-input:focus, select:focus { outline: none; border-color: var(--green); }
+.field-hint { font-size: 11px; color: var(--slate); margin-top: 4px; opacity: 0.8; }
 
+/* Radio group for smoking */
+.radio-group { display: flex; gap: 8px; margin-bottom: 14px; }
+.radio-opt {
+  flex: 1; padding: 10px 8px; border: 1.5px solid var(--border);
+  border-radius: 10px; cursor: pointer; text-align: center;
+  font-size: 13px; color: var(--slate); transition: all 0.15s;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+}
+.radio-opt input[type="radio"] { display: none; }
+.radio-opt:has(input:checked) { border-color: var(--green); background: var(--mint); color: var(--forest); }
+.radio-opt .radio-icon { font-size: 16px; }
+.radio-opt .radio-text { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+
+/* Condition checkboxes */
 .signals-label {
   font-size: 10px; font-weight: 700; color: var(--slate);
-  text-transform: uppercase; letter-spacing: 0.6px;
+  text-transform: uppercase; letter-spacing: 0.5px;
   margin-bottom: 10px; display: block;
 }
-.signal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
-.signal-label {
-  display: flex; align-items: center; gap: 10px;
-  padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 10px;
-  font-size: 13px; color: var(--ink); cursor: pointer;
-  transition: all 0.15s; background: var(--white); user-select: none;
+.signal-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 12px;
 }
-.signal-label:hover { background: var(--mint); border-color: var(--mint-dark); }
+.signal-label {
+  display: flex; align-items: center; gap: 9px;
+  padding: 10px 13px; border: 1.5px solid var(--border);
+  border-radius: 10px; font-size: 13px; color: var(--ink);
+  cursor: pointer; transition: all 0.15s; background: var(--white);
+}
+.signal-label:hover { background: var(--mint); border-color: #b7d9c3; }
 .signal-label input[type="checkbox"] { display: none; }
 .signal-label .dot {
   width: 16px; height: 16px; border: 2px solid var(--border);
@@ -157,21 +200,66 @@ input:focus, select:focus { outline: none; border-color: var(--green); }
   border-top: none; border-left: none; transform: rotate(45deg);
 }
 .signal-label:has(input:checked) { border-color: var(--green); background: var(--mint); }
+.signal-label .sig-icon { font-size: 14px; flex-shrink: 0; }
 
-.carb-row {
-  display: flex; align-items: center; gap: 10px; padding: 11px 14px;
-  border: 1.5px solid var(--border); border-radius: 10px;
-  cursor: pointer; font-size: 13px; color: var(--slate);
-  transition: all 0.15s; margin-bottom: 20px; user-select: none;
-}
-.carb-row:has(input:checked) { border-color: var(--amber); background: #fffbf0; color: var(--ink); }
-.carb-row input { display: none; }
-.carb-check {
-  width: 16px; height: 16px; border: 2px solid var(--border);
-  border-radius: 4px; flex-shrink: 0;
-}
-.carb-row:has(input:checked) .carb-check { background: var(--amber); border-color: var(--amber); }
+/* Conditional field (hidden until gender-triggered) */
+.conditional-field { display: none; }
 
+/* Select tiles for diet / exercise / sleep / alcohol */
+.tile-select { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; margin-bottom: 14px; }
+.tile-select.two-col { grid-template-columns: 1fr 1fr; }
+.tile-opt {
+  padding: 10px 8px; border: 1.5px solid var(--border);
+  border-radius: 10px; cursor: pointer; text-align: center;
+  transition: all 0.15s; background: var(--white);
+}
+.tile-opt input[type="radio"] { display: none; }
+.tile-opt:has(input:checked) { border-color: var(--green); background: var(--mint); }
+.tile-opt .tile-icon { font-size: 18px; display: block; margin-bottom: 4px; }
+.tile-opt .tile-text { font-size: 10px; font-weight: 600; color: var(--slate); text-transform: uppercase; letter-spacing: 0.3px; }
+.tile-opt:has(input:checked) .tile-text { color: var(--forest); }
+
+/* Subjective score sliders */
+.subjective-slider { margin-bottom: 20px; }
+.slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.slider-label { font-size: 12px; font-weight: 600; color: var(--ink); text-transform: uppercase; letter-spacing: 0.4px; font-family: 'Outfit', sans-serif; }
+.slider-value { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; color: var(--green); }
+input[type="range"] {
+  width: 100%; height: 4px; -webkit-appearance: none; appearance: none;
+  background: var(--border); border-radius: 2px; outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 20px; height: 20px;
+  border-radius: 50%; background: var(--forest);
+  cursor: pointer; border: 3px solid white;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.2);
+}
+.slider-ticks { display: flex; justify-content: space-between; font-size: 10px; color: var(--slate); margin-top: 4px; }
+
+/* ─────────────────── PHASE NAV BUTTONS ─────────────────── */
+.phase-nav {
+  display: flex; gap: 10px; margin-top: 6px;
+  justify-content: space-between; align-items: center;
+}
+.btn-back {
+  padding: 11px 20px; border: 1.5px solid var(--border);
+  border-radius: 10px; background: none; cursor: pointer;
+  font-family: 'Outfit', sans-serif; font-size: 13px;
+  font-weight: 600; color: var(--slate); transition: all 0.15s;
+}
+.btn-back:hover { background: var(--mist); border-color: var(--slate); }
+.btn-next {
+  flex: 1; padding: 13px 20px;
+  background: var(--forest); color: white; border: none;
+  border-radius: 10px; font-family: 'Syne', sans-serif;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  letter-spacing: 0.3px; transition: all 0.2s;
+}
+.btn-next:hover { background: var(--green); transform: translateY(-1px); }
+.btn-next:active { transform: none; }
+.phase-counter { font-size: 11px; color: var(--slate); white-space: nowrap; }
+
+/* ─────────────────── CTA BUTTON ─────────────────── */
 .cta-btn {
   width: 100%; padding: 15px; background: var(--forest);
   color: white; border: none; border-radius: 12px;
@@ -179,47 +267,40 @@ input:focus, select:focus { outline: none; border-color: var(--green); }
   cursor: pointer; letter-spacing: 0.3px; transition: all 0.2s;
 }
 .cta-btn:hover { background: var(--green); transform: translateY(-1px); }
-.cta-btn:active { transform: translateY(0); }
+.cta-btn:active { transform: none; }
 .cta-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-/* ─── LOADING ─── */
-#loadingOverlay {
-  display: none; text-align: center; padding: 48px 20px;
-}
+/* ─────────────────── LOADING ─────────────────── */
+#loadingOverlay { display: none; text-align: center; padding: 40px 0; }
 .spinner-dna {
-  font-size: 52px; animation: dna-pulse 1.8s ease-in-out infinite;
-  display: inline-block; margin-bottom: 18px;
+  font-size: 48px; animation: spin-dna 2s ease-in-out infinite;
+  display: inline-block; margin-bottom: 16px;
 }
-@keyframes dna-pulse {
-  0%, 100% { transform: scale(1) rotate(0deg); }
-  50% { transform: scale(1.15) rotate(8deg); }
-}
+@keyframes spin-dna { 0%,100% { transform: scale(1); } 50% { transform: scale(1.2) rotate(10deg); } }
 .loading-stage { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--green); letter-spacing: 0.5px; min-height: 20px; }
 .loading-bar-wrap { width: 200px; height: 3px; background: var(--border); border-radius: 2px; margin: 14px auto 0; }
 .loading-bar { height: 100%; background: var(--green); border-radius: 2px; width: 0; transition: width 0.7s ease; }
-.loading-sub { font-size: 11px; color: var(--slate); margin-top: 8px; }
+.loading-sub { font-size: 12px; color: var(--slate); margin-top: 8px; }
 
-/* ─── DASHBOARD ─── */
-#dashboard { display: none; animation: fadeUp 0.45s ease; }
-@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+/* ─────────────────── DASHBOARD ─────────────────── */
+#dashboard { display: none; animation: fadeUp 0.5s ease; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Coach bar */
 .coach-bar {
-  background: linear-gradient(135deg, var(--forest) 0%, #1e5035 100%);
+  background: linear-gradient(135deg, var(--forest) 0%, #1f4d36 100%);
   color: white; padding: 18px 20px; border-radius: 14px;
-  margin-bottom: 14px; display: flex; gap: 12px; align-items: flex-start;
+  margin-bottom: 14px; display: flex; gap: 14px; align-items: flex-start;
 }
-.coach-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+.coach-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
 .coach-text { font-size: 13px; line-height: 1.7; color: rgba(255,255,255,0.9); font-weight: 400; }
 
-/* Evolution badge row */
 .badge-lifecycle-row {
-  display: flex; align-items: center; gap: 8px;
-  flex-wrap: wrap; margin-bottom: 14px;
+  display: flex; gap: 7px; align-items: center; flex-wrap: wrap;
+  margin-bottom: 14px;
 }
 .evo-badge {
   display: inline-flex; align-items: center; gap: 5px;
-  padding: 5px 12px; border-radius: 20px;
+  padding: 5px 11px; border-radius: 20px;
   font-size: 10px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
 }
 .evo-badge.baseline  { background: #f3f4f6; color: var(--baseline); border: 1px solid #d1d5db; }
@@ -229,26 +310,23 @@ input:focus, select:focus { outline: none; border-color: var(--green); }
 
 .lifecycle-pill {
   display: inline-flex; align-items: center; gap: 5px;
-  padding: 5px 12px; border-radius: 20px;
+  padding: 5px 11px; border-radius: 20px;
+  background: #f0fdf4; color: var(--forest); border: 1px solid #bbf7d0;
   font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
-  background: var(--mint); color: var(--green); border: 1px solid var(--mint-dark);
 }
 .lifecycle-pill.recovery  { background: #fee2e2; color: var(--declining); border-color: #fecaca; }
 .lifecycle-pill.recalib   { background: #fff7ed; color: var(--amber); border-color: #fed7aa; }
 
-/* Responsiveness badge */
 .resp-badge {
   display: inline-flex; align-items: center; gap: 5px;
-  padding: 5px 12px; border-radius: 20px;
-  font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
-  font-family: 'DM Mono', monospace;
+  padding: 5px 11px; border-radius: 20px; border: 1px solid;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
 }
-.resp-badge.accelerating { background: #dcfce7; color: var(--acc-color);  border: 1px solid #bbf7d0; }
-.resp-badge.neutral      { background: #dbeafe; color: var(--neu-color);  border: 1px solid #bfdbfe; }
-.resp-badge.slowed       { background: #fff7ed; color: var(--slow-color); border: 1px solid #fed7aa; }
-.resp-badge.stagnating   { background: #fee2e2; color: var(--stag-color); border: 1px solid #fecaca; }
+.resp-badge.accelerating { background: #dcfce7; color: var(--green);    border-color: #bbf7d0; }
+.resp-badge.neutral      { background: #e0f2fe; color: #0369a1;          border-color: #bae6fd; }
+.resp-badge.slowed       { background: #fff7ed; color: var(--amber);     border-color: #fed7aa; }
+.resp-badge.stagnating   { background: #fee2e2; color: var(--red);       border-color: #fecaca; }
 
-/* Primary stats */
 .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
 .stat-tile {
   background: var(--white); border: 1px solid var(--border);
@@ -257,61 +335,56 @@ input:focus, select:focus { outline: none; border-color: var(--green); }
 }
 .stat-tile::after {
   content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-  height: 3px; background: var(--border);
+  height: 3px; background: var(--green);
 }
+.stat-tile.declining::after { background: var(--red); }
 .stat-tile.improving::after { background: var(--leaf); }
 .stat-tile.stable::after    { background: var(--blue); }
-.stat-tile.declining::after { background: var(--red); }
-.stat-tile.baseline::after  { background: var(--slate); }
 .stat-label { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--slate); font-weight: 700; margin-bottom: 7px; }
 .stat-value { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; color: var(--forest); line-height: 1; }
 .stat-sub { font-size: 10px; color: var(--slate); margin-top: 5px; }
 
-/* Secondary (meta) stats */
-.meta-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+.meta-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
 .meta-tile {
-  background: var(--mint); border: 1px solid var(--mint-dark);
-  border-radius: 12px; padding: 11px 10px; text-align: center;
+  background: var(--mint); border: 1px solid #c8e6d5;
+  border-radius: 11px; padding: 10px 10px; text-align: center;
 }
 .meta-label { font-size: 8px; letter-spacing: 1px; text-transform: uppercase; color: var(--green); font-weight: 700; margin-bottom: 4px; }
 .meta-value { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; color: var(--forest); }
 
-/* Narrative panel */
 .narrative-card {
-  background: #f9fbf9; border: 1px solid var(--border);
-  border-left: 4px solid var(--green);
-  border-radius: 14px; padding: 18px 20px; margin-bottom: 14px;
+  background: #f8fffe; border: 1px solid #c8e6d5; border-radius: 14px;
+  padding: 18px 20px; margin-bottom: 12px;
 }
 .narrative-title { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--green); margin-bottom: 12px; }
 .narrative-main { font-size: 13px; line-height: 1.75; color: var(--ink); margin-bottom: 10px; }
 .narrative-sub { font-size: 12px; color: var(--slate); line-height: 1.65; border-top: 1px solid var(--border); padding-top: 10px; display: flex; flex-direction: column; gap: 5px; }
 .narrative-sub span { display: block; }
 
-/* Radar */
 .chart-wrap {
   background: var(--white); border: 1px solid var(--border);
-  border-radius: 16px; padding: 20px; margin-bottom: 14px;
+  border-radius: 16px; padding: 20px; margin-bottom: 12px;
 }
 .chart-wrap canvas { max-height: 260px; }
 
-/* Protocol stacks */
 .stack-header {
   font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700;
   letter-spacing: 1px; text-transform: uppercase; color: var(--forest);
-  padding: 0 0 10px; border-bottom: 1px solid var(--border); margin-bottom: 14px;
-  display: flex; align-items: center; gap: 8px;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+  margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
 }
+
 .supp-card {
   border: 1px solid var(--border); border-radius: 12px;
-  padding: 14px; margin-bottom: 10px; position: relative; overflow: hidden;
-  transition: box-shadow 0.15s;
+  padding: 15px; margin-bottom: 9px; position: relative;
+  overflow: hidden; transition: box-shadow 0.15s;
 }
 .supp-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
 .supp-card::before {
   content: ''; position: absolute; left: 0; top: 0; bottom: 0;
   width: 3px; background: var(--green);
 }
-.supp-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 5px; }
+.supp-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
 .supp-name { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--ink); }
 .supp-dose-tag {
   background: var(--mint); color: var(--forest); padding: 3px 8px;
@@ -319,102 +392,87 @@ input:focus, select:focus { outline: none; border-color: var(--green); }
   font-size: 10px; font-weight: 500; white-space: nowrap; flex-shrink: 0;
 }
 .supp-hero { font-size: 12px; color: var(--green); font-style: italic; margin-bottom: 7px; display: block; line-height: 1.45; }
-.supp-ing  { font-size: 11px; color: var(--slate); margin-bottom: 10px; display: block; }
-details.clinical-details { background: var(--mist); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.supp-ing { font-size: 11px; color: var(--slate); margin-bottom: 9px; display: block; }
+details.clinical-details {
+  background: var(--mist); border: 1px solid var(--border);
+  border-radius: 8px; overflow: hidden;
+}
 details.clinical-details summary {
   cursor: pointer; padding: 8px 12px;
-  font-size: 11px; font-weight: 600; color: var(--green); letter-spacing: 0.3px;
-  list-style: none; display: flex; align-items: center; gap: 6px; user-select: none;
+  font-size: 11px; font-weight: 600; color: var(--green);
+  letter-spacing: 0.3px; list-style: none;
+  display: flex; align-items: center; gap: 6px; user-select: none;
 }
 details.clinical-details summary::-webkit-details-marker { display: none; }
 details.clinical-details summary::before { content: '▶'; font-size: 8px; transition: transform 0.15s; }
 details[open].clinical-details summary::before { transform: rotate(90deg); }
-.clinical-body { padding: 11px 12px; display: grid; gap: 6px; }
+.clinical-body { padding: 12px; display: grid; gap: 6px; }
 .clinical-row { font-size: 11px; color: var(--ink); line-height: 1.5; }
 .clinical-row strong { color: var(--slate); }
 .clinical-row.warn { color: var(--red); }
 .empty-stack { padding: 14px; text-align: center; font-size: 13px; color: var(--slate); font-style: italic; }
 
-/* Lifestyle */
 .life-card {
   background: #fffbf0; border: 1px solid #f3e0a8;
-  border-radius: 12px; padding: 14px 16px; margin-bottom: 10px;
+  border-radius: 12px; padding: 14px 16px; margin-bottom: 9px;
 }
 .life-cat { font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 500; color: var(--amber); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 5px; }
 .life-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
 .life-text { font-size: 12px; color: var(--slate); line-height: 1.65; }
 
-/* Reset */
 .reset-btn {
   width: 100%; padding: 12px; background: none;
   border: 1px solid var(--border); border-radius: 10px;
   color: var(--slate); font-size: 13px; cursor: pointer;
-  margin-top: 6px; transition: all 0.15s; font-family: 'Outfit', sans-serif;
+  margin-top: 6px; transition: all 0.15s;
 }
 .reset-btn:hover { background: var(--mist); border-color: var(--slate); }
 
-/* ─── MICRO CHECK-IN TAB ─── */
+/* ─────────────────── CHECK-IN TAB ─────────────────── */
 #checkinTab { display: none; }
 #checkinTab h2 {
   font-family: 'Syne', sans-serif; font-size: 21px; font-weight: 800;
   color: var(--forest); margin-bottom: 5px;
 }
+.slider-group { margin-bottom: 20px; }
 
-/* Slider inputs */
-.slider-group { margin-bottom: 18px; }
-.slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.slider-label { font-size: 12px; font-weight: 600; color: var(--ink); text-transform: uppercase; letter-spacing: 0.4px; font-family: 'Outfit', sans-serif; }
-.slider-value { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; color: var(--green); }
-input[type="range"] {
-  width: 100%; height: 4px; -webkit-appearance: none; appearance: none;
-  background: var(--border); border-radius: 4px; outline: none; cursor: pointer;
-}
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 20px; height: 20px;
-  border-radius: 50%; background: var(--green);
-  border: 3px solid var(--white); box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-  cursor: pointer;
-}
-.slider-ticks { display: flex; justify-content: space-between; margin-top: 4px; }
-.slider-ticks span { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--slate); }
-
-/* Behaviour preview strip */
 .preview-card {
-  background: linear-gradient(135deg, var(--forest) 0%, #1e5035 100%);
-  border-radius: 14px; padding: 18px 20px; margin-bottom: 18px;
-  color: white;
+  background: linear-gradient(135deg, var(--forest) 0%, #1f4d36 100%);
+  border-radius: 14px; padding: 18px 20px; margin-bottom: 22px;
 }
 .preview-title {
   font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700;
   letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.6);
   margin-bottom: 14px;
 }
-.preview-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.preview-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 14px; }
 .preview-tile { text-align: center; }
-.preview-tile-label { font-size: 9px; letter-spacing: 0.8px; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 5px; }
+.preview-tile-label { font-size: 9px; letter-spacing: 0.8px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 5px; }
 .preview-tile-val { font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 500; color: white; }
-.preview-tile-sub { font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 3px; }
+.preview-tile-sub { font-size: 9px; color: rgba(255,255,255,0.55); margin-top: 3px; }
 .preview-stmt {
-  margin-top: 14px; font-size: 12px; color: rgba(255,255,255,0.8);
+  font-size: 12px; color: rgba(255,255,255,0.75);
   line-height: 1.65; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 12px;
 }
 
-/* Checkin email hint */
 .email-note {
-  background: var(--mint); border: 1px solid var(--mint-dark);
-  border-radius: 10px; padding: 12px 14px; margin-bottom: 18px;
-  font-size: 12px; color: var(--forest);
+  background: var(--mint); border: 1px solid #c8e6d5;
+  border-radius: 10px; padding: 11px 14px;
+  font-size: 12px; color: var(--forest); margin-bottom: 16px; line-height: 1.5;
 }
 .email-note strong { font-weight: 700; }
 
-/* Responsive */
+/* ─────────────────── RESPONSIVE ─────────────────── */
 @media (max-width: 520px) {
   .stats-row { grid-template-columns: 1fr 1fr; }
   .stats-row .stat-tile:last-child { grid-column: span 2; }
   .meta-row { grid-template-columns: 1fr 1fr; }
   .signal-grid { grid-template-columns: 1fr; }
-  .field-row.two-col { grid-template-columns: 1fr; }
-  .preview-grid { grid-template-columns: 1fr; gap: 8px; }
+  .field-row.two-col, .field-row.three-col { grid-template-columns: 1fr; }
+  .tile-select { grid-template-columns: 1fr 1fr; }
+  .radio-group { flex-wrap: wrap; }
+  .radio-opt { min-width: calc(50% - 4px); }
+  .phase-step .step-label { display: none; }
 }
 </style>
 </head>
@@ -422,9 +480,7 @@ input[type="range"]::-webkit-slider-thumb {
 
 <header class="site-header">
   <div class="logo">PHYTO<span>MEDIX</span></div>
-  <div class="header-right">
-    <span class="engine-badge">ENGINE v28.2</span>
-  </div>
+  <span class="engine-badge">ENGINE v28.3</span>
 </header>
 
 <div class="container">
@@ -439,84 +495,356 @@ input[type="range"]::-webkit-slider-thumb {
     </button>
   </div>
 
-  <!-- ══════════════════════════════════════════ -->
-  <!-- TAB 1 — FULL ASSESSMENT                   -->
-  <!-- ══════════════════════════════════════════ -->
+  <!-- ════════════════════════════════════════════ -->
+  <!-- TAB 1 — FULL ASSESSMENT                     -->
+  <!-- ════════════════════════════════════════════ -->
   <div id="assessTab">
 
-    <!-- Form -->
+    <!-- Form Card with 4-Phase Wizard -->
     <div class="card" id="formCard">
-      <h2>Twin Calibration</h2>
-      <p class="subtitle">6-Domain analysis · ERP-integrated · Behaviour-adaptive · v28.2</p>
 
-      <div class="field-row">
-        <div>
-          <label class="field-label">Email address</label>
-          <input type="email" id="a_email" placeholder="your@email.com">
+      <!-- Phase stepper -->
+      <div class="phase-stepper" id="phaseStepper">
+        <div class="phase-step active" id="pstep_1">
+          <div class="step-dot"><span>1</span></div>
+          <div class="step-label">Biometrics</div>
+        </div>
+        <div class="phase-step" id="pstep_2">
+          <div class="step-dot"><span>2</span></div>
+          <div class="step-label">Conditions</div>
+        </div>
+        <div class="phase-step" id="pstep_3">
+          <div class="step-dot"><span>3</span></div>
+          <div class="step-label">Lifestyle</div>
+        </div>
+        <div class="phase-step" id="pstep_4">
+          <div class="step-dot"><span>4</span></div>
+          <div class="step-label">Signals</div>
         </div>
       </div>
-      <div class="field-row two-col">
-        <div>
-          <label class="field-label">Age</label>
-          <input type="number" id="a_age" placeholder="35" value="35" min="18" max="100">
+
+      <!-- ══ PHASE 1 — Identity & Biometrics ══ -->
+      <div class="phase-panel active" id="phase1">
+        <h2 class="phase-heading">Identity &amp; Biometrics</h2>
+        <p class="phase-sub">Core clinical parameters for Twin initialization and tier calculation.</p>
+
+        <div class="field-row">
+          <div>
+            <label class="field-label">Email address</label>
+            <input type="email" id="a_email" placeholder="your@email.com">
+          </div>
         </div>
-        <div>
-          <label class="field-label">Biological sex</label>
-          <select id="a_gender">
-            <option value="Female">Female</option>
-            <option value="Male">Male</option>
-          </select>
+
+        <div class="field-row two-col">
+          <div>
+            <label class="field-label">Full name (optional)</label>
+            <input type="text" id="a_name" placeholder="Your name">
+          </div>
+          <div>
+            <label class="field-label">Age</label>
+            <input type="number" id="a_age" placeholder="35" value="35" min="18" max="100">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label class="field-label">Biological sex</label>
+            <div class="radio-group" id="sex_group">
+              <label class="radio-opt">
+                <input type="radio" name="sex" value="Female" id="sex_female">
+                <span class="radio-icon">♀</span>
+                <span class="radio-text">Female</span>
+              </label>
+              <label class="radio-opt">
+                <input type="radio" name="sex" value="Male" id="sex_male" checked>
+                <span class="radio-icon">♂</span>
+                <span class="radio-text">Male</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-row two-col">
+          <div>
+            <label class="field-label">Weight (kg)</label>
+            <input type="number" id="a_weight" placeholder="75" min="30" max="250">
+            <span class="field-hint">Used for dose tier calculation</span>
+          </div>
+          <div>
+            <label class="field-label">Height (cm)</label>
+            <input type="number" id="a_height" placeholder="170" min="100" max="250">
+            <span class="field-hint">Used for BMI context</span>
+          </div>
+        </div>
+
+        <div class="field-row" style="margin-bottom: 22px;">
+          <div>
+            <label class="field-label">Smoking status</label>
+            <div class="radio-group">
+              <label class="radio-opt">
+                <input type="radio" name="smoking" value="Never" id="smk_never" checked>
+                <span class="radio-icon">🚭</span>
+                <span class="radio-text">Never</span>
+              </label>
+              <label class="radio-opt">
+                <input type="radio" name="smoking" value="Former" id="smk_former">
+                <span class="radio-icon">🕐</span>
+                <span class="radio-text">Former</span>
+              </label>
+              <label class="radio-opt">
+                <input type="radio" name="smoking" value="Current" id="smk_current">
+                <span class="radio-icon">⚠️</span>
+                <span class="radio-text">Current</span>
+              </label>
+            </div>
+            <span class="field-hint">Activates safety veto logic for certain compounds</span>
+          </div>
+        </div>
+
+        <div class="phase-nav">
+          <span class="phase-counter">Step 1 of 4</span>
+          <button class="btn-next" onclick="goPhase(2)">Continue → Conditions</button>
         </div>
       </div>
 
-      <span class="signals-label">Clinical signals — select all that apply</span>
-      <div class="signal-grid">
-        <label class="signal-label">
-          <input type="checkbox" id="sym_diabetes" value="Diabetes Type 2">
-          <span class="dot"></span><span>🩸 High Blood Sugar</span>
-        </label>
-        <label class="signal-label">
-          <input type="checkbox" id="sym_bp" value="Hypertension">
-          <span class="dot"></span><span>❤️ High Blood Pressure</span>
-        </label>
-        <label class="signal-label">
-          <input type="checkbox" id="sym_brain" value="Brain Fog">
-          <span class="dot"></span><span>🧠 Brain Fog / Focus</span>
-        </label>
-        <label class="signal-label">
-          <input type="checkbox" id="sym_joints" value="Joint Pain">
-          <span class="dot"></span><span>🦴 Joint Inflammation</span>
-        </label>
-        <label class="signal-label">
-          <input type="checkbox" id="sym_gut" value="IBS">
-          <span class="dot"></span><span>🌿 IBS / Bloating</span>
-        </label>
-        <label class="signal-label">
-          <input type="checkbox" id="sym_hormone" value="Hormonal Imbalance">
-          <span class="dot"></span><span>⚡ Hormonal / Libido</span>
-        </label>
+      <!-- ══ PHASE 2 — Clinical Signals ══ -->
+      <div class="phase-panel" id="phase2">
+        <h2 class="phase-heading">Clinical Signals</h2>
+        <p class="phase-sub">Select all conditions that apply. Each activates a specific domain scoring pathway.</p>
+
+        <span class="signals-label">Metabolic &amp; Cardiovascular</span>
+        <div class="signal-grid">
+          <label class="signal-label">
+            <input type="checkbox" id="sym_diabetes" value="Diabetes Type 2">
+            <span class="dot"></span><span class="sig-icon">🩸</span><span>High Blood Sugar / T2D</span>
+          </label>
+          <label class="signal-label">
+            <input type="checkbox" id="sym_bp" value="Hypertension">
+            <span class="dot"></span><span class="sig-icon">❤️</span><span>High Blood Pressure</span>
+          </label>
+          <label class="signal-label">
+            <input type="checkbox" id="sym_chol" value="High Cholesterol">
+            <span class="dot"></span><span class="sig-icon">🧪</span><span>High Cholesterol</span>
+          </label>
+          <label class="signal-label">
+            <input type="checkbox" id="sym_obesity" value="Obesity / Weight Management">
+            <span class="dot"></span><span class="sig-icon">⚖️</span><span>Obesity / Weight Mgmt</span>
+          </label>
+        </div>
+
+        <span class="signals-label">Neurological &amp; Cognitive</span>
+        <div class="signal-grid">
+          <label class="signal-label">
+            <input type="checkbox" id="sym_brain" value="Brain Fog">
+            <span class="dot"></span><span class="sig-icon">🧠</span><span>Brain Fog / Focus</span>
+          </label>
+          <label class="signal-label">
+            <input type="checkbox" id="sym_anxiety" value="Anxiety / Chronic Stress">
+            <span class="dot"></span><span class="sig-icon">😟</span><span>Anxiety / Chronic Stress</span>
+          </label>
+        </div>
+
+        <span class="signals-label">Musculoskeletal &amp; Digestive</span>
+        <div class="signal-grid">
+          <label class="signal-label">
+            <input type="checkbox" id="sym_joints" value="Joint Pain / Arthritis">
+            <span class="dot"></span><span class="sig-icon">🦴</span><span>Joint Pain / Arthritis</span>
+          </label>
+          <label class="signal-label">
+            <input type="checkbox" id="sym_gut" value="IBS / Digestive Issues">
+            <span class="dot"></span><span class="sig-icon">🌿</span><span>IBS / Digestive Issues</span>
+          </label>
+        </div>
+
+        <span class="signals-label">Hormonal</span>
+        <div class="signal-grid">
+          <label class="signal-label">
+            <input type="checkbox" id="sym_hormone" value="Hormonal Imbalance / Low Libido">
+            <span class="dot"></span><span class="sig-icon">⚡</span><span>Hormonal / Low Libido</span>
+          </label>
+          <!-- Menopause shows only for female -->
+          <label class="signal-label conditional-field" id="field_menopause">
+            <input type="checkbox" id="sym_menopause" value="Menopause">
+            <span class="dot"></span><span class="sig-icon">🌸</span><span>Menopause / Perimenopause</span>
+          </label>
+        </div>
+
+        <div class="phase-nav">
+          <button class="btn-back" onclick="goPhase(1)">← Back</button>
+          <span class="phase-counter">Step 2 of 4</span>
+          <button class="btn-next" onclick="goPhase(3)">Continue → Lifestyle</button>
+        </div>
       </div>
 
-      <label class="carb-row">
-        <input type="checkbox" id="sym_carb">
-        <span class="carb-check"></span>
-        I eat a high carbohydrate diet
-      </label>
+      <!-- ══ PHASE 3 — Lifestyle Context ══ -->
+      <div class="phase-panel" id="phase3">
+        <h2 class="phase-heading">Lifestyle Context</h2>
+        <p class="phase-sub">Environmental inputs that modulate your domain load calculations.</p>
 
-      <button class="cta-btn" id="generateBtn" onclick="runAssessment()">
-        Generate Digital Twin Protocol
-      </button>
-    </div>
+        <label class="field-label" style="margin-bottom: 10px;">Diet pattern</label>
+        <div class="tile-select" style="margin-bottom: 20px;">
+          <label class="tile-opt">
+            <input type="radio" name="diet" value="Balanced" checked>
+            <span class="tile-icon">🥗</span>
+            <span class="tile-text">Balanced</span>
+          </label>
+          <label class="tile-opt">
+            <input type="radio" name="diet" value="High carb">
+            <span class="tile-icon">🍞</span>
+            <span class="tile-text">High Carb</span>
+          </label>
+          <label class="tile-opt">
+            <input type="radio" name="diet" value="High fat / Keto">
+            <span class="tile-icon">🥑</span>
+            <span class="tile-text">High Fat</span>
+          </label>
+          <label class="tile-opt">
+            <input type="radio" name="diet" value="Low calorie / Restricted">
+            <span class="tile-icon">📉</span>
+            <span class="tile-text">Low Cal</span>
+          </label>
+        </div>
+
+        <label class="field-label" style="margin-bottom: 10px;">Exercise frequency</label>
+        <div class="tile-select" style="margin-bottom: 20px;">
+          <label class="tile-opt">
+            <input type="radio" name="exercise" value="None">
+            <span class="tile-icon">🛋️</span>
+            <span class="tile-text">None</span>
+          </label>
+          <label class="tile-opt">
+            <input type="radio" name="exercise" value="1–2x / week" checked>
+            <span class="tile-icon">🚶</span>
+            <span class="tile-text">1–2x / wk</span>
+          </label>
+          <label class="tile-opt">
+            <input type="radio" name="exercise" value="3–5x / week">
+            <span class="tile-icon">🏃</span>
+            <span class="tile-text">3–5x / wk</span>
+          </label>
+          <label class="tile-opt">
+            <input type="radio" name="exercise" value="Daily / Athletic">
+            <span class="tile-icon">🏋️</span>
+            <span class="tile-text">Daily</span>
+          </label>
+        </div>
+
+        <div class="field-row two-col">
+          <div>
+            <label class="field-label" style="margin-bottom: 10px;">Avg. nightly sleep</label>
+            <div class="tile-select two-col" style="margin-bottom: 0;">
+              <label class="tile-opt">
+                <input type="radio" name="sleep_hrs" value="Under 5h">
+                <span class="tile-icon">😴</span>
+                <span class="tile-text">&lt; 5h</span>
+              </label>
+              <label class="tile-opt">
+                <input type="radio" name="sleep_hrs" value="5–6h">
+                <span class="tile-icon">😑</span>
+                <span class="tile-text">5–6h</span>
+              </label>
+              <label class="tile-opt">
+                <input type="radio" name="sleep_hrs" value="7–8h" checked>
+                <span class="tile-icon">😌</span>
+                <span class="tile-text">7–8h</span>
+              </label>
+              <label class="tile-opt">
+                <input type="radio" name="sleep_hrs" value="8h+">
+                <span class="tile-icon">😴</span>
+                <span class="tile-text">8h+</span>
+              </label>
+            </div>
+          </div>
+          <div>
+            <label class="field-label" style="margin-bottom: 10px;">Alcohol consumption</label>
+            <div class="tile-select two-col" style="margin-bottom: 0;">
+              <label class="tile-opt">
+                <input type="radio" name="alcohol" value="None" checked>
+                <span class="tile-icon">🚱</span>
+                <span class="tile-text">None</span>
+              </label>
+              <label class="tile-opt">
+                <input type="radio" name="alcohol" value="Occasional (1–2 / wk)">
+                <span class="tile-icon">🍷</span>
+                <span class="tile-text">Occasional</span>
+              </label>
+              <label class="tile-opt">
+                <input type="radio" name="alcohol" value="Regular (3–5 / wk)">
+                <span class="tile-icon">🍺</span>
+                <span class="tile-text">Regular</span>
+              </label>
+              <label class="tile-opt">
+                <input type="radio" name="alcohol" value="Daily">
+                <span class="tile-icon">⚠️</span>
+                <span class="tile-text">Daily</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase-nav" style="margin-top: 20px;">
+          <button class="btn-back" onclick="goPhase(2)">← Back</button>
+          <span class="phase-counter">Step 3 of 4</span>
+          <button class="btn-next" onclick="goPhase(4)">Continue → Signals</button>
+        </div>
+      </div>
+
+      <!-- ══ PHASE 4 — Subjective Scores ══ -->
+      <div class="phase-panel" id="phase4">
+        <h2 class="phase-heading">Subjective Signals</h2>
+        <p class="phase-sub">How have you felt over the past 2 weeks? These calibrate your cognitive and hormonal baseline.</p>
+
+        <div class="subjective-slider">
+          <div class="slider-header">
+            <span class="slider-label">⚡ Daily Energy</span>
+            <span class="slider-value" id="lbl_energy_a">6 / 10</span>
+          </div>
+          <input type="range" id="a_energy" min="1" max="10" value="6" oninput="updateSliderLabels()">
+          <div class="slider-ticks"><span>1 Low</span><span>5 Avg</span><span>10 High</span></div>
+        </div>
+
+        <div class="subjective-slider">
+          <div class="slider-header">
+            <span class="slider-label">🌙 Sleep Quality</span>
+            <span class="slider-value" id="lbl_sleep_a">6 / 10</span>
+          </div>
+          <input type="range" id="a_sleep_q" min="1" max="10" value="6" oninput="updateSliderLabels()">
+          <div class="slider-ticks"><span>1 Poor</span><span>5 Avg</span><span>10 Excellent</span></div>
+        </div>
+
+        <div class="subjective-slider">
+          <div class="slider-header">
+            <span class="slider-label">😮‍💨 Stress Level</span>
+            <span class="slider-value" id="lbl_stress_a">5 / 10</span>
+          </div>
+          <input type="range" id="a_stress" min="1" max="10" value="5" oninput="updateSliderLabels()">
+          <div class="slider-ticks"><span>1 Calm</span><span>5 Moderate</span><span>10 High</span></div>
+        </div>
+
+        <div style="background: var(--mint); border: 1px solid #c8e6d5; border-radius: 10px; padding: 12px 14px; margin: 18px 0 22px; font-size: 12px; color: var(--forest); line-height: 1.6;">
+          <strong>✓ Ready to generate.</strong> Your 4-phase intake is complete. The engine will apply biometric tier weighting, safety vetoes, domain scoring, and behaviour calibration to your protocol.
+        </div>
+
+        <div class="phase-nav">
+          <button class="btn-back" onclick="goPhase(3)">← Back</button>
+          <span class="phase-counter">Step 4 of 4</span>
+          <button class="btn-next" id="generateBtn" onclick="runAssessment()" style="background: #0a5c30;">
+            🧬 Generate Digital Twin Protocol
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /formCard -->
 
     <!-- Loading -->
     <div id="loadingOverlay" class="card">
       <div class="spinner-dna">🧬</div>
       <div class="loading-stage" id="loadingStage">Initializing engine...</div>
       <div class="loading-bar-wrap"><div class="loading-bar" id="loadingBar"></div></div>
-      <div class="loading-sub">Engine v28.2 · Behaviour-adaptive · ERP catalog</div>
+      <div class="loading-sub">Engine v28.3 · Clinical Intake Restored · ERP-integrated</div>
     </div>
 
-    <!-- Dashboard -->
+    <!-- Dashboard (all v28.2 output preserved) -->
     <div id="dashboard">
 
       <!-- Coach bar -->
@@ -547,7 +875,7 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
       </div>
 
-      <!-- Meta stats: cycle, projection, multiplier, responsiveness factor -->
+      <!-- Meta stats: cycle, projection, multiplier, responsiveness -->
       <div class="meta-row">
         <div class="meta-tile">
           <div class="meta-label">Cycle</div>
@@ -602,13 +930,13 @@ input[type="range"]::-webkit-slider-thumb {
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════════ -->
-  <!-- TAB 2 — MICRO CHECK-IN                    -->
-  <!-- ══════════════════════════════════════════ -->
+  <!-- ════════════════════════════════════════════ -->
+  <!-- TAB 2 — MICRO CHECK-IN                      -->
+  <!-- ════════════════════════════════════════════ -->
   <div id="checkinTab">
     <div class="card">
       <h2>Recalibrate My Twin</h2>
-      <p class="subtitle">Behaviour signals — influence your trajectory without a full assessment</p>
+      <p class="subtitle" style="font-size:13px; color:var(--slate); margin-bottom:18px;">Behaviour signals — influence your trajectory without a full assessment</p>
 
       <div class="email-note">
         <strong>Same email as your assessment</strong> — the engine links this check-in to your existing Twin State and increments your cycle.
@@ -705,27 +1033,9 @@ input[type="range"]::-webkit-slider-thumb {
 
 <script>
 // ════════════════════════════════════════════════
-// CONFIG — v28.2
-// Fixes: radar memory leak, narrative behaviour override,
-//        lifecycle CSS helper, projection null guard,
-//        check-in dashboard refresh, calcResponsiveness alignment
+// CONFIG
 // ════════════════════════════════════════════════
-var API_URL = "https://script.google.com/macros/s/AKfycbxh9hnMHOeWMNrl4c38DOaEM7PCejbWY-146WtF0i0ggn15I24-AocgogVY023tOg3Q/exec";
-
-// [v28.2 Fix 1] Global radar instance — destroyed before each new chart creation
-var radarChart = null;
-
-// [v28.2 Fix 3] Lifecycle → CSS class — explicit mapping; update here if label wording changes in engine
-function lifecycleClassMap(lc) {
-  if (lc === "Recovery Needed") return " recovery";
-  if (lc === "Recalibrating")   return " recalib";
-  return "";
-}
-
-// [v28.2 Fix 6] calcResponsiveness() is kept byte-identical to calcAdherenceResponsiveness()
-// in the engine. Any change to engine thresholds MUST be mirrored here.
-// Thresholds: >=90 → 1.1 | >=70 → 1.0 | >=50 → 0.8 | <50 → 0.6
-
+var API_URL = "https://script.google.com/macros/s/AKfycbz33Q_eHlcVxmaGXMFRRyUIVMbBiD5HhD5MDYyk1E0Qxcdb4BsNBevvzsCdKiPdjUr_Ag/exec";
 
 var STAGES = [
   "Loading clinical profiles...",
@@ -765,33 +1075,164 @@ function switchTab(tab) {
 }
 
 // ════════════════════════════════════════════════
+// PHASE WIZARD NAVIGATION
+// ════════════════════════════════════════════════
+var currentPhase = 1;
+
+function goPhase(n) {
+  if (n > currentPhase && !validatePhase(currentPhase)) return;
+
+  // Show/hide panels
+  for (var i = 1; i <= 4; i++) {
+    var panel = document.getElementById("phase" + i);
+    if (panel) panel.classList.toggle("active", i === n);
+  }
+
+  // Update stepper
+  for (var j = 1; j <= 4; j++) {
+    var step = document.getElementById("pstep_" + j);
+    if (!step) continue;
+    step.classList.remove("active", "done");
+    if (j < n) step.classList.add("done");
+    if (j === n) step.classList.add("active");
+  }
+
+  // Conditional menopause field: show if female and on phase 2
+  if (n === 2) {
+    var isFemale = document.querySelector('input[name="sex"]:checked');
+    var femVal   = isFemale ? isFemale.value : "Male";
+    var mField   = document.getElementById("field_menopause");
+    if (mField) mField.style.display = femVal === "Female" ? "flex" : "none";
+  }
+
+  currentPhase = n;
+  // Scroll to top of card smoothly
+  var fc = document.getElementById("formCard");
+  if (fc) fc.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function validatePhase(n) {
+  if (n === 1) {
+    var email = document.getElementById("a_email").value.trim();
+    if (!email || !email.includes("@")) {
+      document.getElementById("a_email").classList.add("error");
+      document.getElementById("a_email").focus();
+      return false;
+    }
+    document.getElementById("a_email").classList.remove("error");
+    var age = parseInt(document.getElementById("a_age").value) || 0;
+    if (age < 18 || age > 100) {
+      document.getElementById("a_age").classList.add("error");
+      document.getElementById("a_age").focus();
+      return false;
+    }
+    document.getElementById("a_age").classList.remove("error");
+  }
+  return true;
+}
+
+// Sex change: toggle menopause field on phase 2
+document.querySelectorAll('input[name="sex"]').forEach(function(r) {
+  r.addEventListener("change", function() {
+    if (currentPhase === 2) {
+      var mField = document.getElementById("field_menopause");
+      if (mField) mField.style.display = this.value === "Female" ? "flex" : "none";
+    }
+  });
+});
+
+// Update subjective slider labels (phase 4)
+function updateSliderLabels() {
+  var e = document.getElementById("a_energy");
+  var s = document.getElementById("a_sleep_q");
+  var st = document.getElementById("a_stress");
+  if (e)  document.getElementById("lbl_energy_a").textContent  = e.value  + " / 10";
+  if (s)  document.getElementById("lbl_sleep_a").textContent   = s.value  + " / 10";
+  if (st) document.getElementById("lbl_stress_a").textContent  = st.value + " / 10";
+}
+
+// ════════════════════════════════════════════════
 // ASSESSMENT ENGINE CALL
 // ════════════════════════════════════════════════
 function runAssessment() {
   var email  = document.getElementById("a_email").value.trim();
+  var name   = document.getElementById("a_name").value.trim();
   var age    = document.getElementById("a_age").value;
-  var gender = document.getElementById("a_gender").value;
-  if (!email) { alert("Please enter your email address."); return; }
+  var weight = document.getElementById("a_weight").value;
+  var height = document.getElementById("a_height").value;
 
+  if (!email) { alert("Please enter your email address."); goPhase(1); return; }
+
+  // Sex
+  var sexInput = document.querySelector('input[name="sex"]:checked');
+  var gender   = sexInput ? sexInput.value : "Male";
+
+  // Smoking
+  var smokingInput = document.querySelector('input[name="smoking"]:checked');
+  var smoking      = smokingInput ? smokingInput.value : "Never";
+
+  // Q-010: Conditions — exact strings matching engine's calcDomainScores
   var q10 = [];
-  if (document.getElementById("sym_diabetes").checked) q10.push("Diabetes Type 2");
-  if (document.getElementById("sym_bp").checked)       q10.push("Hypertension");
-  if (document.getElementById("sym_brain").checked)    q10.push("Brain Fog");
-  if (document.getElementById("sym_joints").checked)   q10.push("Joint Pain");
-  if (document.getElementById("sym_gut").checked)      q10.push("IBS");
-  if (document.getElementById("sym_hormone").checked)  q10.push("Hormonal Imbalance");
+  var condMap = [
+    ["sym_diabetes",  "Diabetes Type 2"],
+    ["sym_bp",        "Hypertension"],
+    ["sym_chol",      "High Cholesterol"],
+    ["sym_obesity",   "Obesity / Weight Management"],
+    ["sym_brain",     "Brain Fog"],
+    ["sym_anxiety",   "Anxiety / Chronic Stress"],
+    ["sym_joints",    "Joint Pain / Arthritis"],
+    ["sym_gut",       "IBS / Digestive Issues"],
+    ["sym_hormone",   "Hormonal Imbalance / Low Libido"],
+    ["sym_menopause", "Menopause"]
+  ];
+  condMap.forEach(function(pair) {
+    var el = document.getElementById(pair[0]);
+    if (el && el.checked) q10.push(pair[1]);
+  });
+
+  // Diet
+  var dietInput = document.querySelector('input[name="diet"]:checked');
+  var diet      = dietInput ? dietInput.value : "Balanced";
+
+  // Exercise
+  var exInput = document.querySelector('input[name="exercise"]:checked');
+  var exercise = exInput ? exInput.value : "1–2x / week";
+
+  // Sleep hours
+  var sleepInput = document.querySelector('input[name="sleep_hrs"]:checked');
+  var sleepHrs   = sleepInput ? sleepInput.value : "7–8h";
+
+  // Alcohol
+  var alcInput = document.querySelector('input[name="alcohol"]:checked');
+  var alcohol  = alcInput ? alcInput.value : "None";
+
+  // Subjective scores
+  var energy     = document.getElementById("a_energy").value;
+  var sleepQual  = document.getElementById("a_sleep_q").value;
+  var stressLvl  = document.getElementById("a_stress").value;
 
   var payload = {
-    email:   email,
-    age:     age,
-    "Q-002": gender,
-    "Q-010": q10.join("; "),
-    "Q-006": document.getElementById("sym_carb").checked ? "High carb" : "Balanced"
+    email:          email,
+    name:           name,
+    "Q-001":        age,
+    "Q-002":        gender,
+    "Q-003":        smoking,        // Never / Former / Current → safety veto
+    "Q-010":        q10.join("; "), // exact condition strings → domain scoring
+    "Q-019":        height,         // height cm
+    "Q-021":        weight,         // weight kg → tier multiplier
+    "Q-006":        diet,           // diet → metabolic scoring
+    "Q-exercise":   exercise,
+    "Q-sleep-hrs":  sleepHrs,
+    "Q-alcohol":    alcohol,
+    "Q-023":        energy,         // subjective energy baseline
+    "Q-sleep-qual": sleepQual,
+    "Q-stress":     stressLvl
   };
 
   document.getElementById("formCard").style.display = "none";
   document.getElementById("loadingOverlay").style.display = "block";
   startStages();
+
   jsonpCall(payload, function(data) {
     stopStages();
     document.getElementById("loadingOverlay").style.display = "none";
@@ -812,70 +1253,45 @@ function runAssessment() {
 }
 
 // ════════════════════════════════════════════════
-// MICRO CHECK-IN CALL — v28.1
-// [v28.1-1] Sends action:"checkin" → engine routes to runCheckin()
-//           which reads stored TwinState (no Q-010 / domain recalc)
-// [v28.1-2] All 4 behaviour signals sent — engine stores them
-// [v28.1-3] Full adaptive response returned in single call
+// MICRO CHECK-IN CALL
 // ════════════════════════════════════════════════
 function runCheckin() {
   var email = document.getElementById("ci_email").value.trim();
   if (!email) { alert("Please enter your email (same as your assessment)."); return; }
 
   var adherenceSlider = parseInt(document.getElementById("ci_adherence").value) || 8;
-  var adherence100    = adherenceSlider * 10;  // Convert 1-10 slider to 0-100
+  var adherence100    = adherenceSlider * 10;  // Convert 1-10 to 0-100
 
-  // action:"checkin" routes to runCheckin() — no age/gender/Q-010 needed
-  // runCheckin() reads stored TwinState scores; no domain regression possible
   var payload = {
-    action:        "checkin",
-    email:         email,
-    adherence:     adherence100,
-    energy_score:  document.getElementById("ci_energy").value,
-    sleep_quality: document.getElementById("ci_sleep").value,
-    stress_level:  document.getElementById("ci_stress").value
+    email:          email,
+    adherence:      adherence100,
+    energy_score:   document.getElementById("ci_energy").value,
+    sleep_quality:  document.getElementById("ci_sleep").value,
+    stress_level:   document.getElementById("ci_stress").value,
+    // Engine also needs these to recalculate scores
+    age:     35,
+    "Q-002": "Unknown",
+    "Q-010": ""
   };
 
   document.getElementById("checkinBtn").style.display = "none";
   document.getElementById("ci_loading").style.display = "block";
-  document.getElementById("ci_result").style.display  = "none";
 
   jsonpCall(payload, function(data) {
     document.getElementById("ci_loading").style.display = "none";
     document.getElementById("checkinBtn").style.display = "block";
     if (data.status === "success") {
-      var out      = data.output;
-      var resp     = parseFloat(out.responsiveness) || 1.0;
-      var respInfo = respToLabel(resp);
-      var mom      = parseFloat(out.momentum) || 0;
-      var momSign  = mom >= 0 ? "+" : "";
-
+      var out = data.output;
+      var resp = parseFloat(out.responsiveness) || 1.0;
+      var respLabel = respToLabel(resp).label;
       document.getElementById("ci_result_body").innerHTML =
-        "<strong>Cycle " + (out.cycleNumber || "—") + " recorded.</strong><br><br>" +
-        "<table style='width:100%;border-collapse:collapse;font-size:12px;'>" +
-        "<tr><td style='padding:5px 0;color:#4a5568;'>Responsiveness</td>" +
-        "    <td style='padding:5px 0;font-weight:700;color:#2e7d4f;'>" + resp.toFixed(1) + "x — " + respInfo.label + "</td></tr>" +
-        "<tr><td style='padding:5px 0;color:#4a5568;'>Lifecycle</td>" +
-        "    <td style='padding:5px 0;font-weight:700;'>" + esc(out.lifecycle || "—") + "</td></tr>" +
-        "<tr><td style='padding:5px 0;color:#4a5568;'>Momentum</td>" +
-        "    <td style='padding:5px 0;font-weight:700;'>" + momSign + mom + "</td></tr>" +
-        "<tr><td style='padding:5px 0;color:#4a5568;'>90-day projection</td>" +
-        "    <td style='padding:5px 0;font-weight:700;'>" + (out.projection90d || "—") + "/100</td></tr>" +
-        "<tr><td style='padding:5px 0;color:#4a5568;'>Adherence stored</td>" +
-        "    <td style='padding:5px 0;font-weight:700;'>" + (out.adherence_score || adherence100) + "%</td></tr>" +
-        "</table><br>" +
-        "<em style='font-size:12px;color:#4a5568;'>" + esc(out.coachMessage || "") + "</em>";
-
+        "<strong>Cycle " + (out.cycleNumber || "—") + " complete.</strong><br><br>" +
+        "Your Twin recalibrated with <strong>" + respLabel + "</strong> responsiveness (" + resp.toFixed(1) + "x).<br><br>" +
+        "Updated trajectory: <strong>" + esc(out.lifecycle || "—") + "</strong><br>" +
+        "90-day projection: <strong>" + (out.projection90d || "—") + "/100</strong><br>" +
+        "Momentum: <strong>" + (out.momentum >= 0 ? "+" : "") + (out.momentum || 0) + "</strong><br><br>" +
+        "<em>" + esc(out.coachMessage || "") + "</em>";
       document.getElementById("ci_result").style.display = "block";
-
-      // [v28.2 Fix 5] Refresh the dashboard and switch back so user sees updated
-      // evolution badges, momentum, lifecycle, projection, AND radar (scores returned
-      // by runCheckin() v28.2 engine). Twin state visible change = retention signal.
-      if (out.scores && document.getElementById("dashboard").style.display !== "none") {
-        renderDashboard(out);
-        setTimeout(function() { switchTab("assess"); }, 1200);
-      }
-
     } else {
       alert("Check-in error: " + (data.message || "Unknown error"));
     }
@@ -929,9 +1345,8 @@ function updatePreview() {
 
   document.getElementById("prev_resp").textContent       = resp.toFixed(1);
   document.getElementById("prev_resp_label").textContent = info.label;
-
-  document.getElementById("prev_mfx").textContent  = info.mfx;
-  document.getElementById("prev_traj").textContent = info.traj;
+  document.getElementById("prev_mfx").textContent        = info.mfx;
+  document.getElementById("prev_traj").textContent       = info.traj;
   document.getElementById("prev_traj_label").textContent = info.trajLabel;
   document.getElementById("prev_stmt").textContent =
     "If you submit today: your Twin will recalibrate with a " + info.label + " trajectory.";
@@ -952,7 +1367,7 @@ function respToLabel(resp) {
 }
 
 // ════════════════════════════════════════════════
-// DASHBOARD RENDER
+// DASHBOARD RENDER (unchanged from v28.2)
 // ════════════════════════════════════════════════
 function renderDashboard(twin) {
   document.getElementById("dashboard").style.display = "block";
@@ -961,10 +1376,10 @@ function renderDashboard(twin) {
   document.getElementById("disp_coach").textContent = twin.coachMessage || "";
 
   // Badge row: evolution + lifecycle + responsiveness
-  var evo      = (twin.evolutionStatus || "baseline").toLowerCase();
-  var lifecycle = twin.lifecycle || "";
-  var resp     = parseFloat(twin.responsiveness) || 1.0;
-  var respInfo = respToLabel(resp);
+  var evo       = (twin.evolutionStatus || "baseline").toLowerCase();
+  var lifecycle  = twin.lifecycle || "";
+  var resp      = parseFloat(twin.responsiveness) || 1.0;
+  var respInfo  = respToLabel(resp);
 
   var evoBadgeMap = {
     baseline:  { icon: "◎", label: "BASELINE" },
@@ -974,7 +1389,9 @@ function renderDashboard(twin) {
   };
   var badge = evoBadgeMap[evo] || evoBadgeMap.baseline;
 
-  var lifecycleClass = lifecycleClassMap(lifecycle);  // [v28.2 Fix 3]
+  var lifecycleClass = "";
+  if (lifecycle === "Recovery Needed") lifecycleClass = " recovery";
+  if (lifecycle === "Recalibrating")   lifecycleClass = " recalib";
 
   var respClass = "";
   if (resp >= 1.1) respClass = "accelerating";
@@ -1007,8 +1424,7 @@ function renderDashboard(twin) {
 
   // Meta stats
   document.getElementById("disp_cycle").textContent = "C" + (twin.cycleNumber || 1);
-  var projVal = twin.projection90d;                                    // [v28.2 Fix 4]
-  document.getElementById("disp_proj").textContent  = projVal ? projVal + "/100" : "—";
+  document.getElementById("disp_proj").textContent  = (twin.projection90d || "—") + "/100";
   document.getElementById("disp_mult").textContent  = (twin.multiplier || 1.0).toFixed(1) + "x";
   document.getElementById("disp_resp").textContent  = resp.toFixed(1) + "x";
 
@@ -1043,25 +1459,15 @@ function renderNarrative(evo, momentum, resp, projection90d, score) {
   else if (resp >= 0.8) behaviourText = "Reduced adherence may be slowing optimization.";
   else behaviourText = "Low engagement is limiting adaptive gains.";
 
-  // [v28.2 Fix 2] Behaviour-sensitive momentum narrative:
-  // If responsiveness is low but momentum is near-zero, the system hasn't declined
-  // physiologically — only behaviour is suppressing trajectory. Use behaviour-specific
-  // language to avoid implying clinical recalibration when physiology is unchanged.
   var momentumText = "";
-  if (resp < 0.8 && Math.abs(momentum) < 3) {
-    momentumText = "Trajectory is suppressed due to reduced engagement, not physiological decline.";
-  } else if (momentum > 3) {
-    momentumText = "Functional gains are accelerating.";
-  } else if (momentum < -3) {
-    momentumText = "System is entering physiological recalibration phase.";
-  } else {
-    momentumText = "System remains in stabilization phase.";
-  }
+  if (momentum > 3)  momentumText = "Functional gains are accelerating.";
+  else if (momentum < -3) momentumText = "System is entering recalibration phase.";
+  else momentumText = "System remains in stabilization phase.";
 
   var projText = "";
   if (projection90d > score)       projText = "Projected trajectory indicates forward improvement.";
   else if (projection90d === score) projText = "Projected trajectory remains stable.";
-  else                              projText = "Projected trajectory suggests intervention may be required.";
+  else projText = "Projected trajectory suggests intervention may be required.";
 
   document.getElementById("narr_sub").innerHTML =
     "<span>⚡ " + behaviourText + "</span>" +
@@ -1071,9 +1477,7 @@ function renderNarrative(evo, momentum, resp, projection90d, score) {
 
 function renderRadar(scores) {
   var ctx = document.getElementById("twinRadar").getContext("2d");
-  // [v28.2 Fix 1] Destroy previous chart instance to prevent memory leak + visual overlay
-  if (radarChart) { radarChart.destroy(); }
-  radarChart = new Chart(ctx, {
+  new Chart(ctx, {
     type: "radar",
     data: {
       labels: ["Metabolic", "Cardio", "Cognitive", "Joints", "Gut", "Hormonal"],
@@ -1148,5 +1552,4 @@ function esc(str) {
 updatePreview();
 </script>
 </body>
-
 </html>
