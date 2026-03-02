@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Phytomedix-Excell Nutrients | Digital Twin v28.3</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,6 +28,10 @@
   --baseline: #6b7280;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── FIX #9: Remove ghost tap highlight on all interactive elements ── */
+* { -webkit-tap-highlight-color: transparent; }
+
 body {
   font-family: 'Outfit', sans-serif;
   background: var(--mist);
@@ -37,6 +41,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  /* Prevent horizontal scroll from overflow */
+  overflow-x: hidden;
 }
 .site-header {
   width: 100%; max-width: 700px;
@@ -66,6 +72,10 @@ body {
   background: none; cursor: pointer; color: var(--slate);
   font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600;
   transition: all 0.15s;
+  /* FIX #2: Remove 300ms tap delay */
+  touch-action: manipulation;
+  /* FIX #7: Minimum touch target */
+  min-height: 44px;
 }
 .tab-btn.active { background: var(--forest); color: white; }
 .tab-btn .tab-icon { font-size: 14px; margin-right: 6px; }
@@ -87,18 +97,24 @@ body {
 .phase-stepper {
   display: flex; align-items: center; gap: 0;
   margin-bottom: 24px; padding: 0 4px;
+  /* FIX #8: Prevent connector line overflow */
+  overflow: hidden;
 }
 .phase-step {
   display: flex; flex-direction: column; align-items: center; gap: 5px;
   flex: 1; position: relative; cursor: default;
+  /* FIX #8: Contain within stepper */
+  min-width: 0;
 }
 .phase-step:not(:last-child)::after {
   content: '';
   position: absolute;
-  top: 14px; left: calc(50% + 16px);
-  width: calc(100% - 32px); height: 2px;
+  top: 13px; left: 50%;
+  /* FIX #8: Use percentage from center to next center, not calc overflow */
+  width: 100%; height: 2px;
   background: var(--border);
   transition: background 0.3s;
+  z-index: 0;
 }
 .phase-step.done:not(:last-child)::after { background: var(--green); }
 .step-dot {
@@ -108,6 +124,7 @@ body {
   display: flex; align-items: center; justify-content: center;
   font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
   transition: all 0.2s; z-index: 1; position: relative;
+  flex-shrink: 0;
 }
 .phase-step.active .step-dot {
   border-color: var(--green); background: var(--green); color: white;
@@ -143,12 +160,15 @@ body {
   letter-spacing: 0.5px; color: var(--slate); margin-bottom: 6px;
   text-transform: uppercase;
 }
+/* FIX #10: 16px prevents iOS auto-zoom on focus */
 input[type="text"], input[type="number"], input[type="email"], select {
   width: 100%; padding: 11px 13px;
   border: 1.5px solid var(--border); border-radius: 10px;
-  font-family: 'Outfit', sans-serif; font-size: 14px;
+  font-family: 'Outfit', sans-serif; font-size: 16px;
   color: var(--ink); background: var(--white);
   transition: border-color 0.15s; -webkit-appearance: none;
+  /* FIX #7: Ensure minimum 44px touch target height */
+  min-height: 44px;
 }
 input:focus, select:focus { outline: none; border-color: var(--green); }
 input.error, select.error { border-color: var(--red); }
@@ -159,20 +179,29 @@ input.error, select.error { border-color: var(--red); }
 
 .field-hint { font-size: 11px; color: var(--slate); margin-top: 4px; opacity: 0.8; }
 
-/* Radio group for smoking */
-.radio-group { display: flex; gap: 8px; margin-bottom: 14px; }
+/* ─────────────────── RADIO TILES ─────────────────── */
+.radio-group { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
 .radio-opt {
-  flex: 1; padding: 10px 8px; border: 1.5px solid var(--border);
+  /* FIX #7: Min touch target */
+  flex: 1; min-width: calc(33.33% - 8px); padding: 12px 8px;
+  border: 1.5px solid var(--border);
   border-radius: 10px; cursor: pointer; text-align: center;
   font-size: 13px; color: var(--slate); transition: all 0.15s;
   display: flex; flex-direction: column; align-items: center; gap: 3px;
+  min-height: 64px; justify-content: center;
+  /* FIX #2: Remove 300ms tap delay */
+  touch-action: manipulation;
+  user-select: none;
 }
 .radio-opt input[type="radio"] { display: none; }
+/* FIX #1: Primary :has() selector — works on modern browsers */
 .radio-opt:has(input:checked) { border-color: var(--green); background: var(--mint); color: var(--forest); }
+/* FIX #1: JS fallback class for older browsers */
+.radio-opt.selected { border-color: var(--green); background: var(--mint); color: var(--forest); }
 .radio-opt .radio-icon { font-size: 16px; }
 .radio-opt .radio-text { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
 
-/* Condition checkboxes */
+/* ─────────────────── CONDITION CHECKBOXES ─────────────────── */
 .signals-label {
   font-size: 10px; font-weight: 700; color: var(--slate);
   text-transform: uppercase; letter-spacing: 0.5px;
@@ -183,58 +212,85 @@ input.error, select.error { border-color: var(--red); }
 }
 .signal-label {
   display: flex; align-items: center; gap: 9px;
-  padding: 10px 13px; border: 1.5px solid var(--border);
+  padding: 12px 13px; border: 1.5px solid var(--border);
   border-radius: 10px; font-size: 13px; color: var(--ink);
   cursor: pointer; transition: all 0.15s; background: var(--white);
+  /* FIX #7: Minimum touch target */
+  min-height: 48px;
+  /* FIX #2: Remove 300ms delay */
+  touch-action: manipulation;
+  user-select: none;
 }
 .signal-label:hover { background: var(--mint); border-color: #b7d9c3; }
 .signal-label input[type="checkbox"] { display: none; }
 .signal-label .dot {
-  width: 16px; height: 16px; border: 2px solid var(--border);
+  width: 18px; height: 18px; border: 2px solid var(--border);
   border-radius: 4px; flex-shrink: 0; transition: all 0.15s; position: relative;
 }
 .signal-label input:checked ~ .dot { background: var(--green); border-color: var(--green); }
 .signal-label input:checked ~ .dot::after {
-  content: ''; position: absolute; left: 3px; top: 1px;
+  content: ''; position: absolute; left: 4px; top: 1px;
   width: 6px; height: 9px; border: 2px solid white;
   border-top: none; border-left: none; transform: rotate(45deg);
 }
+/* FIX #1: :has() + .selected fallback */
 .signal-label:has(input:checked) { border-color: var(--green); background: var(--mint); }
+.signal-label.selected { border-color: var(--green); background: var(--mint); }
 .signal-label .sig-icon { font-size: 14px; flex-shrink: 0; }
 
 /* Conditional field (hidden until gender-triggered) */
 .conditional-field { display: none; }
 
-/* Select tiles for diet / exercise / sleep / alcohol */
+/* ─────────────────── TILE SELECTS ─────────────────── */
 .tile-select { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; margin-bottom: 14px; }
 .tile-select.two-col { grid-template-columns: 1fr 1fr; }
 .tile-opt {
-  padding: 10px 8px; border: 1.5px solid var(--border);
+  padding: 12px 8px; border: 1.5px solid var(--border);
   border-radius: 10px; cursor: pointer; text-align: center;
   transition: all 0.15s; background: var(--white);
+  /* FIX #7: Minimum touch target */
+  min-height: 64px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px;
+  /* FIX #2: Remove 300ms delay */
+  touch-action: manipulation;
+  user-select: none;
 }
 .tile-opt input[type="radio"] { display: none; }
+/* FIX #1: :has() + .selected fallback */
 .tile-opt:has(input:checked) { border-color: var(--green); background: var(--mint); }
-.tile-opt .tile-icon { font-size: 18px; display: block; margin-bottom: 4px; }
+.tile-opt.selected { border-color: var(--green); background: var(--mint); }
+.tile-opt .tile-icon { font-size: 18px; display: block; }
 .tile-opt .tile-text { font-size: 10px; font-weight: 600; color: var(--slate); text-transform: uppercase; letter-spacing: 0.3px; }
+/* FIX #1: Update text color for selected state */
 .tile-opt:has(input:checked) .tile-text { color: var(--forest); }
+.tile-opt.selected .tile-text { color: var(--forest); }
 
-/* Subjective score sliders */
+/* ─────────────────── SLIDERS ─────────────────── */
 .subjective-slider { margin-bottom: 20px; }
 .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .slider-label { font-size: 12px; font-weight: 600; color: var(--ink); text-transform: uppercase; letter-spacing: 0.4px; font-family: 'Outfit', sans-serif; }
 .slider-value { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; color: var(--green); }
 input[type="range"] {
-  width: 100%; height: 4px; -webkit-appearance: none; appearance: none;
-  background: var(--border); border-radius: 2px; outline: none;
+  width: 100%; height: 6px; -webkit-appearance: none; appearance: none;
+  background: var(--border); border-radius: 3px; outline: none;
+  /* FIX #2: Touch action for sliders */
+  touch-action: pan-x;
 }
 input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 20px; height: 20px;
+  -webkit-appearance: none; width: 26px; height: 26px;
   border-radius: 50%; background: var(--forest);
   cursor: pointer; border: 3px solid white;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 26px; height: 26px;
+  border-radius: 50%; background: var(--forest);
+  cursor: pointer; border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
 .slider-ticks { display: flex; justify-content: space-between; font-size: 10px; color: var(--slate); margin-top: 4px; }
+.slider-group { margin-bottom: 20px; }
 
 /* ─────────────────── PHASE NAV BUTTONS ─────────────────── */
 .phase-nav {
@@ -242,18 +298,20 @@ input[type="range"]::-webkit-slider-thumb {
   justify-content: space-between; align-items: center;
 }
 .btn-back {
-  padding: 11px 20px; border: 1.5px solid var(--border);
+  padding: 13px 20px; border: 1.5px solid var(--border);
   border-radius: 10px; background: none; cursor: pointer;
   font-family: 'Outfit', sans-serif; font-size: 13px;
   font-weight: 600; color: var(--slate); transition: all 0.15s;
+  touch-action: manipulation; min-height: 48px;
 }
 .btn-back:hover { background: var(--mist); border-color: var(--slate); }
 .btn-next {
-  flex: 1; padding: 13px 20px;
+  flex: 1; padding: 14px 20px;
   background: var(--forest); color: white; border: none;
   border-radius: 10px; font-family: 'Syne', sans-serif;
   font-size: 14px; font-weight: 700; cursor: pointer;
   letter-spacing: 0.3px; transition: all 0.2s;
+  touch-action: manipulation; min-height: 48px;
 }
 .btn-next:hover { background: var(--green); transform: translateY(-1px); }
 .btn-next:active { transform: none; }
@@ -261,10 +319,11 @@ input[type="range"]::-webkit-slider-thumb {
 
 /* ─────────────────── CTA BUTTON ─────────────────── */
 .cta-btn {
-  width: 100%; padding: 15px; background: var(--forest);
+  width: 100%; padding: 16px; background: var(--forest);
   color: white; border: none; border-radius: 12px;
   font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
   cursor: pointer; letter-spacing: 0.3px; transition: all 0.2s;
+  touch-action: manipulation; min-height: 52px;
 }
 .cta-btn:hover { background: var(--green); transform: translateY(-1px); }
 .cta-btn:active { transform: none; }
@@ -344,10 +403,11 @@ input[type="range"]::-webkit-slider-thumb {
 .stat-value { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; color: var(--forest); line-height: 1; }
 .stat-sub { font-size: 10px; color: var(--slate); margin-top: 5px; }
 
+/* FIX #4: meta-row — default 4-col, collapses to 2x2 on mobile */
 .meta-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
 .meta-tile {
   background: var(--mint); border: 1px solid #c8e6d5;
-  border-radius: 11px; padding: 10px 10px; text-align: center;
+  border-radius: 11px; padding: 10px; text-align: center;
 }
 .meta-label { font-size: 8px; letter-spacing: 1px; text-transform: uppercase; color: var(--green); font-weight: 700; margin-bottom: 4px; }
 .meta-value { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; color: var(--forest); }
@@ -398,10 +458,11 @@ details.clinical-details {
   border-radius: 8px; overflow: hidden;
 }
 details.clinical-details summary {
-  cursor: pointer; padding: 8px 12px;
+  cursor: pointer; padding: 10px 12px;
   font-size: 11px; font-weight: 600; color: var(--green);
   letter-spacing: 0.3px; list-style: none;
   display: flex; align-items: center; gap: 6px; user-select: none;
+  touch-action: manipulation; min-height: 44px;
 }
 details.clinical-details summary::-webkit-details-marker { display: none; }
 details.clinical-details summary::before { content: '▶'; font-size: 8px; transition: transform 0.15s; }
@@ -421,10 +482,11 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
 .life-text { font-size: 12px; color: var(--slate); line-height: 1.65; }
 
 .reset-btn {
-  width: 100%; padding: 12px; background: none;
+  width: 100%; padding: 14px; background: none;
   border: 1px solid var(--border); border-radius: 10px;
   color: var(--slate); font-size: 13px; cursor: pointer;
   margin-top: 6px; transition: all 0.15s;
+  touch-action: manipulation; min-height: 48px;
 }
 .reset-btn:hover { background: var(--mist); border-color: var(--slate); }
 
@@ -434,8 +496,8 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
   font-family: 'Syne', sans-serif; font-size: 21px; font-weight: 800;
   color: var(--forest); margin-bottom: 5px;
 }
-.slider-group { margin-bottom: 20px; }
 
+/* FIX #3: preview-grid — 3-col on desktop, stack on mobile */
 .preview-card {
   background: linear-gradient(135deg, var(--forest) 0%, #1f4d36 100%);
   border-radius: 14px; padding: 18px 20px; margin-bottom: 22px;
@@ -463,16 +525,66 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
 .email-note strong { font-weight: 700; }
 
 /* ─────────────────── RESPONSIVE ─────────────────── */
+
+/* Medium mobile — 520px to 640px */
+@media (max-width: 640px) {
+  /* FIX #4: meta-row drops to 2x2 */
+  .meta-row { grid-template-columns: 1fr 1fr; }
+  /* FIX #3: preview-grid drops to 1-col */
+  .preview-grid { grid-template-columns: 1fr; gap: 6px; }
+  .preview-tile { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .preview-tile:last-child { border-bottom: none; }
+  .preview-tile-label { margin-bottom: 0; font-size: 10px; }
+  .preview-tile-val { font-size: 16px; }
+  .preview-tile-sub { margin-top: 0; font-size: 10px; }
+}
+
+/* Small mobile — 520px and below */
 @media (max-width: 520px) {
+  body { padding: 14px 12px 40px; }
+  .card { padding: 20px 16px; }
+
+  /* Stats */
   .stats-row { grid-template-columns: 1fr 1fr; }
   .stats-row .stat-tile:last-child { grid-column: span 2; }
-  .meta-row { grid-template-columns: 1fr 1fr; }
+
+  /* Conditions */
   .signal-grid { grid-template-columns: 1fr; }
+
+  /* Biometric fields */
   .field-row.two-col, .field-row.three-col { grid-template-columns: 1fr; }
+
+  /* FIX #6: Smoking radio — 3 options, all equal width 1-col stack */
+  .radio-group { flex-direction: column; }
+  .radio-opt { min-width: 100%; flex-direction: row; justify-content: flex-start; gap: 12px; min-height: 48px; }
+  .radio-opt .radio-icon { font-size: 20px; }
+
+  /* Tile selects: 4-col → 2-col */
   .tile-select { grid-template-columns: 1fr 1fr; }
-  .radio-group { flex-wrap: wrap; }
-  .radio-opt { min-width: calc(50% - 4px); }
+  /* Keep explicit two-col as is */
+  .tile-select.two-col { grid-template-columns: 1fr 1fr; }
+
+  /* Phase stepper: hide labels */
   .phase-step .step-label { display: none; }
+
+  /* Font adjustments */
+  .phase-heading { font-size: 18px; }
+
+  /* Phase nav: tighten */
+  .phase-nav { gap: 8px; }
+  .btn-back { padding: 13px 14px; font-size: 12px; }
+  .btn-next { font-size: 13px; }
+
+  /* Supp cards: dose tag wraps nicely */
+  .supp-top { flex-wrap: wrap; }
+}
+
+/* Very small — 400px and below */
+@media (max-width: 400px) {
+  .tab-btn { font-size: 12px; padding: 9px 8px; }
+  .tab-btn .tab-icon { margin-right: 3px; }
+  .stat-value { font-size: 22px; }
+  .preview-tile-val { font-size: 14px; }
 }
 </style>
 </head>
@@ -531,18 +643,18 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
         <div class="field-row">
           <div>
             <label class="field-label">Email address</label>
-            <input type="email" id="a_email" placeholder="your@email.com">
+            <input type="email" id="a_email" placeholder="your@email.com" autocomplete="email">
           </div>
         </div>
 
         <div class="field-row two-col">
           <div>
             <label class="field-label">Full name (optional)</label>
-            <input type="text" id="a_name" placeholder="Your name">
+            <input type="text" id="a_name" placeholder="Your name" autocomplete="name">
           </div>
           <div>
             <label class="field-label">Age</label>
-            <input type="number" id="a_age" placeholder="35" value="35" min="18" max="100">
+            <input type="number" id="a_age" placeholder="35" value="35" min="18" max="100" inputmode="numeric">
           </div>
         </div>
 
@@ -550,12 +662,12 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
           <div>
             <label class="field-label">Biological sex</label>
             <div class="radio-group" id="sex_group">
-              <label class="radio-opt">
+              <label class="radio-opt" onclick="markSelected(this, 'sex_group')">
                 <input type="radio" name="sex" value="Female" id="sex_female">
                 <span class="radio-icon">♀</span>
                 <span class="radio-text">Female</span>
               </label>
-              <label class="radio-opt">
+              <label class="radio-opt" onclick="markSelected(this, 'sex_group')">
                 <input type="radio" name="sex" value="Male" id="sex_male" checked>
                 <span class="radio-icon">♂</span>
                 <span class="radio-text">Male</span>
@@ -567,12 +679,12 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
         <div class="field-row two-col">
           <div>
             <label class="field-label">Weight (kg)</label>
-            <input type="number" id="a_weight" placeholder="75" min="30" max="250">
+            <input type="number" id="a_weight" placeholder="75" min="30" max="250" inputmode="decimal">
             <span class="field-hint">Used for dose tier calculation</span>
           </div>
           <div>
             <label class="field-label">Height (cm)</label>
-            <input type="number" id="a_height" placeholder="170" min="100" max="250">
+            <input type="number" id="a_height" placeholder="170" min="100" max="250" inputmode="decimal">
             <span class="field-hint">Used for BMI context</span>
           </div>
         </div>
@@ -580,18 +692,18 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
         <div class="field-row" style="margin-bottom: 22px;">
           <div>
             <label class="field-label">Smoking status</label>
-            <div class="radio-group">
-              <label class="radio-opt">
+            <div class="radio-group" id="smoking_group">
+              <label class="radio-opt" onclick="markSelected(this, 'smoking_group')">
                 <input type="radio" name="smoking" value="Never" id="smk_never" checked>
                 <span class="radio-icon">🚭</span>
                 <span class="radio-text">Never</span>
               </label>
-              <label class="radio-opt">
+              <label class="radio-opt" onclick="markSelected(this, 'smoking_group')">
                 <input type="radio" name="smoking" value="Former" id="smk_former">
                 <span class="radio-icon">🕐</span>
                 <span class="radio-text">Former</span>
               </label>
-              <label class="radio-opt">
+              <label class="radio-opt" onclick="markSelected(this, 'smoking_group')">
                 <input type="radio" name="smoking" value="Current" id="smk_current">
                 <span class="radio-icon">⚠️</span>
                 <span class="radio-text">Current</span>
@@ -614,19 +726,19 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
 
         <span class="signals-label">Metabolic &amp; Cardiovascular</span>
         <div class="signal-grid">
-          <label class="signal-label">
+          <label class="signal-label" onclick="markCheckSelected(this)">
             <input type="checkbox" id="sym_diabetes" value="Diabetes Type 2">
             <span class="dot"></span><span class="sig-icon">🩸</span><span>High Blood Sugar / T2D</span>
           </label>
-          <label class="signal-label">
+          <label class="signal-label" onclick="markCheckSelected(this)">
             <input type="checkbox" id="sym_bp" value="Hypertension">
             <span class="dot"></span><span class="sig-icon">❤️</span><span>High Blood Pressure</span>
           </label>
-          <label class="signal-label">
+          <label class="signal-label" onclick="markCheckSelected(this)">
             <input type="checkbox" id="sym_chol" value="High Cholesterol">
             <span class="dot"></span><span class="sig-icon">🧪</span><span>High Cholesterol</span>
           </label>
-          <label class="signal-label">
+          <label class="signal-label" onclick="markCheckSelected(this)">
             <input type="checkbox" id="sym_obesity" value="Obesity / Weight Management">
             <span class="dot"></span><span class="sig-icon">⚖️</span><span>Obesity / Weight Mgmt</span>
           </label>
@@ -634,11 +746,11 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
 
         <span class="signals-label">Neurological &amp; Cognitive</span>
         <div class="signal-grid">
-          <label class="signal-label">
+          <label class="signal-label" onclick="markCheckSelected(this)">
             <input type="checkbox" id="sym_brain" value="Brain Fog">
             <span class="dot"></span><span class="sig-icon">🧠</span><span>Brain Fog / Focus</span>
           </label>
-          <label class="signal-label">
+          <label class="signal-label" onclick="markCheckSelected(this)">
             <input type="checkbox" id="sym_anxiety" value="Anxiety / Chronic Stress">
             <span class="dot"></span><span class="sig-icon">😟</span><span>Anxiety / Chronic Stress</span>
           </label>
@@ -646,11 +758,11 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
 
         <span class="signals-label">Musculoskeletal &amp; Digestive</span>
         <div class="signal-grid">
-          <label class="signal-label">
+          <label class="signal-label" onclick="markCheckSelected(this)">
             <input type="checkbox" id="sym_joints" value="Joint Pain / Arthritis">
             <span class="dot"></span><span class="sig-icon">🦴</span><span>Joint Pain / Arthritis</span>
           </label>
-          <label class="signal-label">
+          <label class="signal-label" onclick="markCheckSelected(this)">
             <input type="checkbox" id="sym_gut" value="IBS / Digestive Issues">
             <span class="dot"></span><span class="sig-icon">🌿</span><span>IBS / Digestive Issues</span>
           </label>
@@ -658,12 +770,12 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
 
         <span class="signals-label">Hormonal</span>
         <div class="signal-grid">
-          <label class="signal-label">
+          <label class="signal-label" onclick="markCheckSelected(this)">
             <input type="checkbox" id="sym_hormone" value="Hormonal Imbalance / Low Libido">
             <span class="dot"></span><span class="sig-icon">⚡</span><span>Hormonal / Low Libido</span>
           </label>
           <!-- Menopause shows only for female -->
-          <label class="signal-label conditional-field" id="field_menopause">
+          <label class="signal-label conditional-field" id="field_menopause" onclick="markCheckSelected(this)">
             <input type="checkbox" id="sym_menopause" value="Menopause">
             <span class="dot"></span><span class="sig-icon">🌸</span><span>Menopause / Perimenopause</span>
           </label>
@@ -682,23 +794,23 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
         <p class="phase-sub">Environmental inputs that modulate your domain load calculations.</p>
 
         <label class="field-label" style="margin-bottom: 10px;">Diet pattern</label>
-        <div class="tile-select" style="margin-bottom: 20px;">
-          <label class="tile-opt">
+        <div class="tile-select" id="diet_group" style="margin-bottom: 20px;">
+          <label class="tile-opt" onclick="markSelected(this, 'diet_group')">
             <input type="radio" name="diet" value="Balanced" checked>
             <span class="tile-icon">🥗</span>
             <span class="tile-text">Balanced</span>
           </label>
-          <label class="tile-opt">
+          <label class="tile-opt" onclick="markSelected(this, 'diet_group')">
             <input type="radio" name="diet" value="High carb">
             <span class="tile-icon">🍞</span>
             <span class="tile-text">High Carb</span>
           </label>
-          <label class="tile-opt">
+          <label class="tile-opt" onclick="markSelected(this, 'diet_group')">
             <input type="radio" name="diet" value="High fat / Keto">
             <span class="tile-icon">🥑</span>
             <span class="tile-text">High Fat</span>
           </label>
-          <label class="tile-opt">
+          <label class="tile-opt" onclick="markSelected(this, 'diet_group')">
             <input type="radio" name="diet" value="Low calorie / Restricted">
             <span class="tile-icon">📉</span>
             <span class="tile-text">Low Cal</span>
@@ -706,23 +818,23 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
         </div>
 
         <label class="field-label" style="margin-bottom: 10px;">Exercise frequency</label>
-        <div class="tile-select" style="margin-bottom: 20px;">
-          <label class="tile-opt">
+        <div class="tile-select" id="exercise_group" style="margin-bottom: 20px;">
+          <label class="tile-opt" onclick="markSelected(this, 'exercise_group')">
             <input type="radio" name="exercise" value="None">
             <span class="tile-icon">🛋️</span>
             <span class="tile-text">None</span>
           </label>
-          <label class="tile-opt">
+          <label class="tile-opt selected" onclick="markSelected(this, 'exercise_group')">
             <input type="radio" name="exercise" value="1–2x / week" checked>
             <span class="tile-icon">🚶</span>
             <span class="tile-text">1–2x / wk</span>
           </label>
-          <label class="tile-opt">
+          <label class="tile-opt" onclick="markSelected(this, 'exercise_group')">
             <input type="radio" name="exercise" value="3–5x / week">
             <span class="tile-icon">🏃</span>
             <span class="tile-text">3–5x / wk</span>
           </label>
-          <label class="tile-opt">
+          <label class="tile-opt" onclick="markSelected(this, 'exercise_group')">
             <input type="radio" name="exercise" value="Daily / Athletic">
             <span class="tile-icon">🏋️</span>
             <span class="tile-text">Daily</span>
@@ -732,23 +844,23 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
         <div class="field-row two-col">
           <div>
             <label class="field-label" style="margin-bottom: 10px;">Avg. nightly sleep</label>
-            <div class="tile-select two-col" style="margin-bottom: 0;">
-              <label class="tile-opt">
+            <div class="tile-select two-col" id="sleep_group" style="margin-bottom: 0;">
+              <label class="tile-opt" onclick="markSelected(this, 'sleep_group')">
                 <input type="radio" name="sleep_hrs" value="Under 5h">
                 <span class="tile-icon">😴</span>
                 <span class="tile-text">&lt; 5h</span>
               </label>
-              <label class="tile-opt">
+              <label class="tile-opt" onclick="markSelected(this, 'sleep_group')">
                 <input type="radio" name="sleep_hrs" value="5–6h">
                 <span class="tile-icon">😑</span>
                 <span class="tile-text">5–6h</span>
               </label>
-              <label class="tile-opt">
+              <label class="tile-opt selected" onclick="markSelected(this, 'sleep_group')">
                 <input type="radio" name="sleep_hrs" value="7–8h" checked>
                 <span class="tile-icon">😌</span>
                 <span class="tile-text">7–8h</span>
               </label>
-              <label class="tile-opt">
+              <label class="tile-opt" onclick="markSelected(this, 'sleep_group')">
                 <input type="radio" name="sleep_hrs" value="8h+">
                 <span class="tile-icon">😴</span>
                 <span class="tile-text">8h+</span>
@@ -757,23 +869,23 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
           </div>
           <div>
             <label class="field-label" style="margin-bottom: 10px;">Alcohol consumption</label>
-            <div class="tile-select two-col" style="margin-bottom: 0;">
-              <label class="tile-opt">
+            <div class="tile-select two-col" id="alcohol_group" style="margin-bottom: 0;">
+              <label class="tile-opt selected" onclick="markSelected(this, 'alcohol_group')">
                 <input type="radio" name="alcohol" value="None" checked>
                 <span class="tile-icon">🚱</span>
                 <span class="tile-text">None</span>
               </label>
-              <label class="tile-opt">
+              <label class="tile-opt" onclick="markSelected(this, 'alcohol_group')">
                 <input type="radio" name="alcohol" value="Occasional (1–2 / wk)">
                 <span class="tile-icon">🍷</span>
                 <span class="tile-text">Occasional</span>
               </label>
-              <label class="tile-opt">
+              <label class="tile-opt" onclick="markSelected(this, 'alcohol_group')">
                 <input type="radio" name="alcohol" value="Regular (3–5 / wk)">
                 <span class="tile-icon">🍺</span>
                 <span class="tile-text">Regular</span>
               </label>
-              <label class="tile-opt">
+              <label class="tile-opt" onclick="markSelected(this, 'alcohol_group')">
                 <input type="radio" name="alcohol" value="Daily">
                 <span class="tile-icon">⚠️</span>
                 <span class="tile-text">Daily</span>
@@ -844,19 +956,13 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
       <div class="loading-sub">Engine v28.3 · Clinical Intake Restored · ERP-integrated</div>
     </div>
 
-    <!-- Dashboard (all v28.2 output preserved) -->
+    <!-- Dashboard -->
     <div id="dashboard">
-
-      <!-- Coach bar -->
       <div class="coach-bar">
         <div class="coach-icon">🤖</div>
         <div class="coach-text" id="disp_coach">—</div>
       </div>
-
-      <!-- Badge row: evolution + lifecycle + responsiveness -->
       <div class="badge-lifecycle-row" id="badge_row"></div>
-
-      <!-- Primary stats -->
       <div class="stats-row">
         <div class="stat-tile" id="tile_score">
           <div class="stat-label">Functional Score</div>
@@ -874,8 +980,6 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
           <div class="stat-sub" id="disp_momentum_sub">vs last cycle</div>
         </div>
       </div>
-
-      <!-- Meta stats: cycle, projection, multiplier, responsiveness -->
       <div class="meta-row">
         <div class="meta-tile">
           <div class="meta-label">Cycle</div>
@@ -894,38 +998,27 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
           <div class="meta-value" id="disp_resp">—</div>
         </div>
       </div>
-
-      <!-- Narrative -->
       <div class="narrative-card" id="narrativeCard">
         <div class="narrative-title">🧬 Twin Evolution Summary</div>
         <div class="narrative-main" id="narr_main">—</div>
         <div class="narrative-sub" id="narr_sub"></div>
       </div>
-
-      <!-- Radar chart -->
       <div class="chart-wrap">
         <div class="card-title">6-Domain Load Map</div>
         <canvas id="twinRadar"></canvas>
       </div>
-
-      <!-- AM Stack -->
       <div class="card">
         <div class="stack-header">☀️ Morning Stack (AM)</div>
         <div id="am_list"></div>
       </div>
-
-      <!-- PM Stack -->
       <div class="card">
         <div class="stack-header">🌙 Evening Stack (PM)</div>
         <div id="pm_list"></div>
       </div>
-
-      <!-- Lifestyle -->
       <div class="card">
         <div class="stack-header">🥗 Lifestyle Engine</div>
         <div id="life_list"></div>
       </div>
-
       <button class="reset-btn" onclick="location.reload()">↩ New Assessment</button>
     </div>
   </div>
@@ -945,7 +1038,7 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
       <div class="field-row" style="margin-bottom:20px;">
         <div>
           <label class="field-label">Email</label>
-          <input type="email" id="ci_email" placeholder="your@email.com">
+          <input type="email" id="ci_email" placeholder="your@email.com" autocomplete="email">
         </div>
       </div>
 
@@ -974,7 +1067,6 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
         </div>
       </div>
 
-      <!-- Sliders -->
       <div class="slider-group">
         <div class="slider-header">
           <span class="slider-label">⚡ Daily Energy</span>
@@ -1015,13 +1107,11 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
         Recalibrate My Twin
       </button>
 
-      <!-- Check-in loading -->
       <div id="ci_loading" style="display:none; text-align:center; padding:30px 0;">
         <div class="spinner-dna" style="font-size:36px;">🔄</div>
         <div class="loading-stage" id="ci_stage">Recalibrating...</div>
       </div>
 
-      <!-- Check-in result -->
       <div id="ci_result" style="display:none;" class="card" style="margin-top:14px;">
         <div class="card-title">Twin Recalibrated</div>
         <div id="ci_result_body" style="font-size:13px; line-height:1.7; color:var(--ink);"></div>
@@ -1065,6 +1155,41 @@ function stopStages() {
 }
 
 // ════════════════════════════════════════════════
+// FIX #1: JS FALLBACK FOR :has() — marks .selected on
+// radio tiles, checkbox tiles, radio groups for older
+// Android browsers that don't support CSS :has()
+// ════════════════════════════════════════════════
+function markSelected(el, groupId) {
+  var group = document.getElementById(groupId);
+  if (!group) return;
+  // Remove .selected from all siblings in this group
+  var siblings = group.querySelectorAll('.radio-opt, .tile-opt');
+  siblings.forEach(function(s) { s.classList.remove('selected'); });
+  // Add .selected to clicked element
+  el.classList.add('selected');
+}
+
+function markCheckSelected(el) {
+  // For checkboxes: toggle .selected on the label
+  // We defer to after the browser processes the checkbox state
+  setTimeout(function() {
+    var cb = el.querySelector('input[type="checkbox"]');
+    if (cb) {
+      el.classList.toggle('selected', cb.checked);
+    }
+  }, 0);
+}
+
+// Init .selected classes from pre-checked defaults on page load
+(function initSelected() {
+  // Radio groups: find checked input, mark parent label
+  document.querySelectorAll('input[type="radio"]:checked').forEach(function(input) {
+    var label = input.closest('.radio-opt, .tile-opt');
+    if (label) label.classList.add('selected');
+  });
+})();
+
+// ════════════════════════════════════════════════
 // TAB SWITCHING
 // ════════════════════════════════════════════════
 function switchTab(tab) {
@@ -1082,13 +1207,11 @@ var currentPhase = 1;
 function goPhase(n) {
   if (n > currentPhase && !validatePhase(currentPhase)) return;
 
-  // Show/hide panels
   for (var i = 1; i <= 4; i++) {
     var panel = document.getElementById("phase" + i);
     if (panel) panel.classList.toggle("active", i === n);
   }
 
-  // Update stepper
   for (var j = 1; j <= 4; j++) {
     var step = document.getElementById("pstep_" + j);
     if (!step) continue;
@@ -1097,7 +1220,6 @@ function goPhase(n) {
     if (j === n) step.classList.add("active");
   }
 
-  // Conditional menopause field: show if female and on phase 2
   if (n === 2) {
     var isFemale = document.querySelector('input[name="sex"]:checked');
     var femVal   = isFemale ? isFemale.value : "Male";
@@ -1106,7 +1228,6 @@ function goPhase(n) {
   }
 
   currentPhase = n;
-  // Scroll to top of card smoothly
   var fc = document.getElementById("formCard");
   if (fc) fc.scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -1131,7 +1252,7 @@ function validatePhase(n) {
   return true;
 }
 
-// Sex change: toggle menopause field on phase 2
+// Sex change: toggle menopause field
 document.querySelectorAll('input[name="sex"]').forEach(function(r) {
   r.addEventListener("change", function() {
     if (currentPhase === 2) {
@@ -1143,8 +1264,8 @@ document.querySelectorAll('input[name="sex"]').forEach(function(r) {
 
 // Update subjective slider labels (phase 4)
 function updateSliderLabels() {
-  var e = document.getElementById("a_energy");
-  var s = document.getElementById("a_sleep_q");
+  var e  = document.getElementById("a_energy");
+  var s  = document.getElementById("a_sleep_q");
   var st = document.getElementById("a_stress");
   if (e)  document.getElementById("lbl_energy_a").textContent  = e.value  + " / 10";
   if (s)  document.getElementById("lbl_sleep_a").textContent   = s.value  + " / 10";
@@ -1163,15 +1284,11 @@ function runAssessment() {
 
   if (!email) { alert("Please enter your email address."); goPhase(1); return; }
 
-  // Sex
-  var sexInput = document.querySelector('input[name="sex"]:checked');
-  var gender   = sexInput ? sexInput.value : "Male";
-
-  // Smoking
+  var sexInput     = document.querySelector('input[name="sex"]:checked');
+  var gender       = sexInput ? sexInput.value : "Male";
   var smokingInput = document.querySelector('input[name="smoking"]:checked');
   var smoking      = smokingInput ? smokingInput.value : "Never";
 
-  // Q-010: Conditions — exact strings matching engine's calcDomainScores
   var q10 = [];
   var condMap = [
     ["sym_diabetes",  "Diabetes Type 2"],
@@ -1190,41 +1307,33 @@ function runAssessment() {
     if (el && el.checked) q10.push(pair[1]);
   });
 
-  // Diet
-  var dietInput = document.querySelector('input[name="diet"]:checked');
-  var diet      = dietInput ? dietInput.value : "Balanced";
-
-  // Exercise
-  var exInput = document.querySelector('input[name="exercise"]:checked');
-  var exercise = exInput ? exInput.value : "1–2x / week";
-
-  // Sleep hours
+  var dietInput  = document.querySelector('input[name="diet"]:checked');
+  var diet       = dietInput ? dietInput.value : "Balanced";
+  var exInput    = document.querySelector('input[name="exercise"]:checked');
+  var exercise   = exInput ? exInput.value : "1–2x / week";
   var sleepInput = document.querySelector('input[name="sleep_hrs"]:checked');
   var sleepHrs   = sleepInput ? sleepInput.value : "7–8h";
+  var alcInput   = document.querySelector('input[name="alcohol"]:checked');
+  var alcohol    = alcInput ? alcInput.value : "None";
 
-  // Alcohol
-  var alcInput = document.querySelector('input[name="alcohol"]:checked');
-  var alcohol  = alcInput ? alcInput.value : "None";
-
-  // Subjective scores
-  var energy     = document.getElementById("a_energy").value;
-  var sleepQual  = document.getElementById("a_sleep_q").value;
-  var stressLvl  = document.getElementById("a_stress").value;
+  var energy    = document.getElementById("a_energy").value;
+  var sleepQual = document.getElementById("a_sleep_q").value;
+  var stressLvl = document.getElementById("a_stress").value;
 
   var payload = {
     email:          email,
     name:           name,
     "Q-001":        age,
     "Q-002":        gender,
-    "Q-003":        smoking,        // Never / Former / Current → safety veto
-    "Q-010":        q10.join("; "), // exact condition strings → domain scoring
-    "Q-019":        height,         // height cm
-    "Q-021":        weight,         // weight kg → tier multiplier
-    "Q-006":        diet,           // diet → metabolic scoring
+    "Q-003":        smoking,
+    "Q-010":        q10.join("; "),
+    "Q-019":        height,
+    "Q-021":        weight,
+    "Q-006":        diet,
     "Q-exercise":   exercise,
     "Q-sleep-hrs":  sleepHrs,
     "Q-alcohol":    alcohol,
-    "Q-023":        energy,         // subjective energy baseline
+    "Q-023":        energy,
     "Q-sleep-qual": sleepQual,
     "Q-stress":     stressLvl
   };
@@ -1238,7 +1347,6 @@ function runAssessment() {
     document.getElementById("loadingOverlay").style.display = "none";
     if (data.status === "success") {
       renderDashboard(data.output);
-      // Pre-fill check-in email
       document.getElementById("ci_email").value = email;
     } else {
       document.getElementById("formCard").style.display = "block";
@@ -1260,7 +1368,7 @@ function runCheckin() {
   if (!email) { alert("Please enter your email (same as your assessment)."); return; }
 
   var adherenceSlider = parseInt(document.getElementById("ci_adherence").value) || 8;
-  var adherence100    = adherenceSlider * 10;  // Convert 1-10 to 0-100
+  var adherence100    = adherenceSlider * 10;
 
   var payload = {
     email:          email,
@@ -1268,7 +1376,6 @@ function runCheckin() {
     energy_score:   document.getElementById("ci_energy").value,
     sleep_quality:  document.getElementById("ci_sleep").value,
     stress_level:   document.getElementById("ci_stress").value,
-    // Engine also needs these to recalculate scores
     age:     35,
     "Q-002": "Unknown",
     "Q-010": ""
@@ -1329,9 +1436,9 @@ function jsonpCall(payload, onSuccess, onError) {
 // BEHAVIOUR PREVIEW (live, no API call)
 // ════════════════════════════════════════════════
 function updatePreview() {
-  var energyVal   = parseInt(document.getElementById("ci_energy").value);
-  var sleepVal    = parseInt(document.getElementById("ci_sleep").value);
-  var stressVal   = parseInt(document.getElementById("ci_stress").value);
+  var energyVal    = parseInt(document.getElementById("ci_energy").value);
+  var sleepVal     = parseInt(document.getElementById("ci_sleep").value);
+  var stressVal    = parseInt(document.getElementById("ci_stress").value);
   var adherenceVal = parseInt(document.getElementById("ci_adherence").value);
   var adherence100 = adherenceVal * 10;
 
@@ -1367,19 +1474,16 @@ function respToLabel(resp) {
 }
 
 // ════════════════════════════════════════════════
-// DASHBOARD RENDER (unchanged from v28.2)
+// DASHBOARD RENDER
 // ════════════════════════════════════════════════
 function renderDashboard(twin) {
   document.getElementById("dashboard").style.display = "block";
-
-  // Coach
   document.getElementById("disp_coach").textContent = twin.coachMessage || "";
 
-  // Badge row: evolution + lifecycle + responsiveness
-  var evo       = (twin.evolutionStatus || "baseline").toLowerCase();
-  var lifecycle  = twin.lifecycle || "";
-  var resp      = parseFloat(twin.responsiveness) || 1.0;
-  var respInfo  = respToLabel(resp);
+  var evo      = (twin.evolutionStatus || "baseline").toLowerCase();
+  var lifecycle = twin.lifecycle || "";
+  var resp     = parseFloat(twin.responsiveness) || 1.0;
+  var respInfo = respToLabel(resp);
 
   var evoBadgeMap = {
     baseline:  { icon: "◎", label: "BASELINE" },
@@ -1404,7 +1508,6 @@ function renderDashboard(twin) {
     (lifecycle ? '<span class="lifecycle-pill' + lifecycleClass + '">⬡ ' + esc(lifecycle) + "</span>" : "") +
     '<span class="resp-badge ' + respClass + '">⚡ ' + resp.toFixed(1) + "x " + respInfo.label + "</span>";
 
-  // Primary stats
   document.getElementById("disp_score").textContent  = twin.overallScore;
   document.getElementById("disp_bioage").textContent = twin.biologicalAge;
   document.getElementById("tile_score").className    = "stat-tile " + evo;
@@ -1422,25 +1525,17 @@ function renderDashboard(twin) {
     document.getElementById("tile_momentum").className = "stat-tile " + evo;
   }
 
-  // Meta stats
   document.getElementById("disp_cycle").textContent = "C" + (twin.cycleNumber || 1);
   document.getElementById("disp_proj").textContent  = (twin.projection90d || "—") + "/100";
   document.getElementById("disp_mult").textContent  = (twin.multiplier || 1.0).toFixed(1) + "x";
   document.getElementById("disp_resp").textContent  = resp.toFixed(1) + "x";
 
-  // Narrative panel
   renderNarrative(evo, mom, resp, twin.projection90d, twin.overallScore);
-
-  // Radar
   if (twin.scores) renderRadar(twin.scores);
-
-  // Protocol
   if (twin.protocol) {
     renderStack(twin.protocol.AM, "am_list");
     renderStack(twin.protocol.PM, "pm_list");
   }
-
-  // Lifestyle
   renderLifestyle(twin.lifestyle || []);
 }
 
@@ -1553,4 +1648,3 @@ updatePreview();
 </script>
 </body>
 </html>
-
