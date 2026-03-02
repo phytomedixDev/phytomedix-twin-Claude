@@ -53,6 +53,11 @@ body {
 }
 .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 19px; color: var(--forest); }
 .logo span { color: var(--leaf); }
+.logo-img {
+  height: 36px;
+  width: auto;
+  display: block;
+}
 .engine-badge {
   font-family: 'DM Mono', monospace;
   font-size: 9px; font-weight: 500; color: var(--green);
@@ -591,7 +596,7 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
 <body>
 
 <header class="site-header">
-  <div class="logo">PHYTO<span>MEDIX</span></div>
+  <img src="data:image/jpeg;base64,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" alt="Phytomedix" class="logo-img">
   <span class="engine-badge">ENGINE v28.3</span>
 </header>
 
@@ -1350,13 +1355,13 @@ function runAssessment() {
       document.getElementById("ci_email").value = email;
     } else {
       document.getElementById("formCard").style.display = "block";
-      alert("Engine error: " + (data.message || "Unknown error"));
+      showErrorPanel("engine", "assess");
     }
-  }, function() {
+  }, function(reason) {
     stopStages();
     document.getElementById("loadingOverlay").style.display = "none";
     document.getElementById("formCard").style.display = "block";
-    alert("Network error. Check your Apps Script URL and deployment settings.");
+    showErrorPanel(reason, "assess");
   });
 }
 
@@ -1400,36 +1405,110 @@ function runCheckin() {
         "<em>" + esc(out.coachMessage || "") + "</em>";
       document.getElementById("ci_result").style.display = "block";
     } else {
-      alert("Check-in error: " + (data.message || "Unknown error"));
+      showErrorPanel("engine", "checkin");
     }
-  }, function() {
+  }, function(reason) {
     document.getElementById("ci_loading").style.display = "none";
     document.getElementById("checkinBtn").style.display = "block";
-    alert("Network error. Check your Apps Script deployment URL.");
+    showErrorPanel(reason, "checkin");
   });
 }
 
 // ════════════════════════════════════════════════
-// JSONP TRANSPORT
+// FETCH TRANSPORT — replaces JSONP
+//
+// WHY THIS FIX: JSONP uses <script> tags. GAS /exec
+// URLs respond with a 302 redirect to
+// script.googleusercontent.com. Mobile Chrome/Android
+// does NOT reliably follow cross-origin redirects on
+// <script> tags — it fires onerror immediately.
+// That is why this worked on desktop but failed on mobile.
+//
+// THE FIX: fetch() follows redirects natively. GAS
+// deployed as "Anyone" automatically includes the
+// Access-Control-Allow-Origin: * CORS header, so
+// fetch() works without any engine changes at all.
+// No callback= parameter is needed — GAS returns
+// plain JSON when the callback param is absent.
 // ════════════════════════════════════════════════
 function jsonpCall(payload, onSuccess, onError) {
-  var callbackName = "cb_" + Math.floor(Math.random() * 1e9);
-  var script = document.createElement("script");
+  var url = API_URL + "?payload=" + encodeURIComponent(JSON.stringify(payload));
+  var timeoutMs = 25000; // 25s — GAS cold starts can be slow
 
-  window[callbackName] = function(data) {
-    delete window[callbackName];
-    document.body.removeChild(script);
+  // AbortController for timeout (supported on all modern mobile browsers)
+  var controller = typeof AbortController !== "undefined" ? new AbortController() : null;
+  var timer = setTimeout(function() {
+    if (controller) controller.abort();
+    if (onError) onError("timeout");
+  }, timeoutMs);
+
+  fetch(url, {
+    method: "GET",
+    redirect: "follow",
+    signal: controller ? controller.signal : undefined
+  })
+  .then(function(response) {
+    if (!response.ok) throw new Error("HTTP " + response.status);
+    return response.json();
+  })
+  .then(function(data) {
+    clearTimeout(timer);
     onSuccess(data);
-  };
+  })
+  .catch(function(err) {
+    clearTimeout(timer);
+    // AbortError = our timeout, distinguish from real network failure
+    var reason = err && err.name === "AbortError" ? "timeout" : "network";
+    if (onError) onError(reason);
+  });
+}
 
-  script.onerror = function() {
-    delete window[callbackName];
-    if (document.body.contains(script)) document.body.removeChild(script);
-    if (onError) onError();
-  };
+// ════════════════════════════════════════════════
+// ERROR PANEL (replaces alert())
+// ════════════════════════════════════════════════
+function showErrorPanel(reason, context) {
+  // Remove any existing error panel
+  var old = document.getElementById("errorPanel");
+  if (old) old.remove();
 
-  script.src = API_URL + "?payload=" + encodeURIComponent(JSON.stringify(payload)) + "&callback=" + callbackName;
-  document.body.appendChild(script);
+  var isTimeout = reason === "timeout";
+  var shortUrl = API_URL.length > 60 ? API_URL.substring(0, 57) + "..." : API_URL;
+
+  var panel = document.createElement("div");
+  panel.id = "errorPanel";
+  panel.style.cssText = "background:#fff0f0;border:1.5px solid #fca5a5;border-radius:14px;padding:20px 18px;margin-bottom:14px;";
+
+  panel.innerHTML =
+    "<div style='font-family:Syne,sans-serif;font-size:13px;font-weight:700;color:#c53030;margin-bottom:10px;'>" +
+      (isTimeout ? "⏱ Request timed out (20s)" : "⚠️ Cannot reach the engine") +
+    "</div>" +
+    "<div style='font-size:12px;color:#4a5568;line-height:1.8;margin-bottom:14px;'>" +
+      "Check the following in your <strong>Google Apps Script</strong> dashboard:" +
+    "</div>" +
+    "<ol style='font-size:12px;color:#1a2332;line-height:2;padding-left:18px;margin-bottom:14px;'>" +
+      "<li><strong>Deploy → Manage deployments</strong> → confirm the deployment is <em>Active</em></li>" +
+      "<li><strong>Who has access</strong> must be set to <strong>Anyone</strong> (not 'Only myself')</li>" +
+      "<li><strong>Execute as:</strong> must be <em>Me</em></li>" +
+      "<li>Use the <strong>/exec</strong> URL — not the /dev URL</li>" +
+      (isTimeout ? "<li>Script may be on <strong>cold start</strong> — wait 30s and retry</li>" : "<li>Script may have a <strong>runtime error</strong> — check Executions log</li>") +
+    "</ol>" +
+    "<div style='background:#f7f9f8;border:1px solid #e2e8e5;border-radius:8px;padding:9px 12px;font-family:DM Mono,monospace;font-size:10px;color:#4a5568;word-break:break-all;margin-bottom:14px;'>" +
+      "URL: " + esc(shortUrl) +
+    "</div>" +
+    "<button onclick='document.getElementById(\"errorPanel\").remove();' " +
+      "style='width:100%;padding:12px;background:#1a3d2b;color:white;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;touch-action:manipulation;'>" +
+      "Dismiss &amp; Try Again" +
+    "</button>";
+
+  // Insert panel before formCard or checkinBtn
+  var target = context === "checkin"
+    ? document.getElementById("checkinBtn")
+    : document.getElementById("formCard");
+  if (target && target.parentNode) {
+    target.parentNode.insertBefore(panel, target);
+  } else {
+    document.querySelector(".container").appendChild(panel);
+  }
 }
 
 // ════════════════════════════════════════════════
@@ -1648,4 +1727,3 @@ updatePreview();
 </script>
 </body>
 </html>
-
