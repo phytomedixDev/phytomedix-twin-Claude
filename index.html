@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Phytomedix-Excell Nutrients | Digital Twin v28.3</title>
+<title>Phytomedix-Excell Nutrients | Digital Twin v29.0</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -28,8 +28,6 @@
   --baseline: #6b7280;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-/* ── FIX #9: Remove ghost tap highlight on all interactive elements ── */
 * { -webkit-tap-highlight-color: transparent; }
 
 body {
@@ -41,7 +39,6 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* Prevent horizontal scroll from overflow */
   overflow-x: hidden;
 }
 .site-header {
@@ -51,13 +48,7 @@ body {
   border-bottom: 1px solid var(--border);
   margin-bottom: 24px;
 }
-.logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 19px; color: var(--forest); }
-.logo span { color: var(--leaf); }
-.logo-img {
-  height: 36px;
-  width: auto;
-  display: block;
-}
+.logo-img { height: 36px; width: auto; display: block; }
 .engine-badge {
   font-family: 'DM Mono', monospace;
   font-size: 9px; font-weight: 500; color: var(--green);
@@ -76,11 +67,7 @@ body {
   flex: 1; padding: 9px 14px; border: none; border-radius: 8px;
   background: none; cursor: pointer; color: var(--slate);
   font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600;
-  transition: all 0.15s;
-  /* FIX #2: Remove 300ms tap delay */
-  touch-action: manipulation;
-  /* FIX #7: Minimum touch target */
-  min-height: 44px;
+  transition: all 0.15s; touch-action: manipulation; min-height: 44px;
 }
 .tab-btn.active { background: var(--forest); color: white; }
 .tab-btn .tab-icon { font-size: 14px; margin-right: 6px; }
@@ -101,173 +88,103 @@ body {
 /* ─────────────────── PHASE WIZARD ─────────────────── */
 .phase-stepper {
   display: flex; align-items: center; gap: 0;
-  margin-bottom: 24px; padding: 0 4px;
-  /* FIX #8: Prevent connector line overflow */
-  overflow: hidden;
+  margin-bottom: 24px; padding: 0 4px; overflow: hidden;
 }
 .phase-step {
   display: flex; flex-direction: column; align-items: center; gap: 5px;
-  flex: 1; position: relative; cursor: default;
-  /* FIX #8: Contain within stepper */
-  min-width: 0;
+  flex: 1; position: relative; cursor: default; min-width: 0;
 }
 .phase-step:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  top: 13px; left: 50%;
-  /* FIX #8: Use percentage from center to next center, not calc overflow */
-  width: 100%; height: 2px;
-  background: var(--border);
-  transition: background 0.3s;
-  z-index: 0;
+  content: ''; position: absolute; top: 13px; left: 50%;
+  width: 100%; height: 2px; background: var(--border);
+  transition: background 0.3s; z-index: 0;
 }
 .phase-step.done:not(:last-child)::after { background: var(--green); }
 .step-dot {
   width: 28px; height: 28px; border-radius: 50%;
-  border: 2px solid var(--border);
-  background: var(--white); color: var(--slate);
+  border: 2px solid var(--border); background: var(--white); color: var(--slate);
   display: flex; align-items: center; justify-content: center;
   font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
-  transition: all 0.2s; z-index: 1; position: relative;
-  flex-shrink: 0;
+  transition: all 0.2s; z-index: 1; position: relative; flex-shrink: 0;
 }
-.phase-step.active .step-dot {
-  border-color: var(--green); background: var(--green); color: white;
-}
-.phase-step.done .step-dot {
-  border-color: var(--green); background: var(--green); color: white;
-}
+.phase-step.active .step-dot { border-color: var(--green); background: var(--green); color: white; }
+.phase-step.done .step-dot   { border-color: var(--green); background: var(--green); color: white; }
 .phase-step.done .step-dot::after { content: '✓'; font-size: 12px; }
 .phase-step.done .step-dot span { display: none; }
 .step-label {
   font-size: 9px; font-weight: 600; letter-spacing: 0.4px;
-  text-transform: uppercase; color: var(--slate); text-align: center;
-  white-space: nowrap;
+  text-transform: uppercase; color: var(--slate); text-align: center; white-space: nowrap;
 }
 .phase-step.active .step-label { color: var(--green); }
-.phase-step.done .step-label  { color: var(--forest); }
-
-/* Phase panels */
+.phase-step.done .step-label   { color: var(--forest); }
 .phase-panel { display: none; }
 .phase-panel.active { display: block; }
-
-.phase-heading {
-  font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800;
-  color: var(--forest); margin-bottom: 4px;
-}
-.phase-sub {
-  font-size: 13px; color: var(--slate); margin-bottom: 22px; font-weight: 400;
-}
+.phase-heading { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: var(--forest); margin-bottom: 4px; }
+.phase-sub { font-size: 13px; color: var(--slate); margin-bottom: 22px; font-weight: 400; }
 
 /* ─────────────────── FORM ELEMENTS ─────────────────── */
-.field-label {
-  display: block; font-size: 10px; font-weight: 700;
-  letter-spacing: 0.5px; color: var(--slate); margin-bottom: 6px;
-  text-transform: uppercase;
-}
-/* FIX #10: 16px prevents iOS auto-zoom on focus */
+.field-label { display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; color: var(--slate); margin-bottom: 6px; text-transform: uppercase; }
 input[type="text"], input[type="number"], input[type="email"], select {
-  width: 100%; padding: 11px 13px;
-  border: 1.5px solid var(--border); border-radius: 10px;
-  font-family: 'Outfit', sans-serif; font-size: 16px;
-  color: var(--ink); background: var(--white);
-  transition: border-color 0.15s; -webkit-appearance: none;
-  /* FIX #7: Ensure minimum 44px touch target height */
-  min-height: 44px;
+  width: 100%; padding: 11px 13px; border: 1.5px solid var(--border); border-radius: 10px;
+  font-family: 'Outfit', sans-serif; font-size: 16px; color: var(--ink); background: var(--white);
+  transition: border-color 0.15s; -webkit-appearance: none; min-height: 44px;
 }
 input:focus, select:focus { outline: none; border-color: var(--green); }
 input.error, select.error { border-color: var(--red); }
-
 .field-row { display: grid; gap: 12px; margin-bottom: 14px; }
 .field-row.two-col { grid-template-columns: 1fr 1fr; }
 .field-row.three-col { grid-template-columns: 1fr 1fr 1fr; }
-
 .field-hint { font-size: 11px; color: var(--slate); margin-top: 4px; opacity: 0.8; }
 
 /* ─────────────────── RADIO TILES ─────────────────── */
 .radio-group { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
 .radio-opt {
-  /* FIX #7: Min touch target */
   flex: 1; min-width: calc(33.33% - 8px); padding: 12px 8px;
-  border: 1.5px solid var(--border);
-  border-radius: 10px; cursor: pointer; text-align: center;
+  border: 1.5px solid var(--border); border-radius: 10px; cursor: pointer; text-align: center;
   font-size: 13px; color: var(--slate); transition: all 0.15s;
   display: flex; flex-direction: column; align-items: center; gap: 3px;
-  min-height: 64px; justify-content: center;
-  /* FIX #2: Remove 300ms tap delay */
-  touch-action: manipulation;
-  user-select: none;
+  min-height: 64px; justify-content: center; touch-action: manipulation; user-select: none;
 }
 .radio-opt input[type="radio"] { display: none; }
-/* FIX #1: Primary :has() selector — works on modern browsers */
 .radio-opt:has(input:checked) { border-color: var(--green); background: var(--mint); color: var(--forest); }
-/* FIX #1: JS fallback class for older browsers */
 .radio-opt.selected { border-color: var(--green); background: var(--mint); color: var(--forest); }
 .radio-opt .radio-icon { font-size: 16px; }
 .radio-opt .radio-text { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
 
 /* ─────────────────── CONDITION CHECKBOXES ─────────────────── */
-.signals-label {
-  font-size: 10px; font-weight: 700; color: var(--slate);
-  text-transform: uppercase; letter-spacing: 0.5px;
-  margin-bottom: 10px; display: block;
-}
-.signal-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 12px;
-}
+.signals-label { font-size: 10px; font-weight: 700; color: var(--slate); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; display: block; }
+.signal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 12px; }
 .signal-label {
   display: flex; align-items: center; gap: 9px;
   padding: 12px 13px; border: 1.5px solid var(--border);
   border-radius: 10px; font-size: 13px; color: var(--ink);
   cursor: pointer; transition: all 0.15s; background: var(--white);
-  /* FIX #7: Minimum touch target */
-  min-height: 48px;
-  /* FIX #2: Remove 300ms delay */
-  touch-action: manipulation;
-  user-select: none;
+  min-height: 48px; touch-action: manipulation; user-select: none;
 }
 .signal-label:hover { background: var(--mint); border-color: #b7d9c3; }
 .signal-label input[type="checkbox"] { display: none; }
-.signal-label .dot {
-  width: 18px; height: 18px; border: 2px solid var(--border);
-  border-radius: 4px; flex-shrink: 0; transition: all 0.15s; position: relative;
-}
+.signal-label .dot { width: 18px; height: 18px; border: 2px solid var(--border); border-radius: 4px; flex-shrink: 0; transition: all 0.15s; position: relative; }
 .signal-label input:checked ~ .dot { background: var(--green); border-color: var(--green); }
-.signal-label input:checked ~ .dot::after {
-  content: ''; position: absolute; left: 4px; top: 1px;
-  width: 6px; height: 9px; border: 2px solid white;
-  border-top: none; border-left: none; transform: rotate(45deg);
-}
-/* FIX #1: :has() + .selected fallback */
+.signal-label input:checked ~ .dot::after { content: ''; position: absolute; left: 4px; top: 1px; width: 6px; height: 9px; border: 2px solid white; border-top: none; border-left: none; transform: rotate(45deg); }
 .signal-label:has(input:checked) { border-color: var(--green); background: var(--mint); }
 .signal-label.selected { border-color: var(--green); background: var(--mint); }
 .signal-label .sig-icon { font-size: 14px; flex-shrink: 0; }
-
-/* Conditional field (hidden until gender-triggered) */
 .conditional-field { display: none; }
 
 /* ─────────────────── TILE SELECTS ─────────────────── */
 .tile-select { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; margin-bottom: 14px; }
 .tile-select.two-col { grid-template-columns: 1fr 1fr; }
 .tile-opt {
-  padding: 12px 8px; border: 1.5px solid var(--border);
-  border-radius: 10px; cursor: pointer; text-align: center;
-  transition: all 0.15s; background: var(--white);
-  /* FIX #7: Minimum touch target */
-  min-height: 64px;
+  padding: 12px 8px; border: 1.5px solid var(--border); border-radius: 10px; cursor: pointer; text-align: center;
+  transition: all 0.15s; background: var(--white); min-height: 64px;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 4px;
-  /* FIX #2: Remove 300ms delay */
-  touch-action: manipulation;
-  user-select: none;
+  gap: 4px; touch-action: manipulation; user-select: none;
 }
 .tile-opt input[type="radio"] { display: none; }
-/* FIX #1: :has() + .selected fallback */
 .tile-opt:has(input:checked) { border-color: var(--green); background: var(--mint); }
 .tile-opt.selected { border-color: var(--green); background: var(--mint); }
 .tile-opt .tile-icon { font-size: 18px; display: block; }
 .tile-opt .tile-text { font-size: 10px; font-weight: 600; color: var(--slate); text-transform: uppercase; letter-spacing: 0.3px; }
-/* FIX #1: Update text color for selected state */
 .tile-opt:has(input:checked) .tile-text { color: var(--forest); }
 .tile-opt.selected .tile-text { color: var(--forest); }
 
@@ -276,70 +193,30 @@ input.error, select.error { border-color: var(--red); }
 .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .slider-label { font-size: 12px; font-weight: 600; color: var(--ink); text-transform: uppercase; letter-spacing: 0.4px; font-family: 'Outfit', sans-serif; }
 .slider-value { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; color: var(--green); }
-input[type="range"] {
-  width: 100%; height: 6px; -webkit-appearance: none; appearance: none;
-  background: var(--border); border-radius: 3px; outline: none;
-  /* FIX #2: Touch action for sliders */
-  touch-action: pan-x;
-}
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 26px; height: 26px;
-  border-radius: 50%; background: var(--forest);
-  cursor: pointer; border: 3px solid white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-}
-input[type="range"]::-moz-range-thumb {
-  width: 26px; height: 26px;
-  border-radius: 50%; background: var(--forest);
-  cursor: pointer; border: 3px solid white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-}
+input[type="range"] { width: 100%; height: 6px; -webkit-appearance: none; appearance: none; background: var(--border); border-radius: 3px; outline: none; touch-action: pan-x; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 26px; height: 26px; border-radius: 50%; background: var(--forest); cursor: pointer; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+input[type="range"]::-moz-range-thumb { width: 26px; height: 26px; border-radius: 50%; background: var(--forest); cursor: pointer; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
 .slider-ticks { display: flex; justify-content: space-between; font-size: 10px; color: var(--slate); margin-top: 4px; }
 .slider-group { margin-bottom: 20px; }
 
 /* ─────────────────── PHASE NAV BUTTONS ─────────────────── */
-.phase-nav {
-  display: flex; gap: 10px; margin-top: 6px;
-  justify-content: space-between; align-items: center;
-}
-.btn-back {
-  padding: 13px 20px; border: 1.5px solid var(--border);
-  border-radius: 10px; background: none; cursor: pointer;
-  font-family: 'Outfit', sans-serif; font-size: 13px;
-  font-weight: 600; color: var(--slate); transition: all 0.15s;
-  touch-action: manipulation; min-height: 48px;
-}
+.phase-nav { display: flex; gap: 10px; margin-top: 6px; justify-content: space-between; align-items: center; }
+.btn-back { padding: 13px 20px; border: 1.5px solid var(--border); border-radius: 10px; background: none; cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; color: var(--slate); transition: all 0.15s; touch-action: manipulation; min-height: 48px; }
 .btn-back:hover { background: var(--mist); border-color: var(--slate); }
-.btn-next {
-  flex: 1; padding: 14px 20px;
-  background: var(--forest); color: white; border: none;
-  border-radius: 10px; font-family: 'Syne', sans-serif;
-  font-size: 14px; font-weight: 700; cursor: pointer;
-  letter-spacing: 0.3px; transition: all 0.2s;
-  touch-action: manipulation; min-height: 48px;
-}
+.btn-next { flex: 1; padding: 14px 20px; background: var(--forest); color: white; border: none; border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; letter-spacing: 0.3px; transition: all 0.2s; touch-action: manipulation; min-height: 48px; }
 .btn-next:hover { background: var(--green); transform: translateY(-1px); }
 .btn-next:active { transform: none; }
 .phase-counter { font-size: 11px; color: var(--slate); white-space: nowrap; }
 
 /* ─────────────────── CTA BUTTON ─────────────────── */
-.cta-btn {
-  width: 100%; padding: 16px; background: var(--forest);
-  color: white; border: none; border-radius: 12px;
-  font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
-  cursor: pointer; letter-spacing: 0.3px; transition: all 0.2s;
-  touch-action: manipulation; min-height: 52px;
-}
+.cta-btn { width: 100%; padding: 16px; background: var(--forest); color: white; border: none; border-radius: 12px; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: 0.3px; transition: all 0.2s; touch-action: manipulation; min-height: 52px; }
 .cta-btn:hover { background: var(--green); transform: translateY(-1px); }
 .cta-btn:active { transform: none; }
 .cta-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
 /* ─────────────────── LOADING ─────────────────── */
 #loadingOverlay { display: none; text-align: center; padding: 40px 0; }
-.spinner-dna {
-  font-size: 48px; animation: spin-dna 2s ease-in-out infinite;
-  display: inline-block; margin-bottom: 16px;
-}
+.spinner-dna { font-size: 48px; animation: spin-dna 2s ease-in-out infinite; display: inline-block; margin-bottom: 16px; }
 @keyframes spin-dna { 0%,100% { transform: scale(1); } 50% { transform: scale(1.2) rotate(10deg); } }
 .loading-stage { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--green); letter-spacing: 0.5px; min-height: 20px; }
 .loading-bar-wrap { width: 200px; height: 3px; background: var(--border); border-radius: 2px; margin: 14px auto 0; }
@@ -350,57 +227,28 @@ input[type="range"]::-moz-range-thumb {
 #dashboard { display: none; animation: fadeUp 0.5s ease; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
-.coach-bar {
-  background: linear-gradient(135deg, var(--forest) 0%, #1f4d36 100%);
-  color: white; padding: 18px 20px; border-radius: 14px;
-  margin-bottom: 14px; display: flex; gap: 14px; align-items: flex-start;
-}
+.coach-bar { background: linear-gradient(135deg, var(--forest) 0%, #1f4d36 100%); color: white; padding: 18px 20px; border-radius: 14px; margin-bottom: 14px; display: flex; gap: 14px; align-items: flex-start; }
 .coach-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
 .coach-text { font-size: 13px; line-height: 1.7; color: rgba(255,255,255,0.9); font-weight: 400; }
 
-.badge-lifecycle-row {
-  display: flex; gap: 7px; align-items: center; flex-wrap: wrap;
-  margin-bottom: 14px;
-}
-.evo-badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 5px 11px; border-radius: 20px;
-  font-size: 10px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
-}
+.badge-lifecycle-row { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+.evo-badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; border-radius: 20px; font-size: 10px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; }
 .evo-badge.baseline  { background: #f3f4f6; color: var(--baseline); border: 1px solid #d1d5db; }
 .evo-badge.improving { background: #dcfce7; color: var(--improving); border: 1px solid #bbf7d0; }
 .evo-badge.stable    { background: #dbeafe; color: var(--stable);   border: 1px solid #bfdbfe; }
 .evo-badge.declining { background: #fee2e2; color: var(--declining); border: 1px solid #fecaca; }
-
-.lifecycle-pill {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 5px 11px; border-radius: 20px;
-  background: #f0fdf4; color: var(--forest); border: 1px solid #bbf7d0;
-  font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
-}
-.lifecycle-pill.recovery  { background: #fee2e2; color: var(--declining); border-color: #fecaca; }
-.lifecycle-pill.recalib   { background: #fff7ed; color: var(--amber); border-color: #fed7aa; }
-
-.resp-badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 5px 11px; border-radius: 20px; border: 1px solid;
-  font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
-}
-.resp-badge.accelerating { background: #dcfce7; color: var(--green);    border-color: #bbf7d0; }
-.resp-badge.neutral      { background: #e0f2fe; color: #0369a1;          border-color: #bae6fd; }
-.resp-badge.slowed       { background: #fff7ed; color: var(--amber);     border-color: #fed7aa; }
-.resp-badge.stagnating   { background: #fee2e2; color: var(--red);       border-color: #fecaca; }
+.lifecycle-pill { display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; border-radius: 20px; background: #f0fdf4; color: var(--forest); border: 1px solid #bbf7d0; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+.lifecycle-pill.recovery { background: #fee2e2; color: var(--declining); border-color: #fecaca; }
+.lifecycle-pill.recalib  { background: #fff7ed; color: var(--amber); border-color: #fed7aa; }
+.resp-badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; border-radius: 20px; border: 1px solid; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+.resp-badge.accelerating { background: #dcfce7; color: var(--green);  border-color: #bbf7d0; }
+.resp-badge.neutral      { background: #e0f2fe; color: #0369a1;        border-color: #bae6fd; }
+.resp-badge.slowed       { background: #fff7ed; color: var(--amber);   border-color: #fed7aa; }
+.resp-badge.stagnating   { background: #fee2e2; color: var(--red);     border-color: #fecaca; }
 
 .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-.stat-tile {
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: 14px; padding: 16px 12px; text-align: center;
-  position: relative; overflow: hidden;
-}
-.stat-tile::after {
-  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-  height: 3px; background: var(--green);
-}
+.stat-tile { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 16px 12px; text-align: center; position: relative; overflow: hidden; }
+.stat-tile::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--green); }
 .stat-tile.declining::after { background: var(--red); }
 .stat-tile.improving::after { background: var(--leaf); }
 .stat-tile.stable::after    { background: var(--blue); }
@@ -408,67 +256,171 @@ input[type="range"]::-moz-range-thumb {
 .stat-value { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; color: var(--forest); line-height: 1; }
 .stat-sub { font-size: 10px; color: var(--slate); margin-top: 5px; }
 
-/* FIX #4: meta-row — default 4-col, collapses to 2x2 on mobile */
 .meta-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
-.meta-tile {
-  background: var(--mint); border: 1px solid #c8e6d5;
-  border-radius: 11px; padding: 10px; text-align: center;
-}
+.meta-tile { background: var(--mint); border: 1px solid #c8e6d5; border-radius: 11px; padding: 10px; text-align: center; }
 .meta-label { font-size: 8px; letter-spacing: 1px; text-transform: uppercase; color: var(--green); font-weight: 700; margin-bottom: 4px; }
 .meta-value { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; color: var(--forest); }
 
-.narrative-card {
-  background: #f8fffe; border: 1px solid #c8e6d5; border-radius: 14px;
-  padding: 18px 20px; margin-bottom: 12px;
+/* ─────────────────── DIAGNOSTIC GAP CARD — v29.0 ─────────────────── */
+.gap-card {
+  background: #fffbf0;
+  border: 1.5px solid #f5d87a;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  overflow: hidden;
 }
+.gap-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: #fffbf0;
+  border-bottom: 1px solid transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  min-height: 52px;
+}
+.gap-card-header.has-body { border-bottom-color: #f5d87a; }
+.gap-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #92400e;
+}
+.gap-count-badge {
+  background: #f59e0b;
+  color: white;
+  border-radius: 100px;
+  padding: 2px 9px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+}
+.gap-toggle { font-size: 10px; color: #a06000; opacity: 0.7; white-space: nowrap; }
+.gap-card-body { display: none; }
+.gap-card-body.open { display: block; }
+
+/* Depth message banner */
+.depth-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #fffbf0;
+  border-bottom: 1px solid #fde68a;
+  padding: 12px 18px;
+  font-size: 12px;
+  color: #78350f;
+  line-height: 1.6;
+}
+.depth-banner-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+
+/* Individual test recommendation card */
+.test-rec-card {
+  border-top: 1px solid #fde68a;
+  padding: 16px 18px;
+  background: #fffbf0;
+}
+.test-rec-card:last-child { border-radius: 0 0 12px 12px; }
+.test-rec-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.test-rec-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.priority-pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 100px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.priority-pill.p1 { background: #fee2e2; color: #991b1b; }
+.priority-pill.p2 { background: #fff7ed; color: #92400e; }
+.priority-pill.p3 { background: #f0fdf4; color: #166534; }
+.test-rec-biomarkers { font-size: 11px; color: var(--slate); font-style: italic; margin-bottom: 7px; }
+.test-rec-reason { font-size: 12px; color: var(--slate); line-height: 1.65; margin-bottom: 10px; }
+.test-rec-meta { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; }
+.test-meta-tag {
+  background: white;
+  border: 1px solid #fde68a;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  color: #78350f;
+  font-family: 'DM Mono', monospace;
+}
+.test-rec-how {
+  font-size: 11px;
+  color: var(--forest);
+  background: white;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-top: 10px;
+  line-height: 1.55;
+}
+
+/* Confidence badge — shown on domain score tiles  */
+.conf-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+  margin-top: 4px;
+}
+.conf-badge.HIGH     { background: #dcfce7; color: #166534; }
+.conf-badge.MEDIUM   { background: #fff7ed; color: #92400e; }
+.conf-badge.LOW      { background: #f3f4f6; color: #6b7280; }
+.conf-badge.DISPUTED { background: #fee2e2; color: #991b1b; }
+
+/* Gap dot on meta row */
+.gap-meta-info {
+  background: #fff7ed;
+  border: 1px solid #fde68a;
+  border-radius: 11px;
+  padding: 10px;
+  text-align: center;
+}
+.gap-meta-info .meta-label { color: #92400e; }
+.gap-meta-info .meta-value { color: #78350f; }
+/* ─────────────────── END GAP CARD STYLES ─────────────────── */
+
+.narrative-card { background: #f8fffe; border: 1px solid #c8e6d5; border-radius: 14px; padding: 18px 20px; margin-bottom: 12px; }
 .narrative-title { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--green); margin-bottom: 12px; }
 .narrative-main { font-size: 13px; line-height: 1.75; color: var(--ink); margin-bottom: 10px; }
 .narrative-sub { font-size: 12px; color: var(--slate); line-height: 1.65; border-top: 1px solid var(--border); padding-top: 10px; display: flex; flex-direction: column; gap: 5px; }
 .narrative-sub span { display: block; }
 
-.chart-wrap {
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: 16px; padding: 20px; margin-bottom: 12px;
-}
+.chart-wrap { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 12px; }
 .chart-wrap canvas { max-height: 260px; }
 
-.stack-header {
-  font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700;
-  letter-spacing: 1px; text-transform: uppercase; color: var(--forest);
-  padding: 10px 0; border-bottom: 1px solid var(--border);
-  margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
-}
-
-.supp-card {
-  border: 1px solid var(--border); border-radius: 12px;
-  padding: 15px; margin-bottom: 9px; position: relative;
-  overflow: hidden; transition: box-shadow 0.15s;
-}
+.stack-header { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--forest); padding: 10px 0; border-bottom: 1px solid var(--border); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.supp-card { border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 9px; position: relative; overflow: hidden; transition: box-shadow 0.15s; }
 .supp-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
-.supp-card::before {
-  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-  width: 3px; background: var(--green);
-}
+.supp-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--green); }
 .supp-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
 .supp-name { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--ink); }
-.supp-dose-tag {
-  background: var(--mint); color: var(--forest); padding: 3px 8px;
-  border-radius: 6px; font-family: 'DM Mono', monospace;
-  font-size: 10px; font-weight: 500; white-space: nowrap; flex-shrink: 0;
-}
+.supp-dose-tag { background: var(--mint); color: var(--forest); padding: 3px 8px; border-radius: 6px; font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500; white-space: nowrap; flex-shrink: 0; }
 .supp-hero { font-size: 12px; color: var(--green); font-style: italic; margin-bottom: 7px; display: block; line-height: 1.45; }
 .supp-ing { font-size: 11px; color: var(--slate); margin-bottom: 9px; display: block; }
-details.clinical-details {
-  background: var(--mist); border: 1px solid var(--border);
-  border-radius: 8px; overflow: hidden;
-}
-details.clinical-details summary {
-  cursor: pointer; padding: 10px 12px;
-  font-size: 11px; font-weight: 600; color: var(--green);
-  letter-spacing: 0.3px; list-style: none;
-  display: flex; align-items: center; gap: 6px; user-select: none;
-  touch-action: manipulation; min-height: 44px;
-}
+details.clinical-details { background: var(--mist); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+details.clinical-details summary { cursor: pointer; padding: 10px 12px; font-size: 11px; font-weight: 600; color: var(--green); letter-spacing: 0.3px; list-style: none; display: flex; align-items: center; gap: 6px; user-select: none; touch-action: manipulation; min-height: 44px; }
 details.clinical-details summary::-webkit-details-marker { display: none; }
 details.clinical-details summary::before { content: '▶'; font-size: 8px; transition: transform 0.15s; }
 details[open].clinical-details summary::before { transform: rotate(90deg); }
@@ -478,64 +430,31 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
 .clinical-row.warn { color: var(--red); }
 .empty-stack { padding: 14px; text-align: center; font-size: 13px; color: var(--slate); font-style: italic; }
 
-.life-card {
-  background: #fffbf0; border: 1px solid #f3e0a8;
-  border-radius: 12px; padding: 14px 16px; margin-bottom: 9px;
-}
+.life-card { background: #fffbf0; border: 1px solid #f3e0a8; border-radius: 12px; padding: 14px 16px; margin-bottom: 9px; }
 .life-cat { font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 500; color: var(--amber); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 5px; }
 .life-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
 .life-text { font-size: 12px; color: var(--slate); line-height: 1.65; }
 
-.reset-btn {
-  width: 100%; padding: 14px; background: none;
-  border: 1px solid var(--border); border-radius: 10px;
-  color: var(--slate); font-size: 13px; cursor: pointer;
-  margin-top: 6px; transition: all 0.15s;
-  touch-action: manipulation; min-height: 48px;
-}
+.reset-btn { width: 100%; padding: 14px; background: none; border: 1px solid var(--border); border-radius: 10px; color: var(--slate); font-size: 13px; cursor: pointer; margin-top: 6px; transition: all 0.15s; touch-action: manipulation; min-height: 48px; }
 .reset-btn:hover { background: var(--mist); border-color: var(--slate); }
 
 /* ─────────────────── CHECK-IN TAB ─────────────────── */
 #checkinTab { display: none; }
-#checkinTab h2 {
-  font-family: 'Syne', sans-serif; font-size: 21px; font-weight: 800;
-  color: var(--forest); margin-bottom: 5px;
-}
-
-/* FIX #3: preview-grid — 3-col on desktop, stack on mobile */
-.preview-card {
-  background: linear-gradient(135deg, var(--forest) 0%, #1f4d36 100%);
-  border-radius: 14px; padding: 18px 20px; margin-bottom: 22px;
-}
-.preview-title {
-  font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700;
-  letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.6);
-  margin-bottom: 14px;
-}
+#checkinTab h2 { font-family: 'Syne', sans-serif; font-size: 21px; font-weight: 800; color: var(--forest); margin-bottom: 5px; }
+.preview-card { background: linear-gradient(135deg, var(--forest) 0%, #1f4d36 100%); border-radius: 14px; padding: 18px 20px; margin-bottom: 22px; }
+.preview-title { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 14px; }
 .preview-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 14px; }
 .preview-tile { text-align: center; }
 .preview-tile-label { font-size: 9px; letter-spacing: 0.8px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 5px; }
 .preview-tile-val { font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 500; color: white; }
 .preview-tile-sub { font-size: 9px; color: rgba(255,255,255,0.55); margin-top: 3px; }
-.preview-stmt {
-  font-size: 12px; color: rgba(255,255,255,0.75);
-  line-height: 1.65; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 12px;
-}
-
-.email-note {
-  background: var(--mint); border: 1px solid #c8e6d5;
-  border-radius: 10px; padding: 11px 14px;
-  font-size: 12px; color: var(--forest); margin-bottom: 16px; line-height: 1.5;
-}
+.preview-stmt { font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.65; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 12px; }
+.email-note { background: var(--mint); border: 1px solid #c8e6d5; border-radius: 10px; padding: 11px 14px; font-size: 12px; color: var(--forest); margin-bottom: 16px; line-height: 1.5; }
 .email-note strong { font-weight: 700; }
 
 /* ─────────────────── RESPONSIVE ─────────────────── */
-
-/* Medium mobile — 520px to 640px */
 @media (max-width: 640px) {
-  /* FIX #4: meta-row drops to 2x2 */
   .meta-row { grid-template-columns: 1fr 1fr; }
-  /* FIX #3: preview-grid drops to 1-col */
   .preview-grid { grid-template-columns: 1fr; gap: 6px; }
   .preview-tile { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
   .preview-tile:last-child { border-bottom: none; }
@@ -543,48 +462,27 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
   .preview-tile-val { font-size: 16px; }
   .preview-tile-sub { margin-top: 0; font-size: 10px; }
 }
-
-/* Small mobile — 520px and below */
 @media (max-width: 520px) {
   body { padding: 14px 12px 40px; }
   .card { padding: 20px 16px; }
-
-  /* Stats */
   .stats-row { grid-template-columns: 1fr 1fr; }
   .stats-row .stat-tile:last-child { grid-column: span 2; }
-
-  /* Conditions */
   .signal-grid { grid-template-columns: 1fr; }
-
-  /* Biometric fields */
   .field-row.two-col, .field-row.three-col { grid-template-columns: 1fr; }
-
-  /* FIX #6: Smoking radio — 3 options, all equal width 1-col stack */
   .radio-group { flex-direction: column; }
   .radio-opt { min-width: 100%; flex-direction: row; justify-content: flex-start; gap: 12px; min-height: 48px; }
   .radio-opt .radio-icon { font-size: 20px; }
-
-  /* Tile selects: 4-col → 2-col */
   .tile-select { grid-template-columns: 1fr 1fr; }
-  /* Keep explicit two-col as is */
   .tile-select.two-col { grid-template-columns: 1fr 1fr; }
-
-  /* Phase stepper: hide labels */
   .phase-step .step-label { display: none; }
-
-  /* Font adjustments */
   .phase-heading { font-size: 18px; }
-
-  /* Phase nav: tighten */
   .phase-nav { gap: 8px; }
   .btn-back { padding: 13px 14px; font-size: 12px; }
   .btn-next { font-size: 13px; }
-
-  /* Supp cards: dose tag wraps nicely */
   .supp-top { flex-wrap: wrap; }
+  .gap-card-header { padding: 12px 14px; }
+  .test-rec-card { padding: 14px; }
 }
-
-/* Very small — 400px and below */
 @media (max-width: 400px) {
   .tab-btn { font-size: 12px; padding: 9px 8px; }
   .tab-btn .tab-icon { margin-right: 3px; }
@@ -597,7 +495,7 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
 
 <header class="site-header">
   <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCABuAS4DASIAAhEBAxEB/8QAGAABAQEBAQAAAAAAAAAAAAAAAAcIBQb/xAAwEAEAAgEDAgQDBgcAAAAAAAAAAQIDBAURBgcIEiFhIjFREyMyQVKBFUNicZGy0f/EABoBAQACAwEAAAAAAAAAAAAAAAAEBQMGBwj/xAAoEQEAAgECBgEDBQAAAAAAAAAAAQIDBBEFBiExQVESE2GBkaHBwvD/2gAMAwEAAhEDEQA/AMZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKx2z7EdYdYYsWv1la7FteSItXPqqTOTJX60x+kzHvM1ifymVE8MHaXb42nB171Tp8ea2T7zbtPmiPs8dI/nWifSZnjmvPpEevzmONGbfrdJuGlrqtFnpqNPf8GXHPNL+9Z+Ux7x6OZ8zc8X02S2m0Eda9JvPWIn1EdvzP6eVvo+HReIvl8+EC6u7a9uO0fQGr6i1e2Tv+6U4xaT+JW82PJnt+GPs44r5Y4m0xMTPFZ9WXNx1mo3DWZNXqrxfLktzPlrFax7RWOIrEflEREQ0h4391vz01slLTFPvtXkr9Z+GlJ/3/AMszr3k2ubNoI1mpvN75JnrM9oidoiPUdN+ntG4hNa5fp0jaIAG3oIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADZnQ9I7l58NYtanQew0xaTTaSvpXc9RSleZyfqxU9IivytPrPPHCx0rWlYrWsVrEcRERxEQkHhH3nbtf2k021aa9I1m2Z8tNVj5+L48lr1tx9Ji3HP9M/RYHnDmH5Ytdk0221cczER/afc27zP39RDbNLtOOL+Z/wBt+GR/Gvkme420YufSu0Vtx/fNl/4g6n+J7qTTdSd29dfRZa5tNt+KmhpkrPMWmnM349ova0fsmDufLWC+DhOnpeNp+Mfv1/lrmrtFs9pj2ALxGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdjpLqbfek93ruvT25ZtBq6x5ZtTiYvX9NqzzFo9piXsuoO+Xcretsvt+ffY02HJXy5J0uCmK94+nmiOY/aYTUQc/DNHqMsZcuKtrR2mYiZZK5slY+NbTEACcxgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP//Z" alt="Phytomedix" class="logo-img">
-  <span class="engine-badge">ENGINE v28.3</span>
+  <span class="engine-badge">ENGINE v29.0</span>
 </header>
 
 <div class="container">
@@ -617,340 +515,150 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
   <!-- ════════════════════════════════════════════ -->
   <div id="assessTab">
 
-    <!-- Form Card with 4-Phase Wizard -->
     <div class="card" id="formCard">
-
-      <!-- Phase stepper -->
       <div class="phase-stepper" id="phaseStepper">
-        <div class="phase-step active" id="pstep_1">
-          <div class="step-dot"><span>1</span></div>
-          <div class="step-label">Biometrics</div>
-        </div>
-        <div class="phase-step" id="pstep_2">
-          <div class="step-dot"><span>2</span></div>
-          <div class="step-label">Conditions</div>
-        </div>
-        <div class="phase-step" id="pstep_3">
-          <div class="step-dot"><span>3</span></div>
-          <div class="step-label">Lifestyle</div>
-        </div>
-        <div class="phase-step" id="pstep_4">
-          <div class="step-dot"><span>4</span></div>
-          <div class="step-label">Signals</div>
-        </div>
+        <div class="phase-step active" id="pstep_1"><div class="step-dot"><span>1</span></div><div class="step-label">Biometrics</div></div>
+        <div class="phase-step" id="pstep_2"><div class="step-dot"><span>2</span></div><div class="step-label">Conditions</div></div>
+        <div class="phase-step" id="pstep_3"><div class="step-dot"><span>3</span></div><div class="step-label">Lifestyle</div></div>
+        <div class="phase-step" id="pstep_4"><div class="step-dot"><span>4</span></div><div class="step-label">Signals</div></div>
       </div>
 
-      <!-- ══ PHASE 1 — Identity & Biometrics ══ -->
+      <!-- ══ PHASE 1 ══ -->
       <div class="phase-panel active" id="phase1">
         <h2 class="phase-heading">Identity &amp; Biometrics</h2>
         <p class="phase-sub">Core clinical parameters for Twin initialization and tier calculation.</p>
-
         <div class="field-row">
-          <div>
-            <label class="field-label">Email address</label>
-            <input type="email" id="a_email" placeholder="your@email.com" autocomplete="email">
-          </div>
+          <div><label class="field-label">Email address</label><input type="email" id="a_email" placeholder="your@email.com" autocomplete="email"></div>
         </div>
-
         <div class="field-row two-col">
-          <div>
-            <label class="field-label">Full name (optional)</label>
-            <input type="text" id="a_name" placeholder="Your name" autocomplete="name">
-          </div>
-          <div>
-            <label class="field-label">Age</label>
-            <input type="number" id="a_age" placeholder="35" value="35" min="18" max="100" inputmode="numeric">
-          </div>
+          <div><label class="field-label">Full name (optional)</label><input type="text" id="a_name" placeholder="Your name" autocomplete="name"></div>
+          <div><label class="field-label">Age</label><input type="number" id="a_age" placeholder="35" value="35" min="18" max="100" inputmode="numeric"></div>
         </div>
-
         <div class="field-row">
           <div>
             <label class="field-label">Biological sex</label>
             <div class="radio-group" id="sex_group">
-              <label class="radio-opt" onclick="markSelected(this, 'sex_group')">
-                <input type="radio" name="sex" value="Female" id="sex_female">
-                <span class="radio-icon">♀</span>
-                <span class="radio-text">Female</span>
-              </label>
-              <label class="radio-opt" onclick="markSelected(this, 'sex_group')">
-                <input type="radio" name="sex" value="Male" id="sex_male" checked>
-                <span class="radio-icon">♂</span>
-                <span class="radio-text">Male</span>
-              </label>
+              <label class="radio-opt" onclick="markSelected(this,'sex_group')"><input type="radio" name="sex" value="Female" id="sex_female"><span class="radio-icon">♀</span><span class="radio-text">Female</span></label>
+              <label class="radio-opt" onclick="markSelected(this,'sex_group')"><input type="radio" name="sex" value="Male" id="sex_male" checked><span class="radio-icon">♂</span><span class="radio-text">Male</span></label>
             </div>
           </div>
         </div>
-
         <div class="field-row two-col">
-          <div>
-            <label class="field-label">Weight (kg)</label>
-            <input type="number" id="a_weight" placeholder="75" min="30" max="250" inputmode="decimal">
-            <span class="field-hint">Used for dose tier calculation</span>
-          </div>
-          <div>
-            <label class="field-label">Height (cm)</label>
-            <input type="number" id="a_height" placeholder="170" min="100" max="250" inputmode="decimal">
-            <span class="field-hint">Used for BMI context</span>
-          </div>
+          <div><label class="field-label">Weight (kg)</label><input type="number" id="a_weight" placeholder="75" min="30" max="250" inputmode="decimal"><span class="field-hint">Used for dose tier calculation</span></div>
+          <div><label class="field-label">Height (cm)</label><input type="number" id="a_height" placeholder="170" min="100" max="250" inputmode="decimal"><span class="field-hint">Used for BMI context</span></div>
         </div>
-
-        <div class="field-row" style="margin-bottom: 22px;">
+        <div class="field-row" style="margin-bottom:22px;">
           <div>
             <label class="field-label">Smoking status</label>
             <div class="radio-group" id="smoking_group">
-              <label class="radio-opt" onclick="markSelected(this, 'smoking_group')">
-                <input type="radio" name="smoking" value="Never" id="smk_never" checked>
-                <span class="radio-icon">🚭</span>
-                <span class="radio-text">Never</span>
-              </label>
-              <label class="radio-opt" onclick="markSelected(this, 'smoking_group')">
-                <input type="radio" name="smoking" value="Former" id="smk_former">
-                <span class="radio-icon">🕐</span>
-                <span class="radio-text">Former</span>
-              </label>
-              <label class="radio-opt" onclick="markSelected(this, 'smoking_group')">
-                <input type="radio" name="smoking" value="Current" id="smk_current">
-                <span class="radio-icon">⚠️</span>
-                <span class="radio-text">Current</span>
-              </label>
+              <label class="radio-opt" onclick="markSelected(this,'smoking_group')"><input type="radio" name="smoking" value="Never" id="smk_never" checked><span class="radio-icon">🚭</span><span class="radio-text">Never</span></label>
+              <label class="radio-opt" onclick="markSelected(this,'smoking_group')"><input type="radio" name="smoking" value="Former" id="smk_former"><span class="radio-icon">🕐</span><span class="radio-text">Former</span></label>
+              <label class="radio-opt" onclick="markSelected(this,'smoking_group')"><input type="radio" name="smoking" value="Current" id="smk_current"><span class="radio-icon">⚠️</span><span class="radio-text">Current</span></label>
             </div>
             <span class="field-hint">Activates safety veto logic for certain compounds</span>
           </div>
         </div>
-
-        <div class="phase-nav">
-          <span class="phase-counter">Step 1 of 4</span>
-          <button class="btn-next" onclick="goPhase(2)">Continue → Conditions</button>
-        </div>
+        <div class="phase-nav"><span class="phase-counter">Step 1 of 4</span><button class="btn-next" onclick="goPhase(2)">Continue → Conditions</button></div>
       </div>
 
-      <!-- ══ PHASE 2 — Clinical Signals ══ -->
+      <!-- ══ PHASE 2 ══ -->
       <div class="phase-panel" id="phase2">
         <h2 class="phase-heading">Clinical Signals</h2>
         <p class="phase-sub">Select all conditions that apply. Each activates a specific domain scoring pathway.</p>
-
         <span class="signals-label">Metabolic &amp; Cardiovascular</span>
         <div class="signal-grid">
-          <label class="signal-label" onclick="markCheckSelected(this)">
-            <input type="checkbox" id="sym_diabetes" value="Diabetes Type 2">
-            <span class="dot"></span><span class="sig-icon">🩸</span><span>High Blood Sugar / T2D</span>
-          </label>
-          <label class="signal-label" onclick="markCheckSelected(this)">
-            <input type="checkbox" id="sym_bp" value="Hypertension">
-            <span class="dot"></span><span class="sig-icon">❤️</span><span>High Blood Pressure</span>
-          </label>
-          <label class="signal-label" onclick="markCheckSelected(this)">
-            <input type="checkbox" id="sym_chol" value="High Cholesterol">
-            <span class="dot"></span><span class="sig-icon">🧪</span><span>High Cholesterol</span>
-          </label>
-          <label class="signal-label" onclick="markCheckSelected(this)">
-            <input type="checkbox" id="sym_obesity" value="Obesity / Weight Management">
-            <span class="dot"></span><span class="sig-icon">⚖️</span><span>Obesity / Weight Mgmt</span>
-          </label>
+          <label class="signal-label" onclick="markCheckSelected(this)"><input type="checkbox" id="sym_diabetes" value="Diabetes Type 2"><span class="dot"></span><span class="sig-icon">🩸</span><span>High Blood Sugar / T2D</span></label>
+          <label class="signal-label" onclick="markCheckSelected(this)"><input type="checkbox" id="sym_bp" value="Hypertension"><span class="dot"></span><span class="sig-icon">❤️</span><span>High Blood Pressure</span></label>
+          <label class="signal-label" onclick="markCheckSelected(this)"><input type="checkbox" id="sym_chol" value="High Cholesterol"><span class="dot"></span><span class="sig-icon">🧪</span><span>High Cholesterol</span></label>
+          <label class="signal-label" onclick="markCheckSelected(this)"><input type="checkbox" id="sym_obesity" value="Obesity / Weight Management"><span class="dot"></span><span class="sig-icon">⚖️</span><span>Obesity / Weight Mgmt</span></label>
         </div>
-
         <span class="signals-label">Neurological &amp; Cognitive</span>
         <div class="signal-grid">
-          <label class="signal-label" onclick="markCheckSelected(this)">
-            <input type="checkbox" id="sym_brain" value="Brain Fog">
-            <span class="dot"></span><span class="sig-icon">🧠</span><span>Brain Fog / Focus</span>
-          </label>
-          <label class="signal-label" onclick="markCheckSelected(this)">
-            <input type="checkbox" id="sym_anxiety" value="Anxiety / Chronic Stress">
-            <span class="dot"></span><span class="sig-icon">😟</span><span>Anxiety / Chronic Stress</span>
-          </label>
+          <label class="signal-label" onclick="markCheckSelected(this)"><input type="checkbox" id="sym_brain" value="Brain Fog"><span class="dot"></span><span class="sig-icon">🧠</span><span>Brain Fog / Focus</span></label>
+          <label class="signal-label" onclick="markCheckSelected(this)"><input type="checkbox" id="sym_anxiety" value="Anxiety / Chronic Stress"><span class="dot"></span><span class="sig-icon">😟</span><span>Anxiety / Chronic Stress</span></label>
         </div>
-
         <span class="signals-label">Musculoskeletal &amp; Digestive</span>
         <div class="signal-grid">
-          <label class="signal-label" onclick="markCheckSelected(this)">
-            <input type="checkbox" id="sym_joints" value="Joint Pain / Arthritis">
-            <span class="dot"></span><span class="sig-icon">🦴</span><span>Joint Pain / Arthritis</span>
-          </label>
-          <label class="signal-label" onclick="markCheckSelected(this)">
-            <input type="checkbox" id="sym_gut" value="IBS / Digestive Issues">
-            <span class="dot"></span><span class="sig-icon">🌿</span><span>IBS / Digestive Issues</span>
-          </label>
+          <label class="signal-label" onclick="markCheckSelected(this)"><input type="checkbox" id="sym_joints" value="Joint Pain / Arthritis"><span class="dot"></span><span class="sig-icon">🦴</span><span>Joint Pain / Arthritis</span></label>
+          <label class="signal-label" onclick="markCheckSelected(this)"><input type="checkbox" id="sym_gut" value="IBS / Digestive Issues"><span class="dot"></span><span class="sig-icon">🌿</span><span>IBS / Digestive Issues</span></label>
         </div>
-
         <span class="signals-label">Hormonal</span>
         <div class="signal-grid">
-          <label class="signal-label" onclick="markCheckSelected(this)">
-            <input type="checkbox" id="sym_hormone" value="Hormonal Imbalance / Low Libido">
-            <span class="dot"></span><span class="sig-icon">⚡</span><span>Hormonal / Low Libido</span>
-          </label>
-          <!-- Menopause shows only for female -->
-          <label class="signal-label conditional-field" id="field_menopause" onclick="markCheckSelected(this)">
-            <input type="checkbox" id="sym_menopause" value="Menopause">
-            <span class="dot"></span><span class="sig-icon">🌸</span><span>Menopause / Perimenopause</span>
-          </label>
+          <label class="signal-label" onclick="markCheckSelected(this)"><input type="checkbox" id="sym_hormone" value="Hormonal Imbalance / Low Libido"><span class="dot"></span><span class="sig-icon">⚡</span><span>Hormonal / Low Libido</span></label>
+          <label class="signal-label conditional-field" id="field_menopause" onclick="markCheckSelected(this)"><input type="checkbox" id="sym_menopause" value="Menopause"><span class="dot"></span><span class="sig-icon">🌸</span><span>Menopause / Perimenopause</span></label>
         </div>
-
-        <div class="phase-nav">
-          <button class="btn-back" onclick="goPhase(1)">← Back</button>
-          <span class="phase-counter">Step 2 of 4</span>
-          <button class="btn-next" onclick="goPhase(3)">Continue → Lifestyle</button>
-        </div>
+        <div class="phase-nav"><button class="btn-back" onclick="goPhase(1)">← Back</button><span class="phase-counter">Step 2 of 4</span><button class="btn-next" onclick="goPhase(3)">Continue → Lifestyle</button></div>
       </div>
 
-      <!-- ══ PHASE 3 — Lifestyle Context ══ -->
+      <!-- ══ PHASE 3 ══ -->
       <div class="phase-panel" id="phase3">
         <h2 class="phase-heading">Lifestyle Context</h2>
         <p class="phase-sub">Environmental inputs that modulate your domain load calculations.</p>
-
-        <label class="field-label" style="margin-bottom: 10px;">Diet pattern</label>
-        <div class="tile-select" id="diet_group" style="margin-bottom: 20px;">
-          <label class="tile-opt" onclick="markSelected(this, 'diet_group')">
-            <input type="radio" name="diet" value="Balanced" checked>
-            <span class="tile-icon">🥗</span>
-            <span class="tile-text">Balanced</span>
-          </label>
-          <label class="tile-opt" onclick="markSelected(this, 'diet_group')">
-            <input type="radio" name="diet" value="High carb">
-            <span class="tile-icon">🍞</span>
-            <span class="tile-text">High Carb</span>
-          </label>
-          <label class="tile-opt" onclick="markSelected(this, 'diet_group')">
-            <input type="radio" name="diet" value="High fat / Keto">
-            <span class="tile-icon">🥑</span>
-            <span class="tile-text">High Fat</span>
-          </label>
-          <label class="tile-opt" onclick="markSelected(this, 'diet_group')">
-            <input type="radio" name="diet" value="Low calorie / Restricted">
-            <span class="tile-icon">📉</span>
-            <span class="tile-text">Low Cal</span>
-          </label>
+        <label class="field-label" style="margin-bottom:10px;">Diet pattern</label>
+        <div class="tile-select" id="diet_group" style="margin-bottom:20px;">
+          <label class="tile-opt" onclick="markSelected(this,'diet_group')"><input type="radio" name="diet" value="Balanced" checked><span class="tile-icon">🥗</span><span class="tile-text">Balanced</span></label>
+          <label class="tile-opt" onclick="markSelected(this,'diet_group')"><input type="radio" name="diet" value="High carb"><span class="tile-icon">🍞</span><span class="tile-text">High Carb</span></label>
+          <label class="tile-opt" onclick="markSelected(this,'diet_group')"><input type="radio" name="diet" value="High fat / Keto"><span class="tile-icon">🥑</span><span class="tile-text">High Fat</span></label>
+          <label class="tile-opt" onclick="markSelected(this,'diet_group')"><input type="radio" name="diet" value="Low calorie / Restricted"><span class="tile-icon">📉</span><span class="tile-text">Low Cal</span></label>
         </div>
-
-        <label class="field-label" style="margin-bottom: 10px;">Exercise frequency</label>
-        <div class="tile-select" id="exercise_group" style="margin-bottom: 20px;">
-          <label class="tile-opt" onclick="markSelected(this, 'exercise_group')">
-            <input type="radio" name="exercise" value="None">
-            <span class="tile-icon">🛋️</span>
-            <span class="tile-text">None</span>
-          </label>
-          <label class="tile-opt selected" onclick="markSelected(this, 'exercise_group')">
-            <input type="radio" name="exercise" value="1–2x / week" checked>
-            <span class="tile-icon">🚶</span>
-            <span class="tile-text">1–2x / wk</span>
-          </label>
-          <label class="tile-opt" onclick="markSelected(this, 'exercise_group')">
-            <input type="radio" name="exercise" value="3–5x / week">
-            <span class="tile-icon">🏃</span>
-            <span class="tile-text">3–5x / wk</span>
-          </label>
-          <label class="tile-opt" onclick="markSelected(this, 'exercise_group')">
-            <input type="radio" name="exercise" value="Daily / Athletic">
-            <span class="tile-icon">🏋️</span>
-            <span class="tile-text">Daily</span>
-          </label>
+        <label class="field-label" style="margin-bottom:10px;">Exercise frequency</label>
+        <div class="tile-select" id="exercise_group" style="margin-bottom:20px;">
+          <label class="tile-opt" onclick="markSelected(this,'exercise_group')"><input type="radio" name="exercise" value="None"><span class="tile-icon">🛋️</span><span class="tile-text">None</span></label>
+          <label class="tile-opt selected" onclick="markSelected(this,'exercise_group')"><input type="radio" name="exercise" value="1–2x / week" checked><span class="tile-icon">🚶</span><span class="tile-text">1–2x / wk</span></label>
+          <label class="tile-opt" onclick="markSelected(this,'exercise_group')"><input type="radio" name="exercise" value="3–5x / week"><span class="tile-icon">🏃</span><span class="tile-text">3–5x / wk</span></label>
+          <label class="tile-opt" onclick="markSelected(this,'exercise_group')"><input type="radio" name="exercise" value="Daily / Athletic"><span class="tile-icon">🏋️</span><span class="tile-text">Daily</span></label>
         </div>
-
         <div class="field-row two-col">
           <div>
-            <label class="field-label" style="margin-bottom: 10px;">Avg. nightly sleep</label>
-            <div class="tile-select two-col" id="sleep_group" style="margin-bottom: 0;">
-              <label class="tile-opt" onclick="markSelected(this, 'sleep_group')">
-                <input type="radio" name="sleep_hrs" value="Under 5h">
-                <span class="tile-icon">😴</span>
-                <span class="tile-text">&lt; 5h</span>
-              </label>
-              <label class="tile-opt" onclick="markSelected(this, 'sleep_group')">
-                <input type="radio" name="sleep_hrs" value="5–6h">
-                <span class="tile-icon">😑</span>
-                <span class="tile-text">5–6h</span>
-              </label>
-              <label class="tile-opt selected" onclick="markSelected(this, 'sleep_group')">
-                <input type="radio" name="sleep_hrs" value="7–8h" checked>
-                <span class="tile-icon">😌</span>
-                <span class="tile-text">7–8h</span>
-              </label>
-              <label class="tile-opt" onclick="markSelected(this, 'sleep_group')">
-                <input type="radio" name="sleep_hrs" value="8h+">
-                <span class="tile-icon">😴</span>
-                <span class="tile-text">8h+</span>
-              </label>
+            <label class="field-label" style="margin-bottom:10px;">Avg. nightly sleep</label>
+            <div class="tile-select two-col" id="sleep_group" style="margin-bottom:0;">
+              <label class="tile-opt" onclick="markSelected(this,'sleep_group')"><input type="radio" name="sleep_hrs" value="Under 5h"><span class="tile-icon">😴</span><span class="tile-text">&lt; 5h</span></label>
+              <label class="tile-opt" onclick="markSelected(this,'sleep_group')"><input type="radio" name="sleep_hrs" value="5–6h"><span class="tile-icon">😑</span><span class="tile-text">5–6h</span></label>
+              <label class="tile-opt selected" onclick="markSelected(this,'sleep_group')"><input type="radio" name="sleep_hrs" value="7–8h" checked><span class="tile-icon">😌</span><span class="tile-text">7–8h</span></label>
+              <label class="tile-opt" onclick="markSelected(this,'sleep_group')"><input type="radio" name="sleep_hrs" value="8h+"><span class="tile-icon">😴</span><span class="tile-text">8h+</span></label>
             </div>
           </div>
           <div>
-            <label class="field-label" style="margin-bottom: 10px;">Alcohol consumption</label>
-            <div class="tile-select two-col" id="alcohol_group" style="margin-bottom: 0;">
-              <label class="tile-opt selected" onclick="markSelected(this, 'alcohol_group')">
-                <input type="radio" name="alcohol" value="None" checked>
-                <span class="tile-icon">🚱</span>
-                <span class="tile-text">None</span>
-              </label>
-              <label class="tile-opt" onclick="markSelected(this, 'alcohol_group')">
-                <input type="radio" name="alcohol" value="Occasional (1–2 / wk)">
-                <span class="tile-icon">🍷</span>
-                <span class="tile-text">Occasional</span>
-              </label>
-              <label class="tile-opt" onclick="markSelected(this, 'alcohol_group')">
-                <input type="radio" name="alcohol" value="Regular (3–5 / wk)">
-                <span class="tile-icon">🍺</span>
-                <span class="tile-text">Regular</span>
-              </label>
-              <label class="tile-opt" onclick="markSelected(this, 'alcohol_group')">
-                <input type="radio" name="alcohol" value="Daily">
-                <span class="tile-icon">⚠️</span>
-                <span class="tile-text">Daily</span>
-              </label>
+            <label class="field-label" style="margin-bottom:10px;">Alcohol consumption</label>
+            <div class="tile-select two-col" id="alcohol_group" style="margin-bottom:0;">
+              <label class="tile-opt selected" onclick="markSelected(this,'alcohol_group')"><input type="radio" name="alcohol" value="None" checked><span class="tile-icon">🚱</span><span class="tile-text">None</span></label>
+              <label class="tile-opt" onclick="markSelected(this,'alcohol_group')"><input type="radio" name="alcohol" value="Occasional (1–2 / wk)"><span class="tile-icon">🍷</span><span class="tile-text">Occasional</span></label>
+              <label class="tile-opt" onclick="markSelected(this,'alcohol_group')"><input type="radio" name="alcohol" value="Regular (3–5 / wk)"><span class="tile-icon">🍺</span><span class="tile-text">Regular</span></label>
+              <label class="tile-opt" onclick="markSelected(this,'alcohol_group')"><input type="radio" name="alcohol" value="Daily"><span class="tile-icon">⚠️</span><span class="tile-text">Daily</span></label>
             </div>
           </div>
         </div>
-
-        <div class="phase-nav" style="margin-top: 20px;">
-          <button class="btn-back" onclick="goPhase(2)">← Back</button>
-          <span class="phase-counter">Step 3 of 4</span>
-          <button class="btn-next" onclick="goPhase(4)">Continue → Signals</button>
-        </div>
+        <div class="phase-nav" style="margin-top:20px;"><button class="btn-back" onclick="goPhase(2)">← Back</button><span class="phase-counter">Step 3 of 4</span><button class="btn-next" onclick="goPhase(4)">Continue → Signals</button></div>
       </div>
 
-      <!-- ══ PHASE 4 — Subjective Scores ══ -->
+      <!-- ══ PHASE 4 ══ -->
       <div class="phase-panel" id="phase4">
         <h2 class="phase-heading">Subjective Signals</h2>
         <p class="phase-sub">How have you felt over the past 2 weeks? These calibrate your cognitive and hormonal baseline.</p>
-
         <div class="subjective-slider">
-          <div class="slider-header">
-            <span class="slider-label">⚡ Daily Energy</span>
-            <span class="slider-value" id="lbl_energy_a">6 / 10</span>
-          </div>
+          <div class="slider-header"><span class="slider-label">⚡ Daily Energy</span><span class="slider-value" id="lbl_energy_a">6 / 10</span></div>
           <input type="range" id="a_energy" min="1" max="10" value="6" oninput="updateSliderLabels()">
           <div class="slider-ticks"><span>1 Low</span><span>5 Avg</span><span>10 High</span></div>
         </div>
-
         <div class="subjective-slider">
-          <div class="slider-header">
-            <span class="slider-label">🌙 Sleep Quality</span>
-            <span class="slider-value" id="lbl_sleep_a">6 / 10</span>
-          </div>
+          <div class="slider-header"><span class="slider-label">🌙 Sleep Quality</span><span class="slider-value" id="lbl_sleep_a">6 / 10</span></div>
           <input type="range" id="a_sleep_q" min="1" max="10" value="6" oninput="updateSliderLabels()">
           <div class="slider-ticks"><span>1 Poor</span><span>5 Avg</span><span>10 Excellent</span></div>
         </div>
-
         <div class="subjective-slider">
-          <div class="slider-header">
-            <span class="slider-label">😮‍💨 Stress Level</span>
-            <span class="slider-value" id="lbl_stress_a">5 / 10</span>
-          </div>
+          <div class="slider-header"><span class="slider-label">😮‍💨 Stress Level</span><span class="slider-value" id="lbl_stress_a">5 / 10</span></div>
           <input type="range" id="a_stress" min="1" max="10" value="5" oninput="updateSliderLabels()">
           <div class="slider-ticks"><span>1 Calm</span><span>5 Moderate</span><span>10 High</span></div>
         </div>
-
-        <div style="background: var(--mint); border: 1px solid #c8e6d5; border-radius: 10px; padding: 12px 14px; margin: 18px 0 22px; font-size: 12px; color: var(--forest); line-height: 1.6;">
+        <div style="background:var(--mint);border:1px solid #c8e6d5;border-radius:10px;padding:12px 14px;margin:18px 0 22px;font-size:12px;color:var(--forest);line-height:1.6;">
           <strong>✓ Ready to generate.</strong> Your 4-phase intake is complete. The engine will apply biometric tier weighting, safety vetoes, domain scoring, and behaviour calibration to your protocol.
         </div>
-
         <div class="phase-nav">
           <button class="btn-back" onclick="goPhase(3)">← Back</button>
           <span class="phase-counter">Step 4 of 4</span>
-          <button class="btn-next" id="generateBtn" onclick="runAssessment()" style="background: #0a5c30;">
-            🧬 Generate Digital Twin Protocol
-          </button>
+          <button class="btn-next" id="generateBtn" onclick="runAssessment()" style="background:#0a5c30;">🧬 Generate Digital Twin Protocol</button>
         </div>
       </div>
-
     </div><!-- /formCard -->
 
     <!-- Loading -->
@@ -958,7 +666,7 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
       <div class="spinner-dna">🧬</div>
       <div class="loading-stage" id="loadingStage">Initializing engine...</div>
       <div class="loading-bar-wrap"><div class="loading-bar" id="loadingBar"></div></div>
-      <div class="loading-sub">Engine v28.3 · Clinical Intake Restored · ERP-integrated</div>
+      <div class="loading-sub">Engine v29.0 · Diagnostic Gap Engine Active · ERP-integrated</div>
     </div>
 
     <!-- Dashboard -->
@@ -969,40 +677,41 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
       </div>
       <div class="badge-lifecycle-row" id="badge_row"></div>
       <div class="stats-row">
-        <div class="stat-tile" id="tile_score">
-          <div class="stat-label">Functional Score</div>
-          <div class="stat-value" id="disp_score">—</div>
-          <div class="stat-sub">/100</div>
+        <div class="stat-tile" id="tile_score"><div class="stat-label">Functional Score</div><div class="stat-value" id="disp_score">—</div><div class="stat-sub">/100</div></div>
+        <div class="stat-tile" id="tile_bioage"><div class="stat-label">Biological Age</div><div class="stat-value" id="disp_bioage">—</div><div class="stat-sub">years</div></div>
+        <div class="stat-tile" id="tile_momentum"><div class="stat-label">Momentum</div><div class="stat-value" id="disp_momentum">—</div><div class="stat-sub" id="disp_momentum_sub">vs last cycle</div></div>
+      </div>
+
+      <!-- Meta row — 4 tiles. Gap count tile is shown/hidden by renderGapCard() -->
+      <div class="meta-row" id="metaRow">
+        <div class="meta-tile"><div class="meta-label">Cycle</div><div class="meta-value" id="disp_cycle">—</div></div>
+        <div class="meta-tile"><div class="meta-label">90d Proj.</div><div class="meta-value" id="disp_proj">—</div></div>
+        <div class="meta-tile"><div class="meta-label">Multiplier</div><div class="meta-value" id="disp_mult">—</div></div>
+        <div class="meta-tile"><div class="meta-label">Responsiveness</div><div class="meta-value" id="disp_resp">—</div></div>
+      </div>
+
+      <!-- ══ DIAGNOSTIC GAP CARD — v29.0 ══
+           Hidden by default. renderGapCard() shows it when gaps exist.
+           Position: between meta-row and narrative-card.
+      ══ -->
+      <div class="gap-card" id="gapCard" style="display:none;">
+        <div class="gap-card-header" id="gapCardHeader" onclick="toggleGapCard()">
+          <div class="gap-card-title">
+            🧪 Complete Your Health Profile
+            <span class="gap-count-badge" id="gapCountBadge">— tests</span>
+          </div>
+          <span class="gap-toggle" id="gapToggleIcon">▼ Show</span>
         </div>
-        <div class="stat-tile" id="tile_bioage">
-          <div class="stat-label">Biological Age</div>
-          <div class="stat-value" id="disp_bioage">—</div>
-          <div class="stat-sub">years</div>
-        </div>
-        <div class="stat-tile" id="tile_momentum">
-          <div class="stat-label">Momentum</div>
-          <div class="stat-value" id="disp_momentum">—</div>
-          <div class="stat-sub" id="disp_momentum_sub">vs last cycle</div>
+        <div class="gap-card-body" id="gapCardBody">
+          <div class="depth-banner">
+            <span class="depth-banner-icon">📊</span>
+            <span id="depthMessage"><strong>Your protocol is running at partial depth.</strong> These tests would confirm the domains currently based on lifestyle signals only — and unlock a more precisely calibrated protocol.</span>
+          </div>
+          <div id="testRecList"></div>
         </div>
       </div>
-      <div class="meta-row">
-        <div class="meta-tile">
-          <div class="meta-label">Cycle</div>
-          <div class="meta-value" id="disp_cycle">—</div>
-        </div>
-        <div class="meta-tile">
-          <div class="meta-label">90d Proj.</div>
-          <div class="meta-value" id="disp_proj">—</div>
-        </div>
-        <div class="meta-tile">
-          <div class="meta-label">Multiplier</div>
-          <div class="meta-value" id="disp_mult">—</div>
-        </div>
-        <div class="meta-tile">
-          <div class="meta-label">Responsiveness</div>
-          <div class="meta-value" id="disp_resp">—</div>
-        </div>
-      </div>
+      <!-- ══ END GAP CARD ══ -->
+
       <div class="narrative-card" id="narrativeCard">
         <div class="narrative-title">🧬 Twin Evolution Summary</div>
         <div class="narrative-main" id="narr_main">—</div>
@@ -1034,92 +743,46 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
   <div id="checkinTab">
     <div class="card">
       <h2>Recalibrate My Twin</h2>
-      <p class="subtitle" style="font-size:13px; color:var(--slate); margin-bottom:18px;">Behaviour signals — influence your trajectory without a full assessment</p>
-
-      <div class="email-note">
-        <strong>Same email as your assessment</strong> — the engine links this check-in to your existing Twin State and increments your cycle.
-      </div>
-
-      <div class="field-row" style="margin-bottom:20px;">
-        <div>
-          <label class="field-label">Email</label>
-          <input type="email" id="ci_email" placeholder="your@email.com" autocomplete="email">
-        </div>
-      </div>
-
-      <!-- Behaviour preview (live) -->
+      <p class="subtitle" style="font-size:13px;color:var(--slate);margin-bottom:18px;">Behaviour signals — influence your trajectory without a full assessment</p>
+      <div class="email-note"><strong>Same email as your assessment</strong> — the engine links this check-in to your existing Twin State and increments your cycle.</div>
+      <div class="field-row" style="margin-bottom:20px;"><div><label class="field-label">Email</label><input type="email" id="ci_email" placeholder="your@email.com" autocomplete="email"></div></div>
       <div class="preview-card" id="previewCard">
         <div class="preview-title">Today's Twin Response — Live Preview</div>
         <div class="preview-grid">
-          <div class="preview-tile">
-            <div class="preview-tile-label">Responsiveness</div>
-            <div class="preview-tile-val" id="prev_resp">1.0</div>
-            <div class="preview-tile-sub" id="prev_resp_label">Neutral</div>
-          </div>
-          <div class="preview-tile">
-            <div class="preview-tile-label">Momentum Effect</div>
-            <div class="preview-tile-val" id="prev_mfx">→ Steady</div>
-            <div class="preview-tile-sub">Trajectory modifier</div>
-          </div>
-          <div class="preview-tile">
-            <div class="preview-tile-label">Trajectory</div>
-            <div class="preview-tile-val" id="prev_traj">↗</div>
-            <div class="preview-tile-sub" id="prev_traj_label">Forward</div>
-          </div>
+          <div class="preview-tile"><div class="preview-tile-label">Responsiveness</div><div class="preview-tile-val" id="prev_resp">1.0</div><div class="preview-tile-sub" id="prev_resp_label">Neutral</div></div>
+          <div class="preview-tile"><div class="preview-tile-label">Momentum Effect</div><div class="preview-tile-val" id="prev_mfx">→ Steady</div><div class="preview-tile-sub">Trajectory modifier</div></div>
+          <div class="preview-tile"><div class="preview-tile-label">Trajectory</div><div class="preview-tile-val" id="prev_traj">↗</div><div class="preview-tile-sub" id="prev_traj_label">Forward</div></div>
         </div>
-        <div class="preview-stmt" id="prev_stmt">
-          If you submit today: your Twin will recalibrate with a Neutral trajectory.
-        </div>
+        <div class="preview-stmt" id="prev_stmt">If you submit today: your Twin will recalibrate with a Neutral trajectory.</div>
       </div>
-
       <div class="slider-group">
-        <div class="slider-header">
-          <span class="slider-label">⚡ Daily Energy</span>
-          <span class="slider-value" id="lbl_energy">7 / 10</span>
-        </div>
+        <div class="slider-header"><span class="slider-label">⚡ Daily Energy</span><span class="slider-value" id="lbl_energy">7 / 10</span></div>
         <input type="range" id="ci_energy" min="1" max="10" value="7" oninput="updatePreview()">
         <div class="slider-ticks"><span>1</span><span>5</span><span>10</span></div>
       </div>
-
       <div class="slider-group">
-        <div class="slider-header">
-          <span class="slider-label">🌙 Sleep Quality</span>
-          <span class="slider-value" id="lbl_sleep">7 / 10</span>
-        </div>
+        <div class="slider-header"><span class="slider-label">🌙 Sleep Quality</span><span class="slider-value" id="lbl_sleep">7 / 10</span></div>
         <input type="range" id="ci_sleep" min="1" max="10" value="7" oninput="updatePreview()">
         <div class="slider-ticks"><span>1</span><span>5</span><span>10</span></div>
       </div>
-
       <div class="slider-group">
-        <div class="slider-header">
-          <span class="slider-label">😮‍💨 Stress Level</span>
-          <span class="slider-value" id="lbl_stress">4 / 10</span>
-        </div>
+        <div class="slider-header"><span class="slider-label">😮‍💨 Stress Level</span><span class="slider-value" id="lbl_stress">4 / 10</span></div>
         <input type="range" id="ci_stress" min="1" max="10" value="4" oninput="updatePreview()">
         <div class="slider-ticks"><span>1</span><span>5</span><span>10</span></div>
       </div>
-
       <div class="slider-group">
-        <div class="slider-header">
-          <span class="slider-label">💊 Protocol Adherence</span>
-          <span class="slider-value" id="lbl_adherence">80 %</span>
-        </div>
+        <div class="slider-header"><span class="slider-label">💊 Protocol Adherence</span><span class="slider-value" id="lbl_adherence">80 %</span></div>
         <input type="range" id="ci_adherence" min="1" max="10" value="8" oninput="updatePreview()">
         <div class="slider-ticks"><span>10%</span><span>50%</span><span>100%</span></div>
       </div>
-
-      <button class="cta-btn" id="checkinBtn" onclick="runCheckin()">
-        Recalibrate My Twin
-      </button>
-
-      <div id="ci_loading" style="display:none; text-align:center; padding:30px 0;">
+      <button class="cta-btn" id="checkinBtn" onclick="runCheckin()">Recalibrate My Twin</button>
+      <div id="ci_loading" style="display:none;text-align:center;padding:30px 0;">
         <div class="spinner-dna" style="font-size:36px;">🔄</div>
         <div class="loading-stage" id="ci_stage">Recalibrating...</div>
       </div>
-
       <div id="ci_result" style="display:none;" class="card" style="margin-top:14px;">
         <div class="card-title">Twin Recalibrated</div>
-        <div id="ci_result_body" style="font-size:13px; line-height:1.7; color:var(--ink);"></div>
+        <div id="ci_result_body" style="font-size:13px;line-height:1.7;color:var(--ink);"></div>
       </div>
     </div>
   </div>
@@ -1130,7 +793,7 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
 // ════════════════════════════════════════════════
 // CONFIG
 // ════════════════════════════════════════════════
-var API_URL = "https://script.google.com/macros/s/AKfycbxopRg9ka7U0-Ue2M3cHzgGO8Hxwphs4Vf6g3a6SsPW4MZaTD8jLoHrL2QGiPLDKuBy/exec";
+var API_URL = "https://script.google.com/macros/s/AKfycbyXmQROrpFAQ87Y4r36TjTu2JZ6gElJh-S7I3ZPGyXPmzMRalywNjDOshrOfZ_yAgYJ/exec";
 
 var STAGES = [
   "Loading clinical profiles...",
@@ -1138,7 +801,8 @@ var STAGES = [
   "Querying PRODUCT_CATALOG_DB...",
   "Applying safety vetoes...",
   "Applying tier multipliers...",
-  "Calculating Twin State...",
+  "Calculating confidence tiers...",
+  "Running Diagnostic Gap Engine...",
   "Writing TWIN_STATE + SNAPSHOTS...",
   "Generating coach message..."
 ];
@@ -1160,34 +824,24 @@ function stopStages() {
 }
 
 // ════════════════════════════════════════════════
-// FIX #1: JS FALLBACK FOR :has() — marks .selected on
-// radio tiles, checkbox tiles, radio groups for older
-// Android browsers that don't support CSS :has()
+// FIX #1 — JS FALLBACK FOR :has()
 // ════════════════════════════════════════════════
 function markSelected(el, groupId) {
   var group = document.getElementById(groupId);
   if (!group) return;
-  // Remove .selected from all siblings in this group
   var siblings = group.querySelectorAll('.radio-opt, .tile-opt');
   siblings.forEach(function(s) { s.classList.remove('selected'); });
-  // Add .selected to clicked element
   el.classList.add('selected');
 }
 
 function markCheckSelected(el) {
-  // For checkboxes: toggle .selected on the label
-  // We defer to after the browser processes the checkbox state
   setTimeout(function() {
     var cb = el.querySelector('input[type="checkbox"]');
-    if (cb) {
-      el.classList.toggle('selected', cb.checked);
-    }
+    if (cb) { el.classList.toggle('selected', cb.checked); }
   }, 0);
 }
 
-// Init .selected classes from pre-checked defaults on page load
 (function initSelected() {
-  // Radio groups: find checked input, mark parent label
   document.querySelectorAll('input[type="radio"]:checked').forEach(function(input) {
     var label = input.closest('.radio-opt, .tile-opt');
     if (label) label.classList.add('selected');
@@ -1205,18 +859,16 @@ function switchTab(tab) {
 }
 
 // ════════════════════════════════════════════════
-// PHASE WIZARD NAVIGATION
+// PHASE WIZARD
 // ════════════════════════════════════════════════
 var currentPhase = 1;
 
 function goPhase(n) {
   if (n > currentPhase && !validatePhase(currentPhase)) return;
-
   for (var i = 1; i <= 4; i++) {
     var panel = document.getElementById("phase" + i);
     if (panel) panel.classList.toggle("active", i === n);
   }
-
   for (var j = 1; j <= 4; j++) {
     var step = document.getElementById("pstep_" + j);
     if (!step) continue;
@@ -1224,14 +876,12 @@ function goPhase(n) {
     if (j < n) step.classList.add("done");
     if (j === n) step.classList.add("active");
   }
-
   if (n === 2) {
     var isFemale = document.querySelector('input[name="sex"]:checked');
     var femVal   = isFemale ? isFemale.value : "Male";
     var mField   = document.getElementById("field_menopause");
     if (mField) mField.style.display = femVal === "Female" ? "flex" : "none";
   }
-
   currentPhase = n;
   var fc = document.getElementById("formCard");
   if (fc) fc.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -1257,7 +907,6 @@ function validatePhase(n) {
   return true;
 }
 
-// Sex change: toggle menopause field
 document.querySelectorAll('input[name="sex"]').forEach(function(r) {
   r.addEventListener("change", function() {
     if (currentPhase === 2) {
@@ -1267,7 +916,6 @@ document.querySelectorAll('input[name="sex"]').forEach(function(r) {
   });
 });
 
-// Update subjective slider labels (phase 4)
 function updateSliderLabels() {
   var e  = document.getElementById("a_energy");
   var s  = document.getElementById("a_sleep_q");
@@ -1326,21 +974,13 @@ function runAssessment() {
   var stressLvl = document.getElementById("a_stress").value;
 
   var payload = {
-    email:          email,
-    name:           name,
-    "Q-001":        age,
-    "Q-002":        gender,
-    "Q-003":        smoking,
-    "Q-010":        q10.join("; "),
-    "Q-019":        height,
-    "Q-021":        weight,
-    "Q-006":        diet,
-    "Q-exercise":   exercise,
-    "Q-sleep-hrs":  sleepHrs,
-    "Q-alcohol":    alcohol,
-    "Q-023":        energy,
-    "Q-sleep-qual": sleepQual,
-    "Q-stress":     stressLvl
+    email: email, name: name,
+    "Q-001": age, "Q-002": gender, "Q-003": smoking,
+    "Q-010": q10.join("; "),
+    "Q-019": height, "Q-021": weight, "Q-006": diet,
+    "Q-exercise": exercise, "Q-sleep-hrs": sleepHrs,
+    "Q-alcohol": alcohol, "Q-023": energy,
+    "Q-sleep-qual": sleepQual, "Q-stress": stressLvl
   };
 
   document.getElementById("formCard").style.display = "none";
@@ -1376,14 +1016,11 @@ function runCheckin() {
   var adherence100    = adherenceSlider * 10;
 
   var payload = {
-    email:          email,
-    adherence:      adherence100,
-    energy_score:   document.getElementById("ci_energy").value,
-    sleep_quality:  document.getElementById("ci_sleep").value,
-    stress_level:   document.getElementById("ci_stress").value,
-    age:     35,
-    "Q-002": "Unknown",
-    "Q-010": ""
+    email: email, adherence: adherence100,
+    energy_score:  document.getElementById("ci_energy").value,
+    sleep_quality: document.getElementById("ci_sleep").value,
+    stress_level:  document.getElementById("ci_stress").value,
+    age: 35, "Q-002": "Unknown", "Q-010": ""
   };
 
   document.getElementById("checkinBtn").style.display = "none";
@@ -1415,38 +1052,18 @@ function runCheckin() {
 }
 
 // ════════════════════════════════════════════════
-// FETCH TRANSPORT — replaces JSONP
-//
-// WHY THIS FIX: JSONP uses <script> tags. GAS /exec
-// URLs respond with a 302 redirect to
-// script.googleusercontent.com. Mobile Chrome/Android
-// does NOT reliably follow cross-origin redirects on
-// <script> tags — it fires onerror immediately.
-// That is why this worked on desktop but failed on mobile.
-//
-// THE FIX: fetch() follows redirects natively. GAS
-// deployed as "Anyone" automatically includes the
-// Access-Control-Allow-Origin: * CORS header, so
-// fetch() works without any engine changes at all.
-// No callback= parameter is needed — GAS returns
-// plain JSON when the callback param is absent.
+// FETCH TRANSPORT
 // ════════════════════════════════════════════════
 function jsonpCall(payload, onSuccess, onError) {
   var url = API_URL + "?payload=" + encodeURIComponent(JSON.stringify(payload));
-  var timeoutMs = 25000; // 25s — GAS cold starts can be slow
-
-  // AbortController for timeout (supported on all modern mobile browsers)
+  var timeoutMs = 25000;
   var controller = typeof AbortController !== "undefined" ? new AbortController() : null;
   var timer = setTimeout(function() {
     if (controller) controller.abort();
     if (onError) onError("timeout");
   }, timeoutMs);
 
-  fetch(url, {
-    method: "GET",
-    redirect: "follow",
-    signal: controller ? controller.signal : undefined
-  })
+  fetch(url, { method: "GET", redirect: "follow", signal: controller ? controller.signal : undefined })
   .then(function(response) {
     if (!response.ok) throw new Error("HTTP " + response.status);
     return response.json();
@@ -1457,62 +1074,42 @@ function jsonpCall(payload, onSuccess, onError) {
   })
   .catch(function(err) {
     clearTimeout(timer);
-    // AbortError = our timeout, distinguish from real network failure
     var reason = err && err.name === "AbortError" ? "timeout" : "network";
     if (onError) onError(reason);
   });
 }
 
 // ════════════════════════════════════════════════
-// ERROR PANEL (replaces alert())
+// ERROR PANEL
 // ════════════════════════════════════════════════
 function showErrorPanel(reason, context) {
-  // Remove any existing error panel
   var old = document.getElementById("errorPanel");
   if (old) old.remove();
-
   var isTimeout = reason === "timeout";
   var shortUrl = API_URL.length > 60 ? API_URL.substring(0, 57) + "..." : API_URL;
-
   var panel = document.createElement("div");
   panel.id = "errorPanel";
   panel.style.cssText = "background:#fff0f0;border:1.5px solid #fca5a5;border-radius:14px;padding:20px 18px;margin-bottom:14px;";
-
   panel.innerHTML =
     "<div style='font-family:Syne,sans-serif;font-size:13px;font-weight:700;color:#c53030;margin-bottom:10px;'>" +
-      (isTimeout ? "⏱ Request timed out (20s)" : "⚠️ Cannot reach the engine") +
-    "</div>" +
-    "<div style='font-size:12px;color:#4a5568;line-height:1.8;margin-bottom:14px;'>" +
-      "Check the following in your <strong>Google Apps Script</strong> dashboard:" +
+      (isTimeout ? "⏱ Request timed out (25s)" : "⚠️ Cannot reach the engine") +
     "</div>" +
     "<ol style='font-size:12px;color:#1a2332;line-height:2;padding-left:18px;margin-bottom:14px;'>" +
-      "<li><strong>Deploy → Manage deployments</strong> → confirm the deployment is <em>Active</em></li>" +
-      "<li><strong>Who has access</strong> must be set to <strong>Anyone</strong> (not 'Only myself')</li>" +
+      "<li><strong>Deploy → Manage deployments</strong> → confirm Active</li>" +
+      "<li><strong>Who has access</strong> must be <strong>Anyone</strong></li>" +
       "<li><strong>Execute as:</strong> must be <em>Me</em></li>" +
-      "<li>Use the <strong>/exec</strong> URL — not the /dev URL</li>" +
-      (isTimeout ? "<li>Script may be on <strong>cold start</strong> — wait 30s and retry</li>" : "<li>Script may have a <strong>runtime error</strong> — check Executions log</li>") +
+      "<li>Use the <strong>/exec</strong> URL — not /dev</li>" +
+      (isTimeout ? "<li>Script may be on cold start — wait 30s and retry</li>" : "<li>Check Executions log for runtime errors</li>") +
     "</ol>" +
-    "<div style='background:#f7f9f8;border:1px solid #e2e8e5;border-radius:8px;padding:9px 12px;font-family:DM Mono,monospace;font-size:10px;color:#4a5568;word-break:break-all;margin-bottom:14px;'>" +
-      "URL: " + esc(shortUrl) +
-    "</div>" +
-    "<button onclick='document.getElementById(\"errorPanel\").remove();' " +
-      "style='width:100%;padding:12px;background:#1a3d2b;color:white;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;touch-action:manipulation;'>" +
-      "Dismiss &amp; Try Again" +
-    "</button>";
-
-  // Insert panel before formCard or checkinBtn
-  var target = context === "checkin"
-    ? document.getElementById("checkinBtn")
-    : document.getElementById("formCard");
-  if (target && target.parentNode) {
-    target.parentNode.insertBefore(panel, target);
-  } else {
-    document.querySelector(".container").appendChild(panel);
-  }
+    "<div style='background:#f7f9f8;border:1px solid #e2e8e5;border-radius:8px;padding:9px 12px;font-family:DM Mono,monospace;font-size:10px;color:#4a5568;word-break:break-all;margin-bottom:14px;'>URL: " + esc(shortUrl) + "</div>" +
+    "<button onclick='document.getElementById(\"errorPanel\").remove();' style='width:100%;padding:12px;background:#1a3d2b;color:white;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;touch-action:manipulation;'>Dismiss &amp; Try Again</button>";
+  var target = context === "checkin" ? document.getElementById("checkinBtn") : document.getElementById("formCard");
+  if (target && target.parentNode) { target.parentNode.insertBefore(panel, target); }
+  else { document.querySelector(".container").appendChild(panel); }
 }
 
 // ════════════════════════════════════════════════
-// BEHAVIOUR PREVIEW (live, no API call)
+// BEHAVIOUR PREVIEW
 // ════════════════════════════════════════════════
 function updatePreview() {
   var energyVal    = parseInt(document.getElementById("ci_energy").value);
@@ -1520,22 +1117,18 @@ function updatePreview() {
   var stressVal    = parseInt(document.getElementById("ci_stress").value);
   var adherenceVal = parseInt(document.getElementById("ci_adherence").value);
   var adherence100 = adherenceVal * 10;
-
   document.getElementById("lbl_energy").textContent    = energyVal + " / 10";
   document.getElementById("lbl_sleep").textContent     = sleepVal  + " / 10";
   document.getElementById("lbl_stress").textContent    = stressVal + " / 10";
   document.getElementById("lbl_adherence").textContent = adherence100 + " %";
-
   var resp = calcResponsiveness(adherence100);
   var info = respToLabel(resp);
-
   document.getElementById("prev_resp").textContent       = resp.toFixed(1);
   document.getElementById("prev_resp_label").textContent = info.label;
   document.getElementById("prev_mfx").textContent        = info.mfx;
   document.getElementById("prev_traj").textContent       = info.traj;
   document.getElementById("prev_traj_label").textContent = info.trajLabel;
-  document.getElementById("prev_stmt").textContent =
-    "If you submit today: your Twin will recalibrate with a " + info.label + " trajectory.";
+  document.getElementById("prev_stmt").textContent = "If you submit today: your Twin will recalibrate with a " + info.label + " trajectory.";
 }
 
 function calcResponsiveness(adherence100) {
@@ -1559,10 +1152,10 @@ function renderDashboard(twin) {
   document.getElementById("dashboard").style.display = "block";
   document.getElementById("disp_coach").textContent = twin.coachMessage || "";
 
-  var evo      = (twin.evolutionStatus || "baseline").toLowerCase();
+  var evo       = (twin.evolutionStatus || "baseline").toLowerCase();
   var lifecycle = twin.lifecycle || "";
-  var resp     = parseFloat(twin.responsiveness) || 1.0;
-  var respInfo = respToLabel(resp);
+  var resp      = parseFloat(twin.responsiveness) || 1.0;
+  var respInfo  = respToLabel(resp);
 
   var evoBadgeMap = {
     baseline:  { icon: "◎", label: "BASELINE" },
@@ -1571,16 +1164,10 @@ function renderDashboard(twin) {
     declining: { icon: "↓", label: "DECLINING" }
   };
   var badge = evoBadgeMap[evo] || evoBadgeMap.baseline;
-
   var lifecycleClass = "";
   if (lifecycle === "Recovery Needed") lifecycleClass = " recovery";
   if (lifecycle === "Recalibrating")   lifecycleClass = " recalib";
-
-  var respClass = "";
-  if (resp >= 1.1) respClass = "accelerating";
-  else if (resp >= 1.0) respClass = "neutral";
-  else if (resp >= 0.8) respClass = "slowed";
-  else respClass = "stagnating";
+  var respClass = resp >= 1.1 ? "accelerating" : resp >= 1.0 ? "neutral" : resp >= 0.8 ? "slowed" : "stagnating";
 
   document.getElementById("badge_row").innerHTML =
     '<span class="evo-badge ' + evo + '">' + badge.icon + " " + badge.label + "</span>" +
@@ -1616,6 +1203,9 @@ function renderDashboard(twin) {
     renderStack(twin.protocol.PM, "pm_list");
   }
   renderLifestyle(twin.lifestyle || []);
+
+  // [v29.0] Render Diagnostic Gap Card
+  renderGapCard(twin);
 }
 
 function renderNarrative(evo, momentum, resp, projection90d, score) {
@@ -1627,21 +1217,16 @@ function renderNarrative(evo, momentum, resp, projection90d, score) {
   };
   document.getElementById("narr_main").textContent = main[evo] || main.baseline;
 
-  var behaviourText = "";
-  if (resp >= 1.1) behaviourText = "High consistency is amplifying your improvement potential.";
-  else if (resp >= 1.0) behaviourText = "Your current consistency is maintaining steady progress.";
-  else if (resp >= 0.8) behaviourText = "Reduced adherence may be slowing optimization.";
-  else behaviourText = "Low engagement is limiting adaptive gains.";
-
-  var momentumText = "";
-  if (momentum > 3)  momentumText = "Functional gains are accelerating.";
-  else if (momentum < -3) momentumText = "System is entering recalibration phase.";
-  else momentumText = "System remains in stabilization phase.";
-
-  var projText = "";
-  if (projection90d > score)       projText = "Projected trajectory indicates forward improvement.";
-  else if (projection90d === score) projText = "Projected trajectory remains stable.";
-  else projText = "Projected trajectory suggests intervention may be required.";
+  var behaviourText = resp >= 1.1 ? "High consistency is amplifying your improvement potential." :
+                      resp >= 1.0 ? "Your current consistency is maintaining steady progress." :
+                      resp >= 0.8 ? "Reduced adherence may be slowing optimization." :
+                                    "Low engagement is limiting adaptive gains.";
+  var momentumText = momentum > 3 ? "Functional gains are accelerating." :
+                     momentum < -3 ? "System is entering recalibration phase." :
+                                     "System remains in stabilization phase.";
+  var projText = projection90d > score ? "Projected trajectory indicates forward improvement." :
+                 projection90d === score ? "Projected trajectory remains stable." :
+                                          "Projected trajectory suggests intervention may be required.";
 
   document.getElementById("narr_sub").innerHTML =
     "<span>⚡ " + behaviourText + "</span>" +
@@ -1658,12 +1243,9 @@ function renderRadar(scores) {
       datasets: [{
         label: "Domain Load",
         data: [scores.metabolic, scores.cardio, scores.cognitive, scores.joints, scores.gut, scores.hormonal],
-        backgroundColor: "rgba(46,125,79,0.13)",
-        borderColor: "#2e7d4f",
-        pointBackgroundColor: "#2e7d4f",
-        pointBorderColor: "#fff",
-        pointHoverBackgroundColor: "#fff",
-        pointHoverBorderColor: "#2e7d4f",
+        backgroundColor: "rgba(46,125,79,0.13)", borderColor: "#2e7d4f",
+        pointBackgroundColor: "#2e7d4f", pointBorderColor: "#fff",
+        pointHoverBackgroundColor: "#fff", pointHoverBorderColor: "#2e7d4f",
         borderWidth: 2, pointRadius: 4
       }]
     },
@@ -1715,6 +1297,118 @@ function renderLifestyle(list) {
       '<div class="life-text">' + esc(l.text || "") + '</div></div>';
   }).join("");
 }
+
+// ════════════════════════════════════════════════
+// [v29.0] DIAGNOSTIC GAP ENGINE — FRONTEND RENDER
+// ════════════════════════════════════════════════
+
+// Toggle gap card open / closed
+function toggleGapCard() {
+  var body = document.getElementById("gapCardBody");
+  var icon = document.getElementById("gapToggleIcon");
+  var hdr  = document.getElementById("gapCardHeader");
+  var isOpen = body.classList.contains("open");
+  body.classList.toggle("open", !isOpen);
+  hdr.classList.toggle("has-body", !isOpen);
+  icon.textContent = isOpen ? "▼ Show" : "▲ Hide";
+}
+
+// Main gap card render — called from renderDashboard(twin)
+function renderGapCard(twin) {
+  var gaps = twin.gaps || [];
+  var recs = twin.testRecommendations || [];
+  var gapCard = document.getElementById("gapCard");
+
+  // Hide entirely if no gaps detected
+  if (gaps.length === 0) {
+    gapCard.style.display = "none";
+    return;
+  }
+
+  gapCard.style.display = "block";
+
+  // Update count badge
+  var totalCount = gaps.length;
+  var p1Count    = twin.p1GapCount || 0;
+  document.getElementById("gapCountBadge").textContent =
+    totalCount + (totalCount === 1 ? " test recommended" : " tests recommended");
+
+  // Update depth message
+  var depthEl = document.getElementById("depthMessage");
+  if (p1Count > 0) {
+    depthEl.innerHTML =
+      "<strong>Your protocol is running at reduced depth.</strong> " +
+      p1Count + (p1Count === 1 ? " priority test" : " priority tests") +
+      " would unlock full clinical calibration for your most elevated domains.";
+  } else {
+    depthEl.innerHTML =
+      "<strong>Your protocol can be sharpened.</strong> " +
+      "The tests below would confirm domains currently based on lifestyle signals only.";
+  }
+
+  // Auto-open card if P1 gaps exist (user needs to see these)
+  if (p1Count > 0) {
+    var body = document.getElementById("gapCardBody");
+    var icon = document.getElementById("gapToggleIcon");
+    var hdr  = document.getElementById("gapCardHeader");
+    body.classList.add("open");
+    hdr.classList.add("has-body");
+    icon.textContent = "▲ Hide";
+  }
+
+  // Render test recommendation cards
+  var listEl = document.getElementById("testRecList");
+  if (recs.length > 0) {
+    listEl.innerHTML = recs.map(renderTestRecCard).join("");
+  } else {
+    // Fallback: render from gap objects directly (GAP_TEST_MAP sheet not yet populated)
+    listEl.innerHTML = gaps.map(renderGapFallbackItem).join("");
+  }
+}
+
+// Render a single test recommendation card from testRecommendations[]
+function renderTestRecCard(rec) {
+  var pillClass = (rec.priority || "P3").toLowerCase();
+  var pillLabel = rec.priority === "P1" ? rec.priority + " — Required" :
+                  rec.priority === "P2" ? rec.priority + " — Recommended" :
+                  rec.priority + " — Optional";
+  return (
+    '<div class="test-rec-card">' +
+      '<div class="test-rec-top">' +
+        '<span class="test-rec-name">' + esc(rec.panel_name) + '</span>' +
+        '<span class="priority-pill ' + pillClass + '">' + pillLabel + '</span>' +
+      '</div>' +
+      (rec.biomarkers ? '<div class="test-rec-biomarkers">🧪 ' + esc(rec.biomarkers) + '</div>' : '') +
+      '<div class="test-rec-reason">' + esc(rec.reason) + '</div>' +
+      '<div class="test-rec-meta">' +
+        (rec.estimated_cost ? '<span class="test-meta-tag">💰 AED ' + esc(rec.estimated_cost) + '</span>' : '') +
+        '<span class="test-meta-tag">📍 ' + esc(rec.domain) + ' domain</span>' +
+      '</div>' +
+      (rec.how_to_get_tested ?
+        '<div class="test-rec-how">📋 <strong>How to get tested:</strong> ' + esc(rec.how_to_get_tested) + '</div>'
+        : '') +
+    '</div>'
+  );
+}
+
+// Fallback: render directly from gap object if no GAP_TEST_MAP rows found yet
+function renderGapFallbackItem(gap) {
+  var pillClass = (gap.priority || "P3").toLowerCase();
+  var domainLabel = (gap.domain || "").charAt(0).toUpperCase() + (gap.domain || "").slice(1);
+  return (
+    '<div class="test-rec-card">' +
+      '<div class="test-rec-top">' +
+        '<span class="test-rec-name">' + esc(domainLabel) + ' Panel</span>' +
+        '<span class="priority-pill ' + pillClass + '">' + esc(gap.priority) + '</span>' +
+      '</div>' +
+      '<div class="test-rec-reason">' + esc(gap.reason) + '</div>' +
+      '<div class="test-rec-meta"><span class="test-meta-tag">📍 ' + esc(gap.domain) + ' domain</span></div>' +
+    '</div>'
+  );
+}
+// ════════════════════════════════════════════════
+// END DIAGNOSTIC GAP ENGINE FRONTEND
+// ════════════════════════════════════════════════
 
 function esc(str) {
   return String(str || "")
