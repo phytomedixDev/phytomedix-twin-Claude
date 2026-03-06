@@ -29,7 +29,6 @@
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 * { -webkit-tap-highlight-color: transparent; }
-
 body {
   font-family: 'Outfit', sans-serif;
   background: var(--mist);
@@ -49,13 +48,81 @@ body {
   margin-bottom: 24px;
 }
 .logo-img { height: 36px; width: auto; display: block; }
+.header-right { display: flex; align-items: center; gap: 10px; }
 .engine-badge {
   font-family: 'DM Mono', monospace;
   font-size: 9px; font-weight: 500; color: var(--green);
   background: var(--mint); border: 1px solid #b7d9c3;
   padding: 4px 10px; border-radius: 20px; letter-spacing: 0.6px;
 }
+.session-indicator {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; color: var(--green);
+  background: var(--mint); border: 1px solid #b7d9c3;
+  padding: 4px 10px; border-radius: 20px;
+  display: none;
+}
+.session-indicator.active { display: inline-flex; align-items: center; gap: 5px; }
+.session-indicator::before { content: '●'; font-size: 8px; }
+.logout-btn {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px; font-weight: 600; color: var(--slate);
+  background: none; border: 1px solid var(--border);
+  padding: 5px 12px; border-radius: 20px; cursor: pointer;
+  transition: all 0.15s; touch-action: manipulation;
+  display: none;
+}
+.logout-btn:hover { border-color: var(--slate); background: var(--mist); }
 .container { width: 100%; max-width: 700px; }
+
+/* ─────────────────── LOGIN SCREEN ─────────────────── */
+#loginScreen { width: 100%; max-width: 420px; margin: 0 auto; animation: fadeUp 0.4s ease; }
+.login-card {
+  background: var(--white); border-radius: 20px; padding: 36px 32px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08), 0 0 0 1px var(--border);
+}
+.login-heading {
+  font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800;
+  color: var(--forest); margin-bottom: 6px; text-align: center;
+}
+.login-sub { font-size: 13px; color: var(--slate); margin-bottom: 28px; text-align: center; line-height: 1.6; }
+.login-field { margin-bottom: 14px; }
+.login-field label { display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; color: var(--slate); text-transform: uppercase; margin-bottom: 6px; }
+.login-field input {
+  width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 10px;
+  font-family: 'Outfit', sans-serif; font-size: 16px; color: var(--ink); background: var(--white);
+  transition: border-color 0.15s; -webkit-appearance: none; min-height: 48px;
+}
+.login-field input:focus { outline: none; border-color: var(--green); }
+.login-field input.error { border-color: var(--red); }
+.pin-hint { font-size: 11px; color: var(--slate); margin-top: 4px; opacity: 0.8; display: block; }
+.login-btn {
+  width: 100%; padding: 15px; background: var(--forest); color: white; border: none;
+  border-radius: 12px; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
+  cursor: pointer; letter-spacing: 0.3px; transition: all 0.2s;
+  touch-action: manipulation; min-height: 52px; margin-top: 6px;
+}
+.login-btn:hover { background: var(--green); transform: translateY(-1px); }
+.login-btn:active { transform: none; }
+.login-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.login-error {
+  background: #fff0f0; border: 1px solid #fca5a5; border-radius: 8px;
+  padding: 10px 13px; font-size: 12px; color: var(--red);
+  margin-top: 12px; display: none; line-height: 1.5;
+}
+.login-note {
+  background: var(--mint); border: 1px solid #c8e6d5; border-radius: 8px;
+  padding: 10px 13px; font-size: 11px; color: var(--forest);
+  margin-top: 16px; line-height: 1.6; text-align: center;
+}
+
+/* ─────────────────── SESSION WARNING ─────────────────── */
+.session-warning {
+  background: #fff7ed; border: 1px solid #fde68a; border-radius: 10px;
+  padding: 10px 14px; font-size: 12px; color: #78350f;
+  margin-bottom: 14px; display: none; line-height: 1.5;
+}
+.session-warning a { color: #78350f; font-weight: 700; }
 
 /* ─────────────────── TAB BAR ─────────────────── */
 .tab-bar {
@@ -74,31 +141,19 @@ body {
 
 /* ─────────────────── CARDS ─────────────────── */
 .card {
-  background: var(--white); border-radius: 16px;
-  padding: 26px 24px;
+  background: var(--white); border-radius: 16px; padding: 26px 24px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.05), 0 0 0 1px var(--border);
   margin-bottom: 14px;
 }
 .card-title {
   font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700;
-  letter-spacing: 1.5px; text-transform: uppercase; color: var(--slate);
-  margin-bottom: 18px;
+  letter-spacing: 1.5px; text-transform: uppercase; color: var(--slate); margin-bottom: 18px;
 }
 
 /* ─────────────────── PHASE WIZARD ─────────────────── */
-.phase-stepper {
-  display: flex; align-items: center; gap: 0;
-  margin-bottom: 24px; padding: 0 4px; overflow: hidden;
-}
-.phase-step {
-  display: flex; flex-direction: column; align-items: center; gap: 5px;
-  flex: 1; position: relative; cursor: default; min-width: 0;
-}
-.phase-step:not(:last-child)::after {
-  content: ''; position: absolute; top: 13px; left: 50%;
-  width: 100%; height: 2px; background: var(--border);
-  transition: background 0.3s; z-index: 0;
-}
+.phase-stepper { display: flex; align-items: center; gap: 0; margin-bottom: 24px; padding: 0 4px; overflow: hidden; }
+.phase-step { display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 1; position: relative; cursor: default; min-width: 0; }
+.phase-step:not(:last-child)::after { content: ''; position: absolute; top: 13px; left: 50%; width: 100%; height: 2px; background: var(--border); transition: background 0.3s; z-index: 0; }
 .phase-step.done:not(:last-child)::after { background: var(--green); }
 .step-dot {
   width: 28px; height: 28px; border-radius: 50%;
@@ -111,10 +166,7 @@ body {
 .phase-step.done .step-dot   { border-color: var(--green); background: var(--green); color: white; }
 .phase-step.done .step-dot::after { content: '✓'; font-size: 12px; }
 .phase-step.done .step-dot span { display: none; }
-.step-label {
-  font-size: 9px; font-weight: 600; letter-spacing: 0.4px;
-  text-transform: uppercase; color: var(--slate); text-align: center; white-space: nowrap;
-}
+.step-label { font-size: 9px; font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; color: var(--slate); text-align: center; white-space: nowrap; }
 .phase-step.active .step-label { color: var(--green); }
 .phase-step.done .step-label   { color: var(--forest); }
 .phase-panel { display: none; }
@@ -156,9 +208,8 @@ input.error, select.error { border-color: var(--red); }
 .signal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 12px; }
 .signal-label {
   display: flex; align-items: center; gap: 9px;
-  padding: 12px 13px; border: 1.5px solid var(--border);
-  border-radius: 10px; font-size: 13px; color: var(--ink);
-  cursor: pointer; transition: all 0.15s; background: var(--white);
+  padding: 12px 13px; border: 1.5px solid var(--border); border-radius: 10px;
+  font-size: 13px; color: var(--ink); cursor: pointer; transition: all 0.15s; background: var(--white);
   min-height: 48px; touch-action: manipulation; user-select: none;
 }
 .signal-label:hover { background: var(--mint); border-color: #b7d9c3; }
@@ -226,11 +277,9 @@ input[type="range"]::-moz-range-thumb { width: 26px; height: 26px; border-radius
 /* ─────────────────── DASHBOARD ─────────────────── */
 #dashboard { display: none; animation: fadeUp 0.5s ease; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-
 .coach-bar { background: linear-gradient(135deg, var(--forest) 0%, #1f4d36 100%); color: white; padding: 18px 20px; border-radius: 14px; margin-bottom: 14px; display: flex; gap: 14px; align-items: flex-start; }
 .coach-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
 .coach-text { font-size: 13px; line-height: 1.7; color: rgba(255,255,255,0.9); font-weight: 400; }
-
 .badge-lifecycle-row { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
 .evo-badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; border-radius: 20px; font-size: 10px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; }
 .evo-badge.baseline  { background: #f3f4f6; color: var(--baseline); border: 1px solid #d1d5db; }
@@ -245,7 +294,6 @@ input[type="range"]::-moz-range-thumb { width: 26px; height: 26px; border-radius
 .resp-badge.neutral      { background: #e0f2fe; color: #0369a1;        border-color: #bae6fd; }
 .resp-badge.slowed       { background: #fff7ed; color: var(--amber);   border-color: #fed7aa; }
 .resp-badge.stagnating   { background: #fee2e2; color: var(--red);     border-color: #fecaca; }
-
 .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
 .stat-tile { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 16px 12px; text-align: center; position: relative; overflow: hidden; }
 .stat-tile::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--green); }
@@ -255,161 +303,46 @@ input[type="range"]::-moz-range-thumb { width: 26px; height: 26px; border-radius
 .stat-label { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--slate); font-weight: 700; margin-bottom: 7px; }
 .stat-value { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; color: var(--forest); line-height: 1; }
 .stat-sub { font-size: 10px; color: var(--slate); margin-top: 5px; }
-
 .meta-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
 .meta-tile { background: var(--mint); border: 1px solid #c8e6d5; border-radius: 11px; padding: 10px; text-align: center; }
 .meta-label { font-size: 8px; letter-spacing: 1px; text-transform: uppercase; color: var(--green); font-weight: 700; margin-bottom: 4px; }
 .meta-value { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; color: var(--forest); }
 
-/* ─────────────────── DIAGNOSTIC GAP CARD — v29.0 ─────────────────── */
-.gap-card {
-  background: #fffbf0;
-  border: 1.5px solid #f5d87a;
-  border-radius: 14px;
-  margin-bottom: 12px;
-  overflow: hidden;
-}
-.gap-card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 18px;
-  background: #fffbf0;
-  border-bottom: 1px solid transparent;
-  cursor: pointer;
-  touch-action: manipulation;
-  min-height: 52px;
-}
+/* ─────────────────── DIAGNOSTIC GAP CARD ─────────────────── */
+.gap-card { background: #fffbf0; border: 1.5px solid #f5d87a; border-radius: 14px; margin-bottom: 12px; overflow: hidden; }
+.gap-card-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; background: #fffbf0; border-bottom: 1px solid transparent; cursor: pointer; touch-action: manipulation; min-height: 52px; }
 .gap-card-header.has-body { border-bottom-color: #f5d87a; }
-.gap-card-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'Syne', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  color: #92400e;
-}
-.gap-count-badge {
-  background: #f59e0b;
-  color: white;
-  border-radius: 100px;
-  padding: 2px 9px;
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  font-weight: 500;
-}
+.gap-card-title { display: flex; align-items: center; gap: 8px; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: #92400e; }
+.gap-count-badge { background: #f59e0b; color: white; border-radius: 100px; padding: 2px 9px; font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500; }
 .gap-toggle { font-size: 10px; color: #a06000; opacity: 0.7; white-space: nowrap; }
 .gap-card-body { display: none; }
 .gap-card-body.open { display: block; }
-
-/* Depth message banner */
-.depth-banner {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  background: #fffbf0;
-  border-bottom: 1px solid #fde68a;
-  padding: 12px 18px;
-  font-size: 12px;
-  color: #78350f;
-  line-height: 1.6;
-}
+.depth-banner { display: flex; align-items: flex-start; gap: 10px; background: #fffbf0; border-bottom: 1px solid #fde68a; padding: 12px 18px; font-size: 12px; color: #78350f; line-height: 1.6; }
 .depth-banner-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
-
-/* Individual test recommendation card */
-.test-rec-card {
-  border-top: 1px solid #fde68a;
-  padding: 16px 18px;
-  background: #fffbf0;
-}
+.test-rec-card { border-top: 1px solid #fde68a; padding: 16px 18px; background: #fffbf0; }
 .test-rec-card:last-child { border-radius: 0 0 12px 12px; }
-.test-rec-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 6px;
-}
-.test-rec-name {
-  font-family: 'Syne', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--ink);
-}
-.priority-pill {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  font-weight: 600;
-  padding: 3px 9px;
-  border-radius: 100px;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
+.test-rec-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+.test-rec-name { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--ink); }
+.priority-pill { font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 100px; flex-shrink: 0; white-space: nowrap; }
 .priority-pill.p1 { background: #fee2e2; color: #991b1b; }
 .priority-pill.p2 { background: #fff7ed; color: #92400e; }
 .priority-pill.p3 { background: #f0fdf4; color: #166534; }
 .test-rec-biomarkers { font-size: 11px; color: var(--slate); font-style: italic; margin-bottom: 7px; }
 .test-rec-reason { font-size: 12px; color: var(--slate); line-height: 1.65; margin-bottom: 10px; }
 .test-rec-meta { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; }
-.test-meta-tag {
-  background: white;
-  border: 1px solid #fde68a;
-  border-radius: 6px;
-  padding: 4px 10px;
-  font-size: 11px;
-  color: #78350f;
-  font-family: 'DM Mono', monospace;
-}
-.test-rec-how {
-  font-size: 11px;
-  color: var(--forest);
-  background: white;
-  border: 1px solid #fde68a;
-  border-radius: 8px;
-  padding: 10px 12px;
-  margin-top: 10px;
-  line-height: 1.55;
-}
+.test-meta-tag { background: white; border: 1px solid #fde68a; border-radius: 6px; padding: 4px 10px; font-size: 11px; color: #78350f; font-family: 'DM Mono', monospace; }
+.test-rec-how { font-size: 11px; color: var(--forest); background: white; border: 1px solid #fde68a; border-radius: 8px; padding: 10px 12px; margin-top: 10px; line-height: 1.55; }
 
-/* Confidence badge — shown on domain score tiles  */
-.conf-badge {
-  display: inline-flex;
-  align-items: center;
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  font-weight: 500;
-  padding: 2px 6px;
-  border-radius: 4px;
-  letter-spacing: 0.04em;
-  margin-top: 4px;
-}
-.conf-badge.HIGH     { background: #dcfce7; color: #166534; }
-.conf-badge.MEDIUM   { background: #fff7ed; color: #92400e; }
-.conf-badge.LOW      { background: #f3f4f6; color: #6b7280; }
-.conf-badge.DISPUTED { background: #fee2e2; color: #991b1b; }
-
-/* Gap dot on meta row */
-.gap-meta-info {
-  background: #fff7ed;
-  border: 1px solid #fde68a;
-  border-radius: 11px;
-  padding: 10px;
-  text-align: center;
-}
-.gap-meta-info .meta-label { color: #92400e; }
-.gap-meta-info .meta-value { color: #78350f; }
-/* ─────────────────── END GAP CARD STYLES ─────────────────── */
-
+/* ─────────────────── NARRATIVE + CHART ─────────────────── */
 .narrative-card { background: #f8fffe; border: 1px solid #c8e6d5; border-radius: 14px; padding: 18px 20px; margin-bottom: 12px; }
 .narrative-title { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--green); margin-bottom: 12px; }
 .narrative-main { font-size: 13px; line-height: 1.75; color: var(--ink); margin-bottom: 10px; }
 .narrative-sub { font-size: 12px; color: var(--slate); line-height: 1.65; border-top: 1px solid var(--border); padding-top: 10px; display: flex; flex-direction: column; gap: 5px; }
 .narrative-sub span { display: block; }
-
 .chart-wrap { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 12px; }
 .chart-wrap canvas { max-height: 260px; }
 
+/* ─────────────────── SUPPLEMENT CARDS ─────────────────── */
 .stack-header { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--forest); padding: 10px 0; border-bottom: 1px solid var(--border); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
 .supp-card { border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 9px; position: relative; overflow: hidden; transition: box-shadow 0.15s; }
 .supp-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
@@ -429,12 +362,10 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
 .clinical-row strong { color: var(--slate); }
 .clinical-row.warn { color: var(--red); }
 .empty-stack { padding: 14px; text-align: center; font-size: 13px; color: var(--slate); font-style: italic; }
-
 .life-card { background: #fffbf0; border: 1px solid #f3e0a8; border-radius: 12px; padding: 14px 16px; margin-bottom: 9px; }
 .life-cat { font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 500; color: var(--amber); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 5px; }
 .life-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
 .life-text { font-size: 12px; color: var(--slate); line-height: 1.65; }
-
 .reset-btn { width: 100%; padding: 14px; background: none; border: 1px solid var(--border); border-radius: 10px; color: var(--slate); font-size: 13px; cursor: pointer; margin-top: 6px; transition: all 0.15s; touch-action: manipulation; min-height: 48px; }
 .reset-btn:hover { background: var(--mist); border-color: var(--slate); }
 
@@ -449,8 +380,7 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
 .preview-tile-val { font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 500; color: white; }
 .preview-tile-sub { font-size: 9px; color: rgba(255,255,255,0.55); margin-top: 3px; }
 .preview-stmt { font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.65; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 12px; }
-.email-note { background: var(--mint); border: 1px solid #c8e6d5; border-radius: 10px; padding: 11px 14px; font-size: 12px; color: var(--forest); margin-bottom: 16px; line-height: 1.5; }
-.email-note strong { font-weight: 700; }
+.ci-user-note { background: var(--mint); border: 1px solid #c8e6d5; border-radius: 10px; padding: 11px 14px; font-size: 12px; color: var(--forest); margin-bottom: 16px; line-height: 1.5; }
 
 /* ─────────────────── RESPONSIVE ─────────────────── */
 @media (max-width: 640px) {
@@ -465,6 +395,7 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
 @media (max-width: 520px) {
   body { padding: 14px 12px 40px; }
   .card { padding: 20px 16px; }
+  .login-card { padding: 28px 20px; }
   .stats-row { grid-template-columns: 1fr 1fr; }
   .stats-row .stat-tile:last-child { grid-column: span 2; }
   .signal-grid { grid-template-columns: 1fr; }
@@ -494,13 +425,43 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
 <body>
 
 <header class="site-header">
-  <img src="data:image/jpeg;base64,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" alt="Phytomedix" class="logo-img">
-  <span class="engine-badge">ENGINE v29.0</span>
+  <img src="data:image/jpeg;base64,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" alt="Phytomedix" class="logo-img">
+  <div class="header-right">
+    <span class="session-indicator" id="sessionIndicator">Session Active</span>
+    <span class="engine-badge">ENGINE v29.0</span>
+    <button class="logout-btn" id="logoutBtn" onclick="handleLogout()">Sign Out</button>
+  </div>
 </header>
 
-<div class="container">
+<!-- ══ LOGIN SCREEN ══ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-heading">Sign In</div>
+    <p class="login-sub">Enter your member email and PIN to access your Digital Twin Protocol.</p>
+    <div class="login-field">
+      <label for="login_email">Email Address</label>
+      <input type="email" id="login_email" placeholder="your@email.com" autocomplete="email" autocapitalize="none" spellcheck="false">
+    </div>
+    <div class="login-field">
+      <label for="login_pin">PIN</label>
+      <input type="password" id="login_pin" placeholder="Your PIN" inputmode="numeric" maxlength="20" autocomplete="current-password">
+      <span class="pin-hint">Your PIN was set when your Phytomedix account was created.</span>
+    </div>
+    <button class="login-btn" id="loginBtn" onclick="handleLogin()">Sign In →</button>
+    <div class="login-error" id="loginError"></div>
+    <div class="login-note">🔒 Session expires automatically after 30 minutes. No credentials are stored in this browser.</div>
+  </div>
+</div>
 
-  <!-- ══ TAB BAR ══ -->
+<!-- ══ MAIN APP (hidden until authenticated) ══ -->
+<div class="container" id="mainApp" style="display:none;">
+
+  <div class="session-warning" id="sessionWarning">
+    ⏱ Your session expires in 5 minutes. Complete and submit your assessment to save progress, or
+    <a href="#" onclick="handleLogout();return false;">sign out now</a>.
+  </div>
+
+  <!-- TAB BAR -->
   <div class="tab-bar" id="tabBar">
     <button class="tab-btn active" id="tab_assess" onclick="switchTab('assess')">
       <span class="tab-icon">🧬</span> Full Assessment
@@ -510,11 +471,8 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
     </button>
   </div>
 
-  <!-- ════════════════════════════════════════════ -->
-  <!-- TAB 1 — FULL ASSESSMENT                     -->
-  <!-- ════════════════════════════════════════════ -->
+  <!-- ════════════ TAB 1 — FULL ASSESSMENT ════════════ -->
   <div id="assessTab">
-
     <div class="card" id="formCard">
       <div class="phase-stepper" id="phaseStepper">
         <div class="phase-step active" id="pstep_1"><div class="step-dot"><span>1</span></div><div class="step-label">Biometrics</div></div>
@@ -523,23 +481,20 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
         <div class="phase-step" id="pstep_4"><div class="step-dot"><span>4</span></div><div class="step-label">Signals</div></div>
       </div>
 
-      <!-- ══ PHASE 1 ══ -->
+      <!-- PHASE 1 -->
       <div class="phase-panel active" id="phase1">
         <h2 class="phase-heading">Identity &amp; Biometrics</h2>
         <p class="phase-sub">Core clinical parameters for Twin initialization and tier calculation.</p>
         <div class="field-row">
-          <div><label class="field-label">Email address</label><input type="email" id="a_email" placeholder="your@email.com" autocomplete="email"></div>
+          <div><label class="field-label">Full name (optional)</label><input type="text" id="a_name" placeholder="Your name" autocomplete="name"></div>
         </div>
         <div class="field-row two-col">
-          <div><label class="field-label">Full name (optional)</label><input type="text" id="a_name" placeholder="Your name" autocomplete="name"></div>
           <div><label class="field-label">Age</label><input type="number" id="a_age" placeholder="35" value="35" min="18" max="100" inputmode="numeric"></div>
-        </div>
-        <div class="field-row">
           <div>
             <label class="field-label">Biological sex</label>
-            <div class="radio-group" id="sex_group">
-              <label class="radio-opt" onclick="markSelected(this,'sex_group')"><input type="radio" name="sex" value="Female" id="sex_female"><span class="radio-icon">♀</span><span class="radio-text">Female</span></label>
-              <label class="radio-opt" onclick="markSelected(this,'sex_group')"><input type="radio" name="sex" value="Male" id="sex_male" checked><span class="radio-icon">♂</span><span class="radio-text">Male</span></label>
+            <div class="radio-group" id="sex_group" style="margin-bottom:0;">
+              <label class="radio-opt" onclick="markSelected(this,'sex_group')"><input type="radio" name="sex" value="Female"><span class="radio-icon">♀</span><span class="radio-text">Female</span></label>
+              <label class="radio-opt selected" onclick="markSelected(this,'sex_group')"><input type="radio" name="sex" value="Male" checked><span class="radio-icon">♂</span><span class="radio-text">Male</span></label>
             </div>
           </div>
         </div>
@@ -551,9 +506,9 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
           <div>
             <label class="field-label">Smoking status</label>
             <div class="radio-group" id="smoking_group">
-              <label class="radio-opt" onclick="markSelected(this,'smoking_group')"><input type="radio" name="smoking" value="Never" id="smk_never" checked><span class="radio-icon">🚭</span><span class="radio-text">Never</span></label>
-              <label class="radio-opt" onclick="markSelected(this,'smoking_group')"><input type="radio" name="smoking" value="Former" id="smk_former"><span class="radio-icon">🕐</span><span class="radio-text">Former</span></label>
-              <label class="radio-opt" onclick="markSelected(this,'smoking_group')"><input type="radio" name="smoking" value="Current" id="smk_current"><span class="radio-icon">⚠️</span><span class="radio-text">Current</span></label>
+              <label class="radio-opt selected" onclick="markSelected(this,'smoking_group')"><input type="radio" name="smoking" value="Never" checked><span class="radio-icon">🚭</span><span class="radio-text">Never</span></label>
+              <label class="radio-opt" onclick="markSelected(this,'smoking_group')"><input type="radio" name="smoking" value="Former"><span class="radio-icon">🕐</span><span class="radio-text">Former</span></label>
+              <label class="radio-opt" onclick="markSelected(this,'smoking_group')"><input type="radio" name="smoking" value="Current"><span class="radio-icon">⚠️</span><span class="radio-text">Current</span></label>
             </div>
             <span class="field-hint">Activates safety veto logic for certain compounds</span>
           </div>
@@ -561,7 +516,7 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
         <div class="phase-nav"><span class="phase-counter">Step 1 of 4</span><button class="btn-next" onclick="goPhase(2)">Continue → Conditions</button></div>
       </div>
 
-      <!-- ══ PHASE 2 ══ -->
+      <!-- PHASE 2 -->
       <div class="phase-panel" id="phase2">
         <h2 class="phase-heading">Clinical Signals</h2>
         <p class="phase-sub">Select all conditions that apply. Each activates a specific domain scoring pathway.</p>
@@ -590,13 +545,13 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
         <div class="phase-nav"><button class="btn-back" onclick="goPhase(1)">← Back</button><span class="phase-counter">Step 2 of 4</span><button class="btn-next" onclick="goPhase(3)">Continue → Lifestyle</button></div>
       </div>
 
-      <!-- ══ PHASE 3 ══ -->
+      <!-- PHASE 3 -->
       <div class="phase-panel" id="phase3">
         <h2 class="phase-heading">Lifestyle Context</h2>
         <p class="phase-sub">Environmental inputs that modulate your domain load calculations.</p>
         <label class="field-label" style="margin-bottom:10px;">Diet pattern</label>
         <div class="tile-select" id="diet_group" style="margin-bottom:20px;">
-          <label class="tile-opt" onclick="markSelected(this,'diet_group')"><input type="radio" name="diet" value="Balanced" checked><span class="tile-icon">🥗</span><span class="tile-text">Balanced</span></label>
+          <label class="tile-opt selected" onclick="markSelected(this,'diet_group')"><input type="radio" name="diet" value="Balanced" checked><span class="tile-icon">🥗</span><span class="tile-text">Balanced</span></label>
           <label class="tile-opt" onclick="markSelected(this,'diet_group')"><input type="radio" name="diet" value="High carb"><span class="tile-icon">🍞</span><span class="tile-text">High Carb</span></label>
           <label class="tile-opt" onclick="markSelected(this,'diet_group')"><input type="radio" name="diet" value="High fat / Keto"><span class="tile-icon">🥑</span><span class="tile-text">High Fat</span></label>
           <label class="tile-opt" onclick="markSelected(this,'diet_group')"><input type="radio" name="diet" value="Low calorie / Restricted"><span class="tile-icon">📉</span><span class="tile-text">Low Cal</span></label>
@@ -631,7 +586,7 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
         <div class="phase-nav" style="margin-top:20px;"><button class="btn-back" onclick="goPhase(2)">← Back</button><span class="phase-counter">Step 3 of 4</span><button class="btn-next" onclick="goPhase(4)">Continue → Signals</button></div>
       </div>
 
-      <!-- ══ PHASE 4 ══ -->
+      <!-- PHASE 4 -->
       <div class="phase-panel" id="phase4">
         <h2 class="phase-heading">Subjective Signals</h2>
         <p class="phase-sub">How have you felt over the past 2 weeks? These calibrate your cognitive and hormonal baseline.</p>
@@ -666,92 +621,63 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
       <div class="spinner-dna">🧬</div>
       <div class="loading-stage" id="loadingStage">Initializing engine...</div>
       <div class="loading-bar-wrap"><div class="loading-bar" id="loadingBar"></div></div>
-      <div class="loading-sub">Engine v29.0 · Diagnostic Gap Engine Active · ERP-integrated</div>
+      <div class="loading-sub">Engine v29.0 · Diagnostic Gap Engine Active · Session Authenticated</div>
     </div>
 
     <!-- Dashboard -->
     <div id="dashboard">
-      <div class="coach-bar">
-        <div class="coach-icon">🤖</div>
-        <div class="coach-text" id="disp_coach">—</div>
-      </div>
+      <div class="coach-bar"><div class="coach-icon">🤖</div><div class="coach-text" id="disp_coach">—</div></div>
       <div class="badge-lifecycle-row" id="badge_row"></div>
       <div class="stats-row">
         <div class="stat-tile" id="tile_score"><div class="stat-label">Functional Score</div><div class="stat-value" id="disp_score">—</div><div class="stat-sub">/100</div></div>
         <div class="stat-tile" id="tile_bioage"><div class="stat-label">Biological Age</div><div class="stat-value" id="disp_bioage">—</div><div class="stat-sub">years</div></div>
         <div class="stat-tile" id="tile_momentum"><div class="stat-label">Momentum</div><div class="stat-value" id="disp_momentum">—</div><div class="stat-sub" id="disp_momentum_sub">vs last cycle</div></div>
       </div>
-
-      <!-- Meta row — 4 tiles. Gap count tile is shown/hidden by renderGapCard() -->
-      <div class="meta-row" id="metaRow">
+      <div class="meta-row">
         <div class="meta-tile"><div class="meta-label">Cycle</div><div class="meta-value" id="disp_cycle">—</div></div>
         <div class="meta-tile"><div class="meta-label">90d Proj.</div><div class="meta-value" id="disp_proj">—</div></div>
         <div class="meta-tile"><div class="meta-label">Multiplier</div><div class="meta-value" id="disp_mult">—</div></div>
         <div class="meta-tile"><div class="meta-label">Responsiveness</div><div class="meta-value" id="disp_resp">—</div></div>
       </div>
-
-      <!-- ══ DIAGNOSTIC GAP CARD — v29.0 ══
-           Hidden by default. renderGapCard() shows it when gaps exist.
-           Position: between meta-row and narrative-card.
-      ══ -->
+      <!-- GAP CARD -->
       <div class="gap-card" id="gapCard" style="display:none;">
         <div class="gap-card-header" id="gapCardHeader" onclick="toggleGapCard()">
-          <div class="gap-card-title">
-            🧪 Complete Your Health Profile
-            <span class="gap-count-badge" id="gapCountBadge">— tests</span>
-          </div>
+          <div class="gap-card-title">🧪 Complete Your Health Profile<span class="gap-count-badge" id="gapCountBadge">— tests</span></div>
           <span class="gap-toggle" id="gapToggleIcon">▼ Show</span>
         </div>
         <div class="gap-card-body" id="gapCardBody">
-          <div class="depth-banner">
-            <span class="depth-banner-icon">📊</span>
-            <span id="depthMessage"><strong>Your protocol is running at partial depth.</strong> These tests would confirm the domains currently based on lifestyle signals only — and unlock a more precisely calibrated protocol.</span>
-          </div>
+          <div class="depth-banner"><span class="depth-banner-icon">📊</span><span id="depthMessage"><strong>Your protocol is running at partial depth.</strong> These tests would confirm domains currently based on lifestyle signals only.</span></div>
           <div id="testRecList"></div>
         </div>
       </div>
-      <!-- ══ END GAP CARD ══ -->
-
-      <div class="narrative-card" id="narrativeCard">
+      <div class="narrative-card">
         <div class="narrative-title">🧬 Twin Evolution Summary</div>
         <div class="narrative-main" id="narr_main">—</div>
         <div class="narrative-sub" id="narr_sub"></div>
       </div>
-      <div class="chart-wrap">
-        <div class="card-title">6-Domain Load Map</div>
-        <canvas id="twinRadar"></canvas>
-      </div>
-      <div class="card">
-        <div class="stack-header">☀️ Morning Stack (AM)</div>
-        <div id="am_list"></div>
-      </div>
-      <div class="card">
-        <div class="stack-header">🌙 Evening Stack (PM)</div>
-        <div id="pm_list"></div>
-      </div>
-      <div class="card">
-        <div class="stack-header">🥗 Lifestyle Engine</div>
-        <div id="life_list"></div>
-      </div>
-      <button class="reset-btn" onclick="location.reload()">↩ New Assessment</button>
+      <div class="chart-wrap"><div class="card-title">6-Domain Load Map</div><canvas id="twinRadar"></canvas></div>
+      <div class="card"><div class="stack-header">☀️ Morning Stack (AM)</div><div id="am_list"></div></div>
+      <div class="card"><div class="stack-header">🌙 Evening Stack (PM)</div><div id="pm_list"></div></div>
+      <div class="card"><div class="stack-header">🥗 Lifestyle Engine</div><div id="life_list"></div></div>
+      <button class="reset-btn" onclick="resetAssessment()">↩ New Assessment</button>
     </div>
-  </div>
+  </div><!-- /assessTab -->
 
-  <!-- ════════════════════════════════════════════ -->
-  <!-- TAB 2 — MICRO CHECK-IN                      -->
-  <!-- ════════════════════════════════════════════ -->
+  <!-- ════════════ TAB 2 — MICRO CHECK-IN ════════════ -->
   <div id="checkinTab">
     <div class="card">
       <h2>Recalibrate My Twin</h2>
-      <p class="subtitle" style="font-size:13px;color:var(--slate);margin-bottom:18px;">Behaviour signals — influence your trajectory without a full assessment</p>
-      <div class="email-note"><strong>Same email as your assessment</strong> — the engine links this check-in to your existing Twin State and increments your cycle.</div>
-      <div class="field-row" style="margin-bottom:20px;"><div><label class="field-label">Email</label><input type="email" id="ci_email" placeholder="your@email.com" autocomplete="email"></div></div>
-      <div class="preview-card" id="previewCard">
+      <p style="font-size:13px;color:var(--slate);margin-bottom:18px;">Behaviour signals — influence your trajectory without a full assessment.</p>
+      <div class="ci-user-note">
+        <strong>Signed in as:</strong> <span id="ci_user_display">—</span><br>
+        This check-in will link to your active Twin State and increment your cycle.
+      </div>
+      <div class="preview-card">
         <div class="preview-title">Today's Twin Response — Live Preview</div>
         <div class="preview-grid">
           <div class="preview-tile"><div class="preview-tile-label">Responsiveness</div><div class="preview-tile-val" id="prev_resp">1.0</div><div class="preview-tile-sub" id="prev_resp_label">Neutral</div></div>
           <div class="preview-tile"><div class="preview-tile-label">Momentum Effect</div><div class="preview-tile-val" id="prev_mfx">→ Steady</div><div class="preview-tile-sub">Trajectory modifier</div></div>
-          <div class="preview-tile"><div class="preview-tile-label">Trajectory</div><div class="preview-tile-val" id="prev_traj">↗</div><div class="preview-tile-sub" id="prev_traj_label">Forward</div></div>
+          <div class="preview-tile"><div class="preview-tile-label">Trajectory</div><div class="preview-tile-val" id="prev_traj">→</div><div class="preview-tile-sub" id="prev_traj_label">Stable</div></div>
         </div>
         <div class="preview-stmt" id="prev_stmt">If you submit today: your Twin will recalibrate with a Neutral trajectory.</div>
       </div>
@@ -780,472 +706,662 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
         <div class="spinner-dna" style="font-size:36px;">🔄</div>
         <div class="loading-stage" id="ci_stage">Recalibrating...</div>
       </div>
-      <div id="ci_result" style="display:none;" class="card" style="margin-top:14px;">
+      <div id="ci_result" style="display:none;margin-top:14px;" class="card">
         <div class="card-title">Twin Recalibrated</div>
         <div id="ci_result_body" style="font-size:13px;line-height:1.7;color:var(--ink);"></div>
       </div>
     </div>
   </div>
 
-</div><!-- /container -->
+</div><!-- /mainApp -->
 
 <script>
-// ════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
 // CONFIG
-// ════════════════════════════════════════════════
-var API_URL = "https://script.google.com/macros/s/AKfycbyXmQROrpFAQ87Y4r36TjTu2JZ6gElJh-S7I3ZPGyXPmzMRalywNjDOshrOfZ_yAgYJ/exec";
+// No API key. Authentication uses PIN → session token.
+// ════════════════════════════════════════════════════════════
+var GAS_URL = "https://script.google.com/macros/s/AKfycbyXmQROrpFAQ87Y4r36TjTu2JZ6gElJh-S7I3ZPGyXPmzMRalywNjDOshrOfZ_yAgYJ/exec";
 
+// ════════════════════════════════════════════════════════════
+// SESSION — sessionStorage only (auto-clears on tab close)
+// ════════════════════════════════════════════════════════════
+var Session = {
+  save: function(token, userId, expiresAt) {
+    sessionStorage.setItem('phyto_token',      token);
+    sessionStorage.setItem('phyto_user_id',    userId);
+    sessionStorage.setItem('phyto_expires_at', expiresAt);
+  },
+  get: function() {
+    return {
+      token:     sessionStorage.getItem('phyto_token'),
+      userId:    sessionStorage.getItem('phyto_user_id'),
+      expiresAt: sessionStorage.getItem('phyto_expires_at')
+    };
+  },
+  clear: function() {
+    sessionStorage.removeItem('phyto_token');
+    sessionStorage.removeItem('phyto_user_id');
+    sessionStorage.removeItem('phyto_expires_at');
+  },
+  isValid: function() {
+    var s = this.get();
+    if (!s.token || !s.expiresAt) return false;
+    return new Date(s.expiresAt) > new Date();
+  }
+};
+
+// ════════════════════════════════════════════════════════════
+// SCREEN MANAGEMENT
+// ════════════════════════════════════════════════════════════
+function showLoginScreen(msg) {
+  document.getElementById('loginScreen').style.display  = 'block';
+  document.getElementById('mainApp').style.display      = 'none';
+  document.getElementById('logoutBtn').style.display    = 'none';
+  document.getElementById('sessionIndicator').className = 'session-indicator';
+  if (msg) {
+    var errEl = document.getElementById('loginError');
+    errEl.textContent   = msg;
+    errEl.style.display = 'block';
+  }
+}
+
+function showMainApp() {
+  document.getElementById('loginScreen').style.display  = 'none';
+  document.getElementById('mainApp').style.display      = 'block';
+  document.getElementById('logoutBtn').style.display    = 'block';
+  document.getElementById('sessionIndicator').className = 'session-indicator active';
+  var userId = Session.get().userId || '';
+  var ciDisplay = document.getElementById('ci_user_display');
+  if (ciDisplay) ciDisplay.textContent = userId;
+  startSessionWatcher();
+}
+
+// ════════════════════════════════════════════════════════════
+// LOGIN
+// ════════════════════════════════════════════════════════════
+function handleLogin() {
+  var emailEl = document.getElementById('login_email');
+  var pinEl   = document.getElementById('login_pin');
+  var errEl   = document.getElementById('loginError');
+  var btn     = document.getElementById('loginBtn');
+  var email   = emailEl.value.trim();
+  var pin     = pinEl.value.trim();
+
+  errEl.style.display = 'none';
+  emailEl.classList.remove('error');
+  pinEl.classList.remove('error');
+
+  if (!email || email.indexOf('@') === -1) {
+    emailEl.classList.add('error'); emailEl.focus();
+    errEl.textContent = 'Please enter a valid email address.';
+    errEl.style.display = 'block'; return;
+  }
+  if (!pin || pin.length < 4) {
+    pinEl.classList.add('error'); pinEl.focus();
+    errEl.textContent = 'Please enter your PIN.';
+    errEl.style.display = 'block'; return;
+  }
+
+  btn.disabled = true; btn.textContent = 'Signing in...';
+
+  postToGAS({ action: 'login', user_id: email, pin: pin }, 20000)
+  .then(function(data) {
+    btn.disabled = false; btn.textContent = 'Sign In →';
+    if (data.status === 'ok' && data.token) {
+      Session.save(data.token, data.user_id, data.expires_at);
+      pinEl.value = '';
+      showMainApp();
+    } else {
+      var msgs = {
+        'INVALID_CREDENTIALS': 'Incorrect email or PIN. Please try again.',
+        'ACCOUNT_LOCKED':      data.message || 'Account temporarily locked. Please try again in 15 minutes.',
+        'SERVICE_UNAVAILABLE': 'System is temporarily offline. Please try again shortly.',
+        'MISSING_CREDENTIALS': 'Please enter both email and PIN.'
+      };
+      errEl.textContent   = msgs[data.code] || (data.message || 'Sign-in failed. Please try again.');
+      errEl.style.display = 'block';
+    }
+  })
+  .catch(function(err) {
+    btn.disabled = false; btn.textContent = 'Sign In →';
+    errEl.textContent   = err === 'timeout'
+      ? 'Request timed out. Please check your connection and try again.'
+      : 'Connection error. Please check your network.';
+    errEl.style.display = 'block';
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+// LOGOUT
+// ════════════════════════════════════════════════════════════
+function handleLogout() {
+  var session = Session.get();
+  if (session.token) {
+    postToGAS({ action: 'logout', user_id: session.userId, token: session.token }, 8000)
+    .catch(function() {});
+  }
+  Session.clear();
+  showLoginScreen('You have been signed out.');
+}
+
+// ════════════════════════════════════════════════════════════
+// SESSION WATCHER — checks every 10s, warns at 5min
+// ════════════════════════════════════════════════════════════
+var _sessionWatcher = null;
+function startSessionWatcher() {
+  if (_sessionWatcher) clearInterval(_sessionWatcher);
+  _sessionWatcher = setInterval(function() {
+    var session = Session.get();
+    if (!session.token) return;
+    var msLeft = new Date(session.expiresAt) - new Date();
+    var warnEl = document.getElementById('sessionWarning');
+    if (msLeft <= 0) {
+      clearInterval(_sessionWatcher);
+      Session.clear();
+      showLoginScreen('Your session has expired. Please sign in again.');
+      return;
+    }
+    if (warnEl) warnEl.style.display = msLeft <= 300000 ? 'block' : 'none';
+  }, 10000);
+}
+
+// ════════════════════════════════════════════════════════════
+// AUTHENTICATED API CALL
+// All engine actions go through here. No direct fetch allowed.
+// ════════════════════════════════════════════════════════════
+function callAPI(action, extraPayload, timeoutMs) {
+  if (!Session.isValid()) {
+    Session.clear();
+    showLoginScreen('Your session has expired. Please sign in again.');
+    return Promise.reject('session_expired');
+  }
+  var session = Session.get();
+  var payload = {};
+  if (extraPayload) {
+    for (var k in extraPayload) { if (extraPayload.hasOwnProperty(k)) payload[k] = extraPayload[k]; }
+  }
+  payload.action  = action;
+  payload.user_id = session.userId;
+  payload.token   = session.token;
+
+  return postToGAS(payload, timeoutMs || 30000).then(function(data) {
+    if (data.code === 'SESSION_EXPIRED' || data.code === 'MISSING_TOKEN') {
+      Session.clear();
+      showLoginScreen('Your session has expired. Please sign in again.');
+      throw 'session_expired';
+    }
+    if (data.code === 'SERVICE_UNAVAILABLE') throw 'service_unavailable';
+    if (data.code === 'RATE_LIMITED')        throw 'rate_limited';
+    return data;
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+// POST TRANSPORT
+// GAS FINAL backend requires POST for all authenticated calls.
+// Content-Type: text/plain avoids CORS preflight on GAS.
+// ════════════════════════════════════════════════════════════
+function postToGAS(payload, timeoutMs) {
+  return new Promise(function(resolve, reject) {
+    var controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+    var timer = setTimeout(function() {
+      if (controller) controller.abort();
+      reject('timeout');
+    }, timeoutMs || 30000);
+
+    fetch(GAS_URL, {
+      method:   'POST',
+      redirect: 'follow',
+      headers:  { 'Content-Type': 'text/plain;charset=utf-8' },
+      body:     JSON.stringify(payload),
+      signal:   controller ? controller.signal : undefined
+    })
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function(data) { clearTimeout(timer); resolve(data); })
+    .catch(function(err) {
+      clearTimeout(timer);
+      reject((err && err.name === 'AbortError') ? 'timeout' : 'network');
+    });
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+// PAGE INIT
+// ════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+  // Enter key on login fields
+  var pinEl = document.getElementById('login_pin');
+  if (pinEl) pinEl.addEventListener('keydown', function(e) { if (e.key === 'Enter') handleLogin(); });
+  var emailEl = document.getElementById('login_email');
+  if (emailEl) emailEl.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { var p = document.getElementById('login_pin'); if (p) p.focus(); }
+  });
+
+  // Resume existing session if still valid
+  if (Session.isValid()) {
+    showMainApp();
+  } else {
+    Session.clear();
+    showLoginScreen();
+  }
+
+  initSelectedTiles();
+  updatePreview();
+});
+
+// ════════════════════════════════════════════════════════════
+// LOADING STAGE ANIMATOR
+// ════════════════════════════════════════════════════════════
 var STAGES = [
-  "Loading clinical profiles...",
-  "Running 6-domain scoring...",
-  "Querying PRODUCT_CATALOG_DB...",
-  "Applying safety vetoes...",
-  "Applying tier multipliers...",
-  "Calculating confidence tiers...",
-  "Running Diagnostic Gap Engine...",
-  "Writing TWIN_STATE + SNAPSHOTS...",
-  "Generating coach message..."
+  'Loading clinical profiles...', 'Running 6-domain scoring...',
+  'Querying PRODUCT_CATALOG_DB...', 'Applying safety vetoes...',
+  'Applying tier multipliers...', 'Calculating confidence tiers...',
+  'Running Diagnostic Gap Engine...', 'Writing TWIN_STATE + SNAPSHOTS...',
+  'Generating coach message...'
 ];
-var stageIdx = 0, stageTimer;
-
+var _stageIdx = 0, _stageTimer = null;
 function startStages() {
-  stageIdx = 0;
-  document.getElementById("loadingStage").textContent = STAGES[0];
-  document.getElementById("loadingBar").style.width = "5%";
-  stageTimer = setInterval(function() {
-    stageIdx = (stageIdx + 1) % STAGES.length;
-    document.getElementById("loadingStage").textContent = STAGES[stageIdx];
-    document.getElementById("loadingBar").style.width = Math.round((stageIdx / STAGES.length) * 90 + 5) + "%";
+  _stageIdx = 0;
+  document.getElementById('loadingStage').textContent = STAGES[0];
+  document.getElementById('loadingBar').style.width   = '5%';
+  _stageTimer = setInterval(function() {
+    _stageIdx = (_stageIdx + 1) % STAGES.length;
+    document.getElementById('loadingStage').textContent = STAGES[_stageIdx];
+    document.getElementById('loadingBar').style.width   = Math.round((_stageIdx / STAGES.length) * 90 + 5) + '%';
   }, 700);
 }
 function stopStages() {
-  clearInterval(stageTimer);
-  document.getElementById("loadingBar").style.width = "100%";
+  clearInterval(_stageTimer);
+  document.getElementById('loadingBar').style.width = '100%';
 }
 
-// ════════════════════════════════════════════════
-// FIX #1 — JS FALLBACK FOR :has()
-// ════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
+// UI HELPERS
+// ════════════════════════════════════════════════════════════
 function markSelected(el, groupId) {
   var group = document.getElementById(groupId);
   if (!group) return;
-  var siblings = group.querySelectorAll('.radio-opt, .tile-opt');
-  siblings.forEach(function(s) { s.classList.remove('selected'); });
+  var items = group.querySelectorAll('.radio-opt, .tile-opt');
+  for (var i = 0; i < items.length; i++) items[i].classList.remove('selected');
   el.classList.add('selected');
 }
 
 function markCheckSelected(el) {
   setTimeout(function() {
     var cb = el.querySelector('input[type="checkbox"]');
-    if (cb) { el.classList.toggle('selected', cb.checked); }
+    if (cb) el.classList.toggle('selected', cb.checked);
   }, 0);
 }
 
-(function initSelected() {
-  document.querySelectorAll('input[type="radio"]:checked').forEach(function(input) {
-    var label = input.closest('.radio-opt, .tile-opt');
-    if (label) label.classList.add('selected');
-  });
-})();
-
-// ════════════════════════════════════════════════
-// TAB SWITCHING
-// ════════════════════════════════════════════════
-function switchTab(tab) {
-  document.getElementById("assessTab").style.display  = tab === "assess"  ? "block" : "none";
-  document.getElementById("checkinTab").style.display = tab === "checkin" ? "block" : "none";
-  document.getElementById("tab_assess").classList.toggle("active",  tab === "assess");
-  document.getElementById("tab_checkin").classList.toggle("active", tab === "checkin");
+function initSelectedTiles() {
+  var checked = document.querySelectorAll('input[type="radio"]:checked');
+  for (var i = 0; i < checked.length; i++) {
+    var lbl = checked[i].closest('.radio-opt, .tile-opt');
+    if (lbl) lbl.classList.add('selected');
+  }
 }
 
-// ════════════════════════════════════════════════
-// PHASE WIZARD
-// ════════════════════════════════════════════════
-var currentPhase = 1;
+function switchTab(tab) {
+  document.getElementById('assessTab').style.display  = tab === 'assess'  ? 'block' : 'none';
+  document.getElementById('checkinTab').style.display = tab === 'checkin' ? 'block' : 'none';
+  document.getElementById('tab_assess').classList.toggle('active',  tab === 'assess');
+  document.getElementById('tab_checkin').classList.toggle('active', tab === 'checkin');
+}
 
+function esc(str) {
+  return String(str || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ════════════════════════════════════════════════════════════
+// PHASE WIZARD
+// ════════════════════════════════════════════════════════════
+var currentPhase = 1;
 function goPhase(n) {
   if (n > currentPhase && !validatePhase(currentPhase)) return;
   for (var i = 1; i <= 4; i++) {
-    var panel = document.getElementById("phase" + i);
-    if (panel) panel.classList.toggle("active", i === n);
-  }
-  for (var j = 1; j <= 4; j++) {
-    var step = document.getElementById("pstep_" + j);
-    if (!step) continue;
-    step.classList.remove("active", "done");
-    if (j < n) step.classList.add("done");
-    if (j === n) step.classList.add("active");
+    var p = document.getElementById('phase' + i);
+    if (p) p.classList.toggle('active', i === n);
+    var s = document.getElementById('pstep_' + i);
+    if (!s) continue;
+    s.classList.remove('active', 'done');
+    if (i < n) s.classList.add('done');
+    if (i === n) s.classList.add('active');
   }
   if (n === 2) {
-    var isFemale = document.querySelector('input[name="sex"]:checked');
-    var femVal   = isFemale ? isFemale.value : "Male";
-    var mField   = document.getElementById("field_menopause");
-    if (mField) mField.style.display = femVal === "Female" ? "flex" : "none";
+    var sx = document.querySelector('input[name="sex"]:checked');
+    var mf = document.getElementById('field_menopause');
+    if (mf) mf.style.display = (sx && sx.value === 'Female') ? 'flex' : 'none';
   }
   currentPhase = n;
-  var fc = document.getElementById("formCard");
-  if (fc) fc.scrollIntoView({ behavior: "smooth", block: "start" });
+  var fc = document.getElementById('formCard');
+  if (fc) fc.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function validatePhase(n) {
   if (n === 1) {
-    var email = document.getElementById("a_email").value.trim();
-    if (!email || !email.includes("@")) {
-      document.getElementById("a_email").classList.add("error");
-      document.getElementById("a_email").focus();
-      return false;
-    }
-    document.getElementById("a_email").classList.remove("error");
-    var age = parseInt(document.getElementById("a_age").value) || 0;
+    var age = parseInt(document.getElementById('a_age').value) || 0;
     if (age < 18 || age > 100) {
-      document.getElementById("a_age").classList.add("error");
-      document.getElementById("a_age").focus();
-      return false;
+      document.getElementById('a_age').classList.add('error');
+      document.getElementById('a_age').focus(); return false;
     }
-    document.getElementById("a_age").classList.remove("error");
+    document.getElementById('a_age').classList.remove('error');
   }
   return true;
 }
 
 document.querySelectorAll('input[name="sex"]').forEach(function(r) {
-  r.addEventListener("change", function() {
+  r.addEventListener('change', function() {
     if (currentPhase === 2) {
-      var mField = document.getElementById("field_menopause");
-      if (mField) mField.style.display = this.value === "Female" ? "flex" : "none";
+      var mf = document.getElementById('field_menopause');
+      if (mf) mf.style.display = this.value === 'Female' ? 'flex' : 'none';
     }
   });
 });
 
 function updateSliderLabels() {
-  var e  = document.getElementById("a_energy");
-  var s  = document.getElementById("a_sleep_q");
-  var st = document.getElementById("a_stress");
-  if (e)  document.getElementById("lbl_energy_a").textContent  = e.value  + " / 10";
-  if (s)  document.getElementById("lbl_sleep_a").textContent   = s.value  + " / 10";
-  if (st) document.getElementById("lbl_stress_a").textContent  = st.value + " / 10";
+  var e  = document.getElementById('a_energy');
+  var s  = document.getElementById('a_sleep_q');
+  var st = document.getElementById('a_stress');
+  if (e)  document.getElementById('lbl_energy_a').textContent = e.value  + ' / 10';
+  if (s)  document.getElementById('lbl_sleep_a').textContent  = s.value  + ' / 10';
+  if (st) document.getElementById('lbl_stress_a').textContent = st.value + ' / 10';
 }
 
-// ════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
 // ASSESSMENT ENGINE CALL
-// ════════════════════════════════════════════════
+// Email comes from session — not a form field
+// ════════════════════════════════════════════════════════════
 function runAssessment() {
-  var email  = document.getElementById("a_email").value.trim();
-  var name   = document.getElementById("a_name").value.trim();
-  var age    = document.getElementById("a_age").value;
-  var weight = document.getElementById("a_weight").value;
-  var height = document.getElementById("a_height").value;
-
-  if (!email) { alert("Please enter your email address."); goPhase(1); return; }
+  if (!Session.isValid()) { showLoginScreen('Session expired. Please sign in.'); return; }
+  var session = Session.get();
+  var email   = session.userId;
 
   var sexInput     = document.querySelector('input[name="sex"]:checked');
-  var gender       = sexInput ? sexInput.value : "Male";
   var smokingInput = document.querySelector('input[name="smoking"]:checked');
-  var smoking      = smokingInput ? smokingInput.value : "Never";
+  var dietInput    = document.querySelector('input[name="diet"]:checked');
+  var exInput      = document.querySelector('input[name="exercise"]:checked');
+  var sleepInput   = document.querySelector('input[name="sleep_hrs"]:checked');
+  var alcInput     = document.querySelector('input[name="alcohol"]:checked');
 
   var q10 = [];
   var condMap = [
-    ["sym_diabetes",  "Diabetes Type 2"],
-    ["sym_bp",        "Hypertension"],
-    ["sym_chol",      "High Cholesterol"],
-    ["sym_obesity",   "Obesity / Weight Management"],
-    ["sym_brain",     "Brain Fog"],
-    ["sym_anxiety",   "Anxiety / Chronic Stress"],
-    ["sym_joints",    "Joint Pain / Arthritis"],
-    ["sym_gut",       "IBS / Digestive Issues"],
-    ["sym_hormone",   "Hormonal Imbalance / Low Libido"],
-    ["sym_menopause", "Menopause"]
+    ['sym_diabetes','Diabetes Type 2'],['sym_bp','Hypertension'],
+    ['sym_chol','High Cholesterol'],['sym_obesity','Obesity / Weight Management'],
+    ['sym_brain','Brain Fog'],['sym_anxiety','Anxiety / Chronic Stress'],
+    ['sym_joints','Joint Pain / Arthritis'],['sym_gut','IBS / Digestive Issues'],
+    ['sym_hormone','Hormonal Imbalance / Low Libido'],['sym_menopause','Menopause']
   ];
   condMap.forEach(function(pair) {
     var el = document.getElementById(pair[0]);
     if (el && el.checked) q10.push(pair[1]);
   });
 
-  var dietInput  = document.querySelector('input[name="diet"]:checked');
-  var diet       = dietInput ? dietInput.value : "Balanced";
-  var exInput    = document.querySelector('input[name="exercise"]:checked');
-  var exercise   = exInput ? exInput.value : "1–2x / week";
-  var sleepInput = document.querySelector('input[name="sleep_hrs"]:checked');
-  var sleepHrs   = sleepInput ? sleepInput.value : "7–8h";
-  var alcInput   = document.querySelector('input[name="alcohol"]:checked');
-  var alcohol    = alcInput ? alcInput.value : "None";
-
-  var energy    = document.getElementById("a_energy").value;
-  var sleepQual = document.getElementById("a_sleep_q").value;
-  var stressLvl = document.getElementById("a_stress").value;
-
-  var payload = {
-    email: email, name: name,
-    "Q-001": age, "Q-002": gender, "Q-003": smoking,
-    "Q-010": q10.join("; "),
-    "Q-019": height, "Q-021": weight, "Q-006": diet,
-    "Q-exercise": exercise, "Q-sleep-hrs": sleepHrs,
-    "Q-alcohol": alcohol, "Q-023": energy,
-    "Q-sleep-qual": sleepQual, "Q-stress": stressLvl
+  var enginePayload = {
+    email: email,
+    name:  document.getElementById('a_name').value.trim(),
+    'Q-001': document.getElementById('a_age').value,
+    'Q-002': sexInput     ? sexInput.value     : 'Male',
+    'Q-003': smokingInput ? smokingInput.value : 'Never',
+    'Q-010': q10.join('; '),
+    'Q-019': document.getElementById('a_height').value,
+    'Q-021': document.getElementById('a_weight').value,
+    'Q-006': dietInput  ? dietInput.value  : 'Balanced',
+    'Q-exercise':   exInput    ? exInput.value    : '1–2x / week',
+    'Q-sleep-hrs':  sleepInput ? sleepInput.value : '7–8h',
+    'Q-alcohol':    alcInput   ? alcInput.value   : 'None',
+    'Q-023':        document.getElementById('a_energy').value,
+    'Q-sleep-qual': document.getElementById('a_sleep_q').value,
+    'Q-stress':     document.getElementById('a_stress').value
   };
 
-  document.getElementById("formCard").style.display = "none";
-  document.getElementById("loadingOverlay").style.display = "block";
+  document.getElementById('formCard').style.display     = 'none';
+  document.getElementById('loadingOverlay').style.display = 'block';
   startStages();
 
-  jsonpCall(payload, function(data) {
-    stopStages();
-    document.getElementById("loadingOverlay").style.display = "none";
-    if (data.status === "success") {
-      renderDashboard(data.output);
-      document.getElementById("ci_email").value = email;
-    } else {
-      document.getElementById("formCard").style.display = "block";
-      showErrorPanel("engine", "assess");
-    }
-  }, function(reason) {
-    stopStages();
-    document.getElementById("loadingOverlay").style.display = "none";
-    document.getElementById("formCard").style.display = "block";
-    showErrorPanel(reason, "assess");
-  });
-}
-
-// ════════════════════════════════════════════════
-// MICRO CHECK-IN CALL
-// ════════════════════════════════════════════════
-function runCheckin() {
-  var email = document.getElementById("ci_email").value.trim();
-  if (!email) { alert("Please enter your email (same as your assessment)."); return; }
-
-  var adherenceSlider = parseInt(document.getElementById("ci_adherence").value) || 8;
-  var adherence100    = adherenceSlider * 10;
-
-  var payload = {
-    email: email, adherence: adherence100,
-    energy_score:  document.getElementById("ci_energy").value,
-    sleep_quality: document.getElementById("ci_sleep").value,
-    stress_level:  document.getElementById("ci_stress").value,
-    age: 35, "Q-002": "Unknown", "Q-010": ""
-  };
-
-  document.getElementById("checkinBtn").style.display = "none";
-  document.getElementById("ci_loading").style.display = "block";
-
-  jsonpCall(payload, function(data) {
-    document.getElementById("ci_loading").style.display = "none";
-    document.getElementById("checkinBtn").style.display = "block";
-    if (data.status === "success") {
-      var out = data.output;
-      var resp = parseFloat(out.responsiveness) || 1.0;
-      var respLabel = respToLabel(resp).label;
-      document.getElementById("ci_result_body").innerHTML =
-        "<strong>Cycle " + (out.cycleNumber || "—") + " complete.</strong><br><br>" +
-        "Your Twin recalibrated with <strong>" + respLabel + "</strong> responsiveness (" + resp.toFixed(1) + "x).<br><br>" +
-        "Updated trajectory: <strong>" + esc(out.lifecycle || "—") + "</strong><br>" +
-        "90-day projection: <strong>" + (out.projection90d || "—") + "/100</strong><br>" +
-        "Momentum: <strong>" + (out.momentum >= 0 ? "+" : "") + (out.momentum || 0) + "</strong><br><br>" +
-        "<em>" + esc(out.coachMessage || "") + "</em>";
-      document.getElementById("ci_result").style.display = "block";
-    } else {
-      showErrorPanel("engine", "checkin");
-    }
-  }, function(reason) {
-    document.getElementById("ci_loading").style.display = "none";
-    document.getElementById("checkinBtn").style.display = "block";
-    showErrorPanel(reason, "checkin");
-  });
-}
-
-// ════════════════════════════════════════════════
-// FETCH TRANSPORT
-// ════════════════════════════════════════════════
-function jsonpCall(payload, onSuccess, onError) {
-  var url = API_URL + "?payload=" + encodeURIComponent(JSON.stringify(payload));
-  var timeoutMs = 25000;
-  var controller = typeof AbortController !== "undefined" ? new AbortController() : null;
-  var timer = setTimeout(function() {
-    if (controller) controller.abort();
-    if (onError) onError("timeout");
-  }, timeoutMs);
-
-  fetch(url, { method: "GET", redirect: "follow", signal: controller ? controller.signal : undefined })
-  .then(function(response) {
-    if (!response.ok) throw new Error("HTTP " + response.status);
-    return response.json();
-  })
+  callAPI('run_engine', enginePayload, 35000)
   .then(function(data) {
-    clearTimeout(timer);
-    onSuccess(data);
+    stopStages();
+    document.getElementById('loadingOverlay').style.display = 'none';
+    if (data.status === 'success' && data.output) {
+      renderDashboard(data.output);
+    } else {
+      document.getElementById('formCard').style.display = 'block';
+      showErrorPanel(data.code || 'engine_error', 'assess');
+    }
   })
   .catch(function(err) {
-    clearTimeout(timer);
-    var reason = err && err.name === "AbortError" ? "timeout" : "network";
-    if (onError) onError(reason);
+    stopStages();
+    document.getElementById('loadingOverlay').style.display = 'none';
+    if (err !== 'session_expired') {
+      document.getElementById('formCard').style.display = 'block';
+      showErrorPanel(err, 'assess');
+    }
   });
 }
 
-// ════════════════════════════════════════════════
-// ERROR PANEL
-// ════════════════════════════════════════════════
-function showErrorPanel(reason, context) {
-  var old = document.getElementById("errorPanel");
-  if (old) old.remove();
-  var isTimeout = reason === "timeout";
-  var shortUrl = API_URL.length > 60 ? API_URL.substring(0, 57) + "..." : API_URL;
-  var panel = document.createElement("div");
-  panel.id = "errorPanel";
-  panel.style.cssText = "background:#fff0f0;border:1.5px solid #fca5a5;border-radius:14px;padding:20px 18px;margin-bottom:14px;";
-  panel.innerHTML =
-    "<div style='font-family:Syne,sans-serif;font-size:13px;font-weight:700;color:#c53030;margin-bottom:10px;'>" +
-      (isTimeout ? "⏱ Request timed out (25s)" : "⚠️ Cannot reach the engine") +
-    "</div>" +
-    "<ol style='font-size:12px;color:#1a2332;line-height:2;padding-left:18px;margin-bottom:14px;'>" +
-      "<li><strong>Deploy → Manage deployments</strong> → confirm Active</li>" +
-      "<li><strong>Who has access</strong> must be <strong>Anyone</strong></li>" +
-      "<li><strong>Execute as:</strong> must be <em>Me</em></li>" +
-      "<li>Use the <strong>/exec</strong> URL — not /dev</li>" +
-      (isTimeout ? "<li>Script may be on cold start — wait 30s and retry</li>" : "<li>Check Executions log for runtime errors</li>") +
-    "</ol>" +
-    "<div style='background:#f7f9f8;border:1px solid #e2e8e5;border-radius:8px;padding:9px 12px;font-family:DM Mono,monospace;font-size:10px;color:#4a5568;word-break:break-all;margin-bottom:14px;'>URL: " + esc(shortUrl) + "</div>" +
-    "<button onclick='document.getElementById(\"errorPanel\").remove();' style='width:100%;padding:12px;background:#1a3d2b;color:white;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;touch-action:manipulation;'>Dismiss &amp; Try Again</button>";
-  var target = context === "checkin" ? document.getElementById("checkinBtn") : document.getElementById("formCard");
-  if (target && target.parentNode) { target.parentNode.insertBefore(panel, target); }
-  else { document.querySelector(".container").appendChild(panel); }
+// ════════════════════════════════════════════════════════════
+// MICRO CHECK-IN CALL
+// ════════════════════════════════════════════════════════════
+function runCheckin() {
+  if (!Session.isValid()) { showLoginScreen('Session expired. Please sign in.'); return; }
+  var session = Session.get();
+  var adherence100 = parseInt(document.getElementById('ci_adherence').value) * 10;
+
+  var ciPayload = {
+    email:         session.userId,
+    adherence:     adherence100,
+    energy_score:  document.getElementById('ci_energy').value,
+    sleep_quality: document.getElementById('ci_sleep').value,
+    stress_level:  document.getElementById('ci_stress').value,
+    age: 35, 'Q-002': 'Unknown', 'Q-010': ''
+  };
+
+  document.getElementById('checkinBtn').style.display = 'none';
+  document.getElementById('ci_loading').style.display = 'block';
+  document.getElementById('ci_result').style.display  = 'none';
+
+  callAPI('checkin', ciPayload, 20000)
+  .then(function(data) {
+    document.getElementById('ci_loading').style.display = 'none';
+    document.getElementById('checkinBtn').style.display = 'block';
+    if (data.status === 'success' && data.output) {
+      var out       = data.output;
+      var resp      = parseFloat(out.responsiveness) || 1.0;
+      var respLabel = respToLabel(resp).label;
+      document.getElementById('ci_result_body').innerHTML =
+        '<strong>Cycle ' + (out.cycleNumber || '—') + ' complete.</strong><br><br>' +
+        'Your Twin recalibrated with <strong>' + respLabel + '</strong> responsiveness (' + resp.toFixed(1) + 'x).<br><br>' +
+        'Updated trajectory: <strong>' + esc(out.lifecycle || '—') + '</strong><br>' +
+        '90-day projection: <strong>' + (out.projection90d || '—') + '/100</strong><br>' +
+        'Momentum: <strong>' + (out.momentum >= 0 ? '+' : '') + (out.momentum || 0) + '</strong><br><br>' +
+        '<em>' + esc(out.coachMessage || '') + '</em>';
+      document.getElementById('ci_result').style.display = 'block';
+    } else {
+      showErrorPanel(data.code || 'engine_error', 'checkin');
+    }
+  })
+  .catch(function(err) {
+    document.getElementById('ci_loading').style.display = 'none';
+    document.getElementById('checkinBtn').style.display = 'block';
+    if (err !== 'session_expired') showErrorPanel(err, 'checkin');
+  });
 }
 
-// ════════════════════════════════════════════════
-// BEHAVIOUR PREVIEW
-// ════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
+// ERROR PANEL
+// ════════════════════════════════════════════════════════════
+function showErrorPanel(reason, context) {
+  var old = document.getElementById('errorPanel');
+  if (old) old.remove();
+  var title = reason === 'timeout'            ? '⏱ Request timed out (35s)'     :
+              reason === 'rate_limited'        ? '⏳ Too many requests'           :
+              reason === 'service_unavailable' ? '🔧 Service offline'            :
+              reason === 'network'             ? '📡 Network error'              : '⚠️ Engine error';
+  var extraHint = reason === 'timeout'   ? '<li>Script cold start — wait 30s and retry</li>'       :
+                  reason === 'rate_limited' ? '<li>Wait 60 seconds before retrying</li>'           :
+                  reason === 'network'  ? '<li>Check internet connection</li>'                      :
+                  '<li>Check Apps Script Executions log for runtime errors</li>';
+
+  var shortUrl = GAS_URL.length > 60 ? GAS_URL.substring(0,57) + '...' : GAS_URL;
+  var panel = document.createElement('div');
+  panel.id  = 'errorPanel';
+  panel.style.cssText = 'background:#fff0f0;border:1.5px solid #fca5a5;border-radius:14px;padding:20px 18px;margin-bottom:14px;';
+  panel.innerHTML =
+    '<div style="font-family:Syne,sans-serif;font-size:13px;font-weight:700;color:#c53030;margin-bottom:10px;">' + title + '</div>' +
+    '<ol style="font-size:12px;color:#1a2332;line-height:2;padding-left:18px;margin-bottom:14px;">' +
+      '<li>Deploy → Manage deployments → confirm Active</li>' +
+      '<li>Who has access must be <strong>Anyone</strong></li>' +
+      '<li>Execute as: must be <em>Me</em></li>' +
+      '<li>Use the <strong>/exec</strong> URL — not /dev</li>' +
+      '<li>Ensure <code>SERVICE_STATUS = ACTIVE</code> in Script Properties</li>' +
+      extraHint +
+    '</ol>' +
+    '<div style="background:#f7f9f8;border:1px solid #e2e8e5;border-radius:8px;padding:9px 12px;font-family:DM Mono,monospace;font-size:10px;color:#4a5568;word-break:break-all;margin-bottom:14px;">URL: ' + esc(shortUrl) + '</div>' +
+    '<button onclick="document.getElementById(\'errorPanel\').remove();" style="width:100%;padding:12px;background:#1a3d2b;color:white;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;touch-action:manipulation;">Dismiss &amp; Try Again</button>';
+
+  var target = context === 'checkin' ? document.getElementById('checkinBtn') : document.getElementById('formCard');
+  if (target && target.parentNode) target.parentNode.insertBefore(panel, target);
+  else document.getElementById('mainApp').appendChild(panel);
+}
+
+// ════════════════════════════════════════════════════════════
+// BEHAVIOUR PREVIEW (check-in tab)
+// ════════════════════════════════════════════════════════════
 function updatePreview() {
-  var energyVal    = parseInt(document.getElementById("ci_energy").value);
-  var sleepVal     = parseInt(document.getElementById("ci_sleep").value);
-  var stressVal    = parseInt(document.getElementById("ci_stress").value);
-  var adherenceVal = parseInt(document.getElementById("ci_adherence").value);
-  var adherence100 = adherenceVal * 10;
-  document.getElementById("lbl_energy").textContent    = energyVal + " / 10";
-  document.getElementById("lbl_sleep").textContent     = sleepVal  + " / 10";
-  document.getElementById("lbl_stress").textContent    = stressVal + " / 10";
-  document.getElementById("lbl_adherence").textContent = adherence100 + " %";
+  var adherence100 = parseInt(document.getElementById('ci_adherence').value) * 10;
+  document.getElementById('lbl_energy').textContent    = document.getElementById('ci_energy').value + ' / 10';
+  document.getElementById('lbl_sleep').textContent     = document.getElementById('ci_sleep').value  + ' / 10';
+  document.getElementById('lbl_stress').textContent    = document.getElementById('ci_stress').value + ' / 10';
+  document.getElementById('lbl_adherence').textContent = adherence100 + ' %';
   var resp = calcResponsiveness(adherence100);
   var info = respToLabel(resp);
-  document.getElementById("prev_resp").textContent       = resp.toFixed(1);
-  document.getElementById("prev_resp_label").textContent = info.label;
-  document.getElementById("prev_mfx").textContent        = info.mfx;
-  document.getElementById("prev_traj").textContent       = info.traj;
-  document.getElementById("prev_traj_label").textContent = info.trajLabel;
-  document.getElementById("prev_stmt").textContent = "If you submit today: your Twin will recalibrate with a " + info.label + " trajectory.";
+  document.getElementById('prev_resp').textContent       = resp.toFixed(1);
+  document.getElementById('prev_resp_label').textContent = info.label;
+  document.getElementById('prev_mfx').textContent        = info.mfx;
+  document.getElementById('prev_traj').textContent       = info.traj;
+  document.getElementById('prev_traj_label').textContent = info.trajLabel;
+  document.getElementById('prev_stmt').textContent       = 'If you submit today: your Twin will recalibrate with a ' + info.label + ' trajectory.';
 }
 
-function calcResponsiveness(adherence100) {
-  if (adherence100 >= 90) return 1.1;
-  if (adherence100 >= 70) return 1.0;
-  if (adherence100 >= 50) return 0.8;
+function calcResponsiveness(a) {
+  if (a >= 90) return 1.1;
+  if (a >= 70) return 1.0;
+  if (a >= 50) return 0.8;
   return 0.6;
 }
 
-function respToLabel(resp) {
-  if (resp >= 1.1) return { label: "Accelerating", mfx: "↑ Compounding", traj: "↗", trajLabel: "Improving" };
-  if (resp >= 1.0) return { label: "Neutral",      mfx: "→ Steady",      traj: "→", trajLabel: "Stable"    };
-  if (resp >= 0.8) return { label: "Slowed",       mfx: "↓ Drag",        traj: "→", trajLabel: "Slowing"   };
-  return                   { label: "Stagnating",  mfx: "⬇ Blocked",     traj: "↘", trajLabel: "At Risk"   };
+function respToLabel(r) {
+  if (r >= 1.1) return { label: 'Accelerating', mfx: '↑ Compounding', traj: '↗', trajLabel: 'Improving' };
+  if (r >= 1.0) return { label: 'Neutral',      mfx: '→ Steady',      traj: '→', trajLabel: 'Stable'    };
+  if (r >= 0.8) return { label: 'Slowed',        mfx: '↓ Drag',        traj: '→', trajLabel: 'Slowing'   };
+  return               { label: 'Stagnating',   mfx: '⬇ Blocked',     traj: '↘', trajLabel: 'At Risk'   };
 }
 
-// ════════════════════════════════════════════════
-// DASHBOARD RENDER
-// ════════════════════════════════════════════════
-function renderDashboard(twin) {
-  document.getElementById("dashboard").style.display = "block";
-  document.getElementById("disp_coach").textContent = twin.coachMessage || "";
+// ════════════════════════════════════════════════════════════
+// RESET ASSESSMENT
+// ════════════════════════════════════════════════════════════
+function resetAssessment() {
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('formCard').style.display  = 'block';
+  currentPhase = 1;
+  goPhase(1);
+  var ep = document.getElementById('errorPanel');
+  if (ep) ep.remove();
+}
 
-  var evo       = (twin.evolutionStatus || "baseline").toLowerCase();
-  var lifecycle = twin.lifecycle || "";
+// ════════════════════════════════════════════════════════════
+// DASHBOARD RENDER
+// ════════════════════════════════════════════════════════════
+function renderDashboard(twin) {
+  document.getElementById('dashboard').style.display = 'block';
+  document.getElementById('disp_coach').textContent  = twin.coachMessage || '';
+
+  var evo       = (twin.evolutionStatus || 'baseline').toLowerCase();
+  var lifecycle = twin.lifecycle || '';
   var resp      = parseFloat(twin.responsiveness) || 1.0;
   var respInfo  = respToLabel(resp);
 
   var evoBadgeMap = {
-    baseline:  { icon: "◎", label: "BASELINE" },
-    improving: { icon: "↑", label: "IMPROVING" },
-    stable:    { icon: "→", label: "STABLE" },
-    declining: { icon: "↓", label: "DECLINING" }
+    baseline:  { icon: '◎', label: 'BASELINE' },
+    improving: { icon: '↑', label: 'IMPROVING' },
+    stable:    { icon: '→', label: 'STABLE'    },
+    declining: { icon: '↓', label: 'DECLINING' }
   };
   var badge = evoBadgeMap[evo] || evoBadgeMap.baseline;
-  var lifecycleClass = "";
-  if (lifecycle === "Recovery Needed") lifecycleClass = " recovery";
-  if (lifecycle === "Recalibrating")   lifecycleClass = " recalib";
-  var respClass = resp >= 1.1 ? "accelerating" : resp >= 1.0 ? "neutral" : resp >= 0.8 ? "slowed" : "stagnating";
+  var lcClass   = lifecycle === 'Recovery Needed' ? ' recovery' : lifecycle === 'Recalibrating' ? ' recalib' : '';
+  var respClass = resp >= 1.1 ? 'accelerating' : resp >= 1.0 ? 'neutral' : resp >= 0.8 ? 'slowed' : 'stagnating';
 
-  document.getElementById("badge_row").innerHTML =
-    '<span class="evo-badge ' + evo + '">' + badge.icon + " " + badge.label + "</span>" +
-    (lifecycle ? '<span class="lifecycle-pill' + lifecycleClass + '">⬡ ' + esc(lifecycle) + "</span>" : "") +
-    '<span class="resp-badge ' + respClass + '">⚡ ' + resp.toFixed(1) + "x " + respInfo.label + "</span>";
+  document.getElementById('badge_row').innerHTML =
+    '<span class="evo-badge ' + evo + '">' + badge.icon + ' ' + badge.label + '</span>' +
+    (lifecycle ? '<span class="lifecycle-pill' + lcClass + '">⬡ ' + esc(lifecycle) + '</span>' : '') +
+    '<span class="resp-badge ' + respClass + '">⚡ ' + resp.toFixed(1) + 'x ' + respInfo.label + '</span>';
 
-  document.getElementById("disp_score").textContent  = twin.overallScore;
-  document.getElementById("disp_bioage").textContent = twin.biologicalAge;
-  document.getElementById("tile_score").className    = "stat-tile " + evo;
-  document.getElementById("tile_bioage").className   = "stat-tile " + evo;
+  document.getElementById('disp_score').textContent  = twin.overallScore;
+  document.getElementById('disp_bioage').textContent = twin.biologicalAge;
+  document.getElementById('tile_score').className    = 'stat-tile ' + evo;
+  document.getElementById('tile_bioage').className   = 'stat-tile ' + evo;
 
-  var mom = parseFloat(twin.momentum) || 0;
-  var momEl = document.getElementById("disp_momentum");
-  if (evo === "baseline") {
-    momEl.textContent = "—";
-    document.getElementById("disp_momentum_sub").textContent = "first run";
+  var mom   = parseFloat(twin.momentum) || 0;
+  var momEl = document.getElementById('disp_momentum');
+  if (evo === 'baseline') {
+    momEl.textContent = '—';
+    document.getElementById('disp_momentum_sub').textContent = 'first run';
   } else {
-    var arrow = mom > 3 ? "↑" : (mom < -3 ? "↓" : "→");
-    momEl.textContent = arrow + " " + (mom > 0 ? "+" : "") + mom;
-    momEl.style.color = mom > 3 ? "var(--improving)" : (mom < -3 ? "var(--declining)" : "var(--stable)");
-    document.getElementById("tile_momentum").className = "stat-tile " + evo;
+    var arrow = mom > 3 ? '↑' : (mom < -3 ? '↓' : '→');
+    momEl.textContent = arrow + ' ' + (mom > 0 ? '+' : '') + mom;
+    momEl.style.color = mom > 3 ? 'var(--improving)' : (mom < -3 ? 'var(--declining)' : 'var(--stable)');
+    document.getElementById('tile_momentum').className = 'stat-tile ' + evo;
   }
 
-  document.getElementById("disp_cycle").textContent = "C" + (twin.cycleNumber || 1);
-  document.getElementById("disp_proj").textContent  = (twin.projection90d || "—") + "/100";
-  document.getElementById("disp_mult").textContent  = (twin.multiplier || 1.0).toFixed(1) + "x";
-  document.getElementById("disp_resp").textContent  = resp.toFixed(1) + "x";
+  document.getElementById('disp_cycle').textContent = 'C' + (twin.cycleNumber || 1);
+  document.getElementById('disp_proj').textContent  = (twin.projection90d || '—') + '/100';
+  document.getElementById('disp_mult').textContent  = (twin.multiplier || 1.0).toFixed(1) + 'x';
+  document.getElementById('disp_resp').textContent  = resp.toFixed(1) + 'x';
 
   renderNarrative(evo, mom, resp, twin.projection90d, twin.overallScore);
-  if (twin.scores) renderRadar(twin.scores);
-  if (twin.protocol) {
-    renderStack(twin.protocol.AM, "am_list");
-    renderStack(twin.protocol.PM, "pm_list");
-  }
+  if (twin.scores)   renderRadar(twin.scores);
+  if (twin.protocol) { renderStack(twin.protocol.AM, 'am_list'); renderStack(twin.protocol.PM, 'pm_list'); }
   renderLifestyle(twin.lifestyle || []);
-
-  // [v29.0] Render Diagnostic Gap Card
   renderGapCard(twin);
 }
 
-function renderNarrative(evo, momentum, resp, projection90d, score) {
+function renderNarrative(evo, momentum, resp, proj90, score) {
   var main = {
-    baseline:  "Your Digital Twin has been initialized. Initial biological load patterns are now mapped. The system will begin tracking functional change across future cycles.",
-    improving: "Your recent inputs indicate positive functional adaptation. Current trajectory suggests ongoing improvement supported by consistent engagement.",
-    stable:    "Your system is maintaining functional stability. Future gains will depend on sustained adherence and environmental inputs.",
-    declining: "Your recent trajectory suggests emerging biological stress. The system has adjusted guidance to stabilize future progress."
+    baseline:  'Your Digital Twin has been initialized. Initial biological load patterns are now mapped. The system will begin tracking functional change across future cycles.',
+    improving: 'Your recent inputs indicate positive functional adaptation. Current trajectory suggests ongoing improvement supported by consistent engagement.',
+    stable:    'Your system is maintaining functional stability. Future gains will depend on sustained adherence and environmental inputs.',
+    declining: 'Your recent trajectory suggests emerging biological stress. The system has adjusted guidance to stabilize future progress.'
   };
-  document.getElementById("narr_main").textContent = main[evo] || main.baseline;
-
-  var behaviourText = resp >= 1.1 ? "High consistency is amplifying your improvement potential." :
-                      resp >= 1.0 ? "Your current consistency is maintaining steady progress." :
-                      resp >= 0.8 ? "Reduced adherence may be slowing optimization." :
-                                    "Low engagement is limiting adaptive gains.";
-  var momentumText = momentum > 3 ? "Functional gains are accelerating." :
-                     momentum < -3 ? "System is entering recalibration phase." :
-                                     "System remains in stabilization phase.";
-  var projText = projection90d > score ? "Projected trajectory indicates forward improvement." :
-                 projection90d === score ? "Projected trajectory remains stable." :
-                                          "Projected trajectory suggests intervention may be required.";
-
-  document.getElementById("narr_sub").innerHTML =
-    "<span>⚡ " + behaviourText + "</span>" +
-    "<span>📈 " + momentumText + "</span>" +
-    "<span>🎯 " + projText + "</span>";
+  document.getElementById('narr_main').textContent = main[evo] || main.baseline;
+  var behText = resp >= 1.1 ? 'High consistency is amplifying your improvement potential.' :
+                resp >= 1.0 ? 'Your current consistency is maintaining steady progress.' :
+                resp >= 0.8 ? 'Reduced adherence may be slowing optimization.' :
+                              'Low engagement is limiting adaptive gains.';
+  var momText = momentum > 3 ? 'Functional gains are accelerating.' :
+                momentum < -3 ? 'System is entering recalibration phase.' : 'System remains in stabilization phase.';
+  var projText = proj90 > score ? 'Projected trajectory indicates forward improvement.' :
+                 proj90 === score ? 'Projected trajectory remains stable.' : 'Projected trajectory suggests intervention may be required.';
+  document.getElementById('narr_sub').innerHTML =
+    '<span>⚡ ' + behText + '</span><span>📈 ' + momText + '</span><span>🎯 ' + projText + '</span>';
 }
 
 function renderRadar(scores) {
-  var ctx = document.getElementById("twinRadar").getContext("2d");
+  var ctx = document.getElementById('twinRadar').getContext('2d');
   new Chart(ctx, {
-    type: "radar",
+    type: 'radar',
     data: {
-      labels: ["Metabolic", "Cardio", "Cognitive", "Joints", "Gut", "Hormonal"],
+      labels: ['Metabolic', 'Cardio', 'Cognitive', 'Joints', 'Gut', 'Hormonal'],
       datasets: [{
-        label: "Domain Load",
+        label: 'Domain Load',
         data: [scores.metabolic, scores.cardio, scores.cognitive, scores.joints, scores.gut, scores.hormonal],
-        backgroundColor: "rgba(46,125,79,0.13)", borderColor: "#2e7d4f",
-        pointBackgroundColor: "#2e7d4f", pointBorderColor: "#fff",
-        pointHoverBackgroundColor: "#fff", pointHoverBorderColor: "#2e7d4f",
+        backgroundColor: 'rgba(46,125,79,0.13)', borderColor: '#2e7d4f',
+        pointBackgroundColor: '#2e7d4f', pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff', pointHoverBorderColor: '#2e7d4f',
         borderWidth: 2, pointRadius: 4
       }]
     },
@@ -1255,8 +1371,8 @@ function renderRadar(scores) {
         r: {
           min: 0, max: 100,
           ticks: { display: false, stepSize: 25 },
-          grid: { color: "rgba(0,0,0,0.06)" },
-          pointLabels: { font: { family: "Outfit", size: 11, weight: "600" }, color: "#4a5568" }
+          grid: { color: 'rgba(0,0,0,0.06)' },
+          pointLabels: { font: { family: 'Outfit', size: 11, weight: '600' }, color: '#4a5568' }
         }
       },
       plugins: { legend: { display: false } }
@@ -1267,157 +1383,119 @@ function renderRadar(scores) {
 function renderStack(list, containerId) {
   var el = document.getElementById(containerId);
   if (!list || list.length === 0) {
-    el.innerHTML = '<div class="empty-stack">No items for this time block.</div>';
-    return;
+    el.innerHTML = '<div class="empty-stack">No items for this time block.</div>'; return;
   }
   el.innerHTML = list.map(function(item) {
-    var doseParts = [item.dose || ""];
-    if (item.final_dose_mg) doseParts.push(item.final_dose_mg + "mg");
+    var doseParts = [item.dose || ''];
+    if (item.final_dose_mg) doseParts.push(item.final_dose_mg + 'mg');
     return '<div class="supp-card">' +
       '<div class="supp-top"><span class="supp-name">' + esc(item.name) + '</span>' +
-      '<span class="supp-dose-tag">' + esc(doseParts.join(" · ")) + '</span></div>' +
+      '<span class="supp-dose-tag">' + esc(doseParts.join(' · ')) + '</span></div>' +
       (item.hero ? '<span class="supp-hero">&ldquo;' + esc(item.hero) + '&rdquo;</span>' : '') +
       (item.ingredients ? '<span class="supp-ing">🧪 ' + esc(item.ingredients) + '</span>' : '') +
       '<details class="clinical-details"><summary>Clinical rationale</summary>' +
       '<div class="clinical-body">' +
-      (item.why ? '<div class="clinical-row"><strong>Mechanism:</strong> ' + esc(item.why) + '</div>' : '') +
+      (item.why  ? '<div class="clinical-row"><strong>Mechanism:</strong> ' + esc(item.why) + '</div>' : '') +
       (item.safety ? '<div class="clinical-row warn"><strong>Safety note:</strong> ' + esc(item.safety) + '</div>' : '') +
-      (item.contraindications && item.contraindications !== "None" ? '<div class="clinical-row warn"><strong>Contraindications:</strong> ' + esc(item.contraindications) + '</div>' : '') +
+      (item.contraindications && item.contraindications !== 'None' ? '<div class="clinical-row warn"><strong>Contraindications:</strong> ' + esc(item.contraindications) + '</div>' : '') +
       '</div></details></div>';
-  }).join("");
+  }).join('');
 }
 
 function renderLifestyle(list) {
-  var el = document.getElementById("life_list");
-  if (!list || list.length === 0) { el.innerHTML = ""; return; }
+  var el = document.getElementById('life_list');
+  if (!list || list.length === 0) { el.innerHTML = ''; return; }
   el.innerHTML = list.map(function(l) {
     return '<div class="life-card">' +
-      '<span class="life-cat">' + esc(l.category || "") + '</span>' +
-      '<div class="life-title">' + esc(l.title || "") + '</div>' +
-      '<div class="life-text">' + esc(l.text || "") + '</div></div>';
-  }).join("");
+      '<span class="life-cat">' + esc(l.category || '') + '</span>' +
+      '<div class="life-title">' + esc(l.title || '') + '</div>' +
+      '<div class="life-text">'  + esc(l.text  || '') + '</div></div>';
+  }).join('');
 }
 
-// ════════════════════════════════════════════════
-// [v29.0] DIAGNOSTIC GAP ENGINE — FRONTEND RENDER
-// ════════════════════════════════════════════════
-
-// Toggle gap card open / closed
+// ════════════════════════════════════════════════════════════
+// GAP CARD RENDER — v29.0
+// ════════════════════════════════════════════════════════════
 function toggleGapCard() {
-  var body = document.getElementById("gapCardBody");
-  var icon = document.getElementById("gapToggleIcon");
-  var hdr  = document.getElementById("gapCardHeader");
-  var isOpen = body.classList.contains("open");
-  body.classList.toggle("open", !isOpen);
-  hdr.classList.toggle("has-body", !isOpen);
-  icon.textContent = isOpen ? "▼ Show" : "▲ Hide";
+  var body = document.getElementById('gapCardBody');
+  var icon = document.getElementById('gapToggleIcon');
+  var hdr  = document.getElementById('gapCardHeader');
+  var open = body.classList.contains('open');
+  body.classList.toggle('open', !open);
+  hdr.classList.toggle('has-body', !open);
+  icon.textContent = open ? '▼ Show' : '▲ Hide';
 }
 
-// Main gap card render — called from renderDashboard(twin)
 function renderGapCard(twin) {
   var gaps = twin.gaps || [];
   var recs = twin.testRecommendations || [];
-  var gapCard = document.getElementById("gapCard");
+  var card = document.getElementById('gapCard');
+  if (gaps.length === 0) { card.style.display = 'none'; return; }
+  card.style.display = 'block';
 
-  // Hide entirely if no gaps detected
-  if (gaps.length === 0) {
-    gapCard.style.display = "none";
-    return;
-  }
+  var p1Count = twin.p1GapCount || 0;
+  document.getElementById('gapCountBadge').textContent =
+    gaps.length + (gaps.length === 1 ? ' test recommended' : ' tests recommended');
 
-  gapCard.style.display = "block";
-
-  // Update count badge
-  var totalCount = gaps.length;
-  var p1Count    = twin.p1GapCount || 0;
-  document.getElementById("gapCountBadge").textContent =
-    totalCount + (totalCount === 1 ? " test recommended" : " tests recommended");
-
-  // Update depth message
-  var depthEl = document.getElementById("depthMessage");
+  var depthEl = document.getElementById('depthMessage');
   if (p1Count > 0) {
-    depthEl.innerHTML =
-      "<strong>Your protocol is running at reduced depth.</strong> " +
-      p1Count + (p1Count === 1 ? " priority test" : " priority tests") +
-      " would unlock full clinical calibration for your most elevated domains.";
+    depthEl.innerHTML = '<strong>Your protocol is running at reduced depth.</strong> ' + p1Count +
+      (p1Count === 1 ? ' priority test' : ' priority tests') +
+      ' would unlock full clinical calibration for your most elevated domains.';
   } else {
-    depthEl.innerHTML =
-      "<strong>Your protocol can be sharpened.</strong> " +
-      "The tests below would confirm domains currently based on lifestyle signals only.";
+    depthEl.innerHTML = '<strong>Your protocol can be sharpened.</strong> The tests below would confirm domains currently based on lifestyle signals only.';
   }
 
-  // Auto-open card if P1 gaps exist (user needs to see these)
+  // Auto-open if P1 gaps
   if (p1Count > 0) {
-    var body = document.getElementById("gapCardBody");
-    var icon = document.getElementById("gapToggleIcon");
-    var hdr  = document.getElementById("gapCardHeader");
-    body.classList.add("open");
-    hdr.classList.add("has-body");
-    icon.textContent = "▲ Hide";
+    var body = document.getElementById('gapCardBody');
+    var icon = document.getElementById('gapToggleIcon');
+    var hdr  = document.getElementById('gapCardHeader');
+    body.classList.add('open');
+    hdr.classList.add('has-body');
+    icon.textContent = '▲ Hide';
   }
 
-  // Render test recommendation cards
-  var listEl = document.getElementById("testRecList");
-  if (recs.length > 0) {
-    listEl.innerHTML = recs.map(renderTestRecCard).join("");
-  } else {
-    // Fallback: render from gap objects directly (GAP_TEST_MAP sheet not yet populated)
-    listEl.innerHTML = gaps.map(renderGapFallbackItem).join("");
-  }
+  var listEl = document.getElementById('testRecList');
+  listEl.innerHTML = (recs.length > 0 ? recs : []).map(recs.length > 0 ? renderTestRecCard : renderGapFallback).join('');
+  if (recs.length === 0) listEl.innerHTML = gaps.map(renderGapFallback).join('');
 }
 
-// Render a single test recommendation card from testRecommendations[]
 function renderTestRecCard(rec) {
-  var pillClass = (rec.priority || "P3").toLowerCase();
-  var pillLabel = rec.priority === "P1" ? rec.priority + " — Required" :
-                  rec.priority === "P2" ? rec.priority + " — Recommended" :
-                  rec.priority + " — Optional";
-  return (
-    '<div class="test-rec-card">' +
-      '<div class="test-rec-top">' +
-        '<span class="test-rec-name">' + esc(rec.panel_name) + '</span>' +
-        '<span class="priority-pill ' + pillClass + '">' + pillLabel + '</span>' +
-      '</div>' +
-      (rec.biomarkers ? '<div class="test-rec-biomarkers">🧪 ' + esc(rec.biomarkers) + '</div>' : '') +
-      '<div class="test-rec-reason">' + esc(rec.reason) + '</div>' +
-      '<div class="test-rec-meta">' +
-        (rec.estimated_cost ? '<span class="test-meta-tag">💰 AED ' + esc(rec.estimated_cost) + '</span>' : '') +
-        '<span class="test-meta-tag">📍 ' + esc(rec.domain) + ' domain</span>' +
-      '</div>' +
-      (rec.how_to_get_tested ?
-        '<div class="test-rec-how">📋 <strong>How to get tested:</strong> ' + esc(rec.how_to_get_tested) + '</div>'
-        : '') +
-    '</div>'
-  );
+  var pillClass = (rec.priority || 'P3').toLowerCase();
+  var pillLabel = rec.priority === 'P1' ? rec.priority + ' — Required' :
+                  rec.priority === 'P2' ? rec.priority + ' — Recommended' :
+                                          rec.priority + ' — Optional';
+  return '<div class="test-rec-card">' +
+    '<div class="test-rec-top">' +
+      '<span class="test-rec-name">' + esc(rec.panel_name) + '</span>' +
+      '<span class="priority-pill ' + pillClass + '">' + pillLabel + '</span>' +
+    '</div>' +
+    (rec.biomarkers ? '<div class="test-rec-biomarkers">🧪 ' + esc(rec.biomarkers) + '</div>' : '') +
+    '<div class="test-rec-reason">' + esc(rec.reason) + '</div>' +
+    '<div class="test-rec-meta">' +
+      (rec.estimated_cost ? '<span class="test-meta-tag">💰 AED ' + esc(rec.estimated_cost) + '</span>' : '') +
+      '<span class="test-meta-tag">📍 ' + esc(rec.domain) + ' domain</span>' +
+    '</div>' +
+    (rec.how_to_get_tested ?
+      '<div class="test-rec-how">📋 <strong>How to get tested:</strong> ' + esc(rec.how_to_get_tested) + '</div>'
+      : '') +
+    '</div>';
 }
 
-// Fallback: render directly from gap object if no GAP_TEST_MAP rows found yet
-function renderGapFallbackItem(gap) {
-  var pillClass = (gap.priority || "P3").toLowerCase();
-  var domainLabel = (gap.domain || "").charAt(0).toUpperCase() + (gap.domain || "").slice(1);
-  return (
-    '<div class="test-rec-card">' +
-      '<div class="test-rec-top">' +
-        '<span class="test-rec-name">' + esc(domainLabel) + ' Panel</span>' +
-        '<span class="priority-pill ' + pillClass + '">' + esc(gap.priority) + '</span>' +
-      '</div>' +
-      '<div class="test-rec-reason">' + esc(gap.reason) + '</div>' +
-      '<div class="test-rec-meta"><span class="test-meta-tag">📍 ' + esc(gap.domain) + ' domain</span></div>' +
-    '</div>'
-  );
-}
-// ════════════════════════════════════════════════
-// END DIAGNOSTIC GAP ENGINE FRONTEND
-// ════════════════════════════════════════════════
-
-function esc(str) {
-  return String(str || "")
-    .replace(/&/g,"&amp;").replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+function renderGapFallback(gap) {
+  var pillClass  = (gap.priority || 'P3').toLowerCase();
+  var domainLabel = (gap.domain || '').charAt(0).toUpperCase() + (gap.domain || '').slice(1);
+  return '<div class="test-rec-card">' +
+    '<div class="test-rec-top">' +
+      '<span class="test-rec-name">' + esc(domainLabel) + ' Panel</span>' +
+      '<span class="priority-pill ' + pillClass + '">' + esc(gap.priority) + '</span>' +
+    '</div>' +
+    '<div class="test-rec-reason">' + esc(gap.reason) + '</div>' +
+    '<div class="test-rec-meta"><span class="test-meta-tag">📍 ' + esc(gap.domain) + ' domain</span></div>' +
+    '</div>';
 }
 
-// Init preview on load
-updatePreview();
 </script>
 </body>
 </html>
