@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Phytomedix-Excell Nutrients | Digital Twin v29.0</title>
+<title>Phytomedix-Excell Nutrients | Digital Twin v29.1</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -115,6 +115,76 @@ body {
   padding: 10px 13px; font-size: 11px; color: var(--forest);
   margin-top: 16px; line-height: 1.6; text-align: center;
 }
+
+/* ─────────────────── REGISTER SCREEN ─────────────────── */
+#registerScreen { width: 100%; max-width: 460px; margin: 0 auto; animation: fadeUp 0.4s ease; display: none; }
+.reg-card {
+  background: var(--white); border-radius: 20px; padding: 36px 32px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08), 0 0 0 1px var(--border); margin-bottom: 16px;
+}
+.reg-steps { display: flex; align-items: center; gap: 0; margin-bottom: 26px; padding: 0 4px; }
+.reg-step { display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 1; position: relative; }
+.reg-step:not(:last-child)::after { content: ''; position: absolute; top: 13px; left: 50%; width: 100%; height: 2px; background: var(--border); transition: background 0.3s; z-index: 0; }
+.reg-step.done:not(:last-child)::after { background: var(--green); }
+.reg-step .step-dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border); background: var(--white); color: var(--slate); display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; transition: all 0.2s; z-index: 1; position: relative; flex-shrink: 0; }
+.reg-step.active .step-dot { border-color: var(--green); background: var(--green); color: white; }
+.reg-step.done .step-dot { border-color: var(--green); background: var(--green); color: white; }
+.reg-step.done .step-dot::after { content: '✓'; font-size: 12px; }
+.reg-step.done .step-dot span { display: none; }
+.reg-step-label { font-size: 9px; font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; color: var(--slate); text-align: center; white-space: nowrap; }
+.reg-step.active .reg-step-label { color: var(--green); }
+.reg-step.done .reg-step-label { color: var(--forest); }
+.reg-panel { display: none; }
+.reg-panel.active { display: block; animation: fadeUp 0.25s ease; }
+.reg-panel-heading { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--forest); margin-bottom: 4px; }
+.reg-panel-sub { font-size: 13px; color: var(--slate); margin-bottom: 20px; line-height: 1.55; }
+.reg-field { margin-bottom: 14px; }
+.reg-field label { display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; color: var(--slate); text-transform: uppercase; margin-bottom: 6px; }
+.reg-field input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'Outfit', sans-serif; font-size: 16px; color: var(--ink); background: var(--white); transition: border-color 0.15s; -webkit-appearance: none; min-height: 48px; }
+.reg-field input:focus { outline: none; border-color: var(--green); }
+.reg-field input.error { border-color: var(--red); }
+.reg-field input.success { border-color: var(--leaf); }
+.reg-field .reg-hint { font-size: 11px; color: var(--slate); margin-top: 4px; opacity: 0.8; display: block; }
+.pin-strength-bar { height: 3px; background: var(--border); border-radius: 2px; margin: 6px 0 3px; overflow: hidden; }
+.pin-strength-fill { height: 100%; border-radius: 2px; width: 0; transition: width 0.3s, background 0.3s; }
+.pin-strength-text { font-size: 10px; font-weight: 600; }
+.pin-strength-text.weak   { color: var(--red); }
+.pin-strength-text.medium { color: var(--amber); }
+.pin-strength-text.strong { color: var(--green); }
+.pin-match-msg { font-size: 11px; font-weight: 600; margin-top: 5px; min-height: 16px; }
+.pin-match-msg.match   { color: var(--green); }
+.pin-match-msg.nomatch { color: var(--red); }
+.reg-nav { display: flex; gap: 10px; margin-top: 6px; align-items: center; justify-content: space-between; }
+.reg-nav-counter { font-size: 11px; color: var(--slate); }
+.btn-reg-back { padding: 13px 18px; border: 1.5px solid var(--border); border-radius: 10px; background: none; cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; color: var(--slate); transition: all 0.15s; touch-action: manipulation; min-height: 48px; }
+.btn-reg-back:hover { background: var(--mist); border-color: var(--slate); }
+.btn-reg-next { padding: 13px 24px; background: var(--forest); color: white; border: none; border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; letter-spacing: 0.3px; transition: all 0.2s; touch-action: manipulation; min-height: 48px; }
+.btn-reg-next:hover { background: var(--green); }
+.btn-reg-next:disabled { opacity: 0.6; cursor: not-allowed; }
+.reg-confirm-box { background: var(--mist); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin-bottom: 18px; display: grid; gap: 10px; }
+.reg-confirm-row { display: flex; justify-content: space-between; align-items: center; }
+.reg-confirm-key { font-size: 10px; font-weight: 700; color: var(--slate); text-transform: uppercase; letter-spacing: 0.5px; }
+.reg-confirm-val { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--ink); }
+.reg-error { background: #fff0f0; border: 1px solid #fca5a5; border-radius: 8px; padding: 10px 13px; font-size: 12px; color: var(--red); margin-top: 12px; display: none; line-height: 1.5; }
+.reg-security-note { background: var(--mint); border: 1px solid #c8e6d5; border-radius: 8px; padding: 10px 13px; font-size: 11px; color: var(--forest); margin-top: 16px; line-height: 1.6; text-align: center; }
+.auth-switch-link { text-align: center; font-size: 12px; color: var(--slate); margin-top: 14px; }
+.auth-switch-link a { color: var(--green); font-weight: 700; text-decoration: none; cursor: pointer; }
+/* SUCCESS OVERLAY */
+#regSuccessScreen { display: none; width: 100%; max-width: 460px; margin: 0 auto; animation: fadeUp 0.4s ease; }
+.success-card { background: var(--white); border-radius: 20px; padding: 36px 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.08), 0 0 0 1px var(--border); text-align: center; }
+.success-emoji { font-size: 52px; display: block; margin-bottom: 14px; }
+.success-heading { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--forest); margin-bottom: 8px; }
+.success-sub { font-size: 13px; color: var(--slate); margin-bottom: 24px; line-height: 1.65; }
+.pin-reveal { background: var(--mint); border: 1px solid #b7d9c3; border-radius: 14px; padding: 20px 24px; margin-bottom: 20px; text-align: left; }
+.pin-reveal-label { font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500; color: var(--green); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.pin-reveal-value { font-family: 'DM Mono', monospace; font-size: 30px; font-weight: 500; color: var(--forest); letter-spacing: 8px; margin-bottom: 8px; }
+.pin-reveal-note { font-size: 12px; color: var(--slate); line-height: 1.6; }
+.pin-save-warning { background: #fff7ed; border: 1px solid #fde68a; border-radius: 10px; padding: 12px 16px; font-size: 12px; color: #78350f; margin-bottom: 20px; line-height: 1.6; text-align: left; }
+.btn-go-login { width: 100%; padding: 15px; background: var(--forest); color: white; border: none; border-radius: 12px; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; touch-action: manipulation; min-height: 52px; }
+.btn-go-login:hover { background: var(--green); }
+/* Loading spinner inline */
+.btn-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin-s 0.7s linear infinite; vertical-align: middle; margin-right: 7px; }
+@keyframes spin-s { to { transform: rotate(360deg); } }
 
 /* ─────────────────── SESSION WARNING ─────────────────── */
 .session-warning {
@@ -428,7 +498,7 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
   <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCABuAS4DASIAAhEBAxEB/8QAGAABAQEBAQAAAAAAAAAAAAAAAAcIBQb/xAAwEAEAAgEDAgQDBgcAAAAAAAAAAQIDBAURBgcIEiFhIjFREyMyQVKBFUNicZGy0f/EABoBAQACAwEAAAAAAAAAAAAAAAAEBQMGBwj/xAAoEQEAAgECBgEDBQAAAAAAAAAAAQIDBBEFBiExQVESE2GBkaHBwvD/2gAMAwEAAhEDEQA/AMZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKx2z7EdYdYYsWv1la7FteSItXPqqTOTJX60x+kzHvM1ifymVE8MHaXb42nB171Tp8ea2T7zbtPmiPs8dI/nWifSZnjmvPpEevzmONGbfrdJuGlrqtFnpqNPf8GXHPNL+9Z+Ux7x6OZ8zc8X02S2m0Eda9JvPWIn1EdvzP6eVvo+HReIvl8+EC6u7a9uO0fQGr6i1e2Tv+6U4xaT+JW82PJnt+GPs44r5Y4m0xMTPFZ9WXNx1mo3DWZNXqrxfLktzPlrFax7RWOIrEflEREQ0h4391vz01slLTFPvtXkr9Z+GlJ/3/AMszr3k2ubNoI1mpvN75JnrM9oidoiPUdN+ntG4hNa5fp0jaIAG3oIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADZnQ9I7l58NYtanQew0xaTTaSvpXc9RSleZyfqxU9IivytPrPPHCx0rWlYrWsVrEcRERxEQkHhH3nbtf2k021aa9I1m2Z8tNVj5+L48lr1tx9Ji3HP9M/RYHnDmH5Ytdk0221cczER/afc27zP39RDbNLtOOL+Z/wBt+GR/Gvkme420YufSu0Vtx/fNl/4g6n+J7qTTdSd29dfRZa5tNt+KmhpkrPMWmnM249ova0fsmDufLWC+DhOnpeNp+Mfv1/lrmrtFs9pj2ALxGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdjpLqbfek93ruvT25ZtBq6x5ZtTiYvX9NqzzFo9piXsuoO+Xcretsvt+ffY02HJXy5J0uCmK94+nmiOY/aYTUQc/DNHqMsZcuKtrR2mYiZZK5slY+NbTEACcxgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP//Z" alt="Phytomedix" class="logo-img">
   <div class="header-right">
     <span class="session-indicator" id="sessionIndicator">Session Active</span>
-    <span class="engine-badge">ENGINE v29.0</span>
+    <span class="engine-badge">ENGINE v29.1</span>
     <button class="logout-btn" id="logoutBtn" onclick="handleLogout()">Sign Out</button>
   </div>
 </header>
@@ -450,6 +520,83 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
     <button class="login-btn" id="loginBtn" onclick="handleLogin()">Sign In →</button>
     <div class="login-error" id="loginError"></div>
     <div class="login-note">🔒 Session expires automatically after 30 minutes. No credentials are stored in this browser.</div>
+    <div class="auth-switch-link" style="margin-top:14px;">New member? <a onclick="showRegisterScreen()">Create account →</a></div>
+  </div>
+</div>
+
+<!-- ══ REGISTER SCREEN ══ -->
+<div id="registerScreen" style="display:none;">
+  <div class="reg-card">
+    <div class="login-heading" style="margin-bottom:6px;">Create Account</div>
+    <p class="login-sub">Set up your Phytomedix Digital Twin account in 3 steps.</p>
+    <div class="reg-steps">
+      <div class="reg-step active" id="rstep_1"><div class="step-dot"><span>1</span></div><div class="reg-step-label">Identity</div></div>
+      <div class="reg-step" id="rstep_2"><div class="step-dot"><span>2</span></div><div class="reg-step-label">Security</div></div>
+      <div class="reg-step" id="rstep_3"><div class="step-dot"><span>3</span></div><div class="reg-step-label">Confirm</div></div>
+    </div>
+    <!-- Step 1 -->
+    <div class="reg-panel active" id="rpanel_1">
+      <h3 class="reg-panel-heading">Your Identity</h3>
+      <p class="reg-panel-sub">Enter your email — this becomes your login ID and links to your Twin State.</p>
+      <div class="reg-field">
+        <label for="r_email">Email Address</label>
+        <input type="email" id="r_email" placeholder="your@email.com" autocomplete="email" autocapitalize="none" spellcheck="false">
+        <span class="reg-hint">Used to log in. Never shared or used for marketing.</span>
+      </div>
+      <div class="reg-field">
+        <label for="r_name">Full Name <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+        <input type="text" id="r_name" placeholder="Your name" autocomplete="name">
+        <span class="reg-hint">Personalises your Twin coach messages.</span>
+      </div>
+      <div class="reg-nav"><span class="reg-nav-counter">Step 1 of 3</span><button class="btn-reg-next" onclick="goRegStep(2)">Continue →</button></div>
+    </div>
+    <!-- Step 2 -->
+    <div class="reg-panel" id="rpanel_2">
+      <h3 class="reg-panel-heading">Set Your PIN</h3>
+      <p class="reg-panel-sub">Choose a PIN you'll use every time you sign in. Minimum 6 characters.</p>
+      <div class="reg-field">
+        <label for="r_pin">Your PIN</label>
+        <input type="password" id="r_pin" placeholder="Minimum 6 characters" inputmode="numeric" maxlength="20" autocomplete="new-password" oninput="checkPinStrength()">
+        <div class="pin-strength-bar"><div class="pin-strength-fill" id="pinStrengthFill"></div></div>
+        <span class="pin-strength-text" id="pinStrengthText"></span>
+      </div>
+      <div class="reg-field">
+        <label for="r_pin_confirm">Confirm PIN</label>
+        <input type="password" id="r_pin_confirm" placeholder="Re-enter your PIN" inputmode="numeric" maxlength="20" autocomplete="new-password" oninput="checkPinMatch()">
+        <div class="pin-match-msg" id="pinMatchMsg"></div>
+      </div>
+      <div class="reg-nav"><button class="btn-reg-back" onclick="goRegStep(1)">← Back</button><span class="reg-nav-counter">Step 2 of 3</span><button class="btn-reg-next" onclick="goRegStep(3)">Continue →</button></div>
+    </div>
+    <!-- Step 3 -->
+    <div class="reg-panel" id="rpanel_3">
+      <h3 class="reg-panel-heading">Confirm &amp; Create</h3>
+      <p class="reg-panel-sub">Review your details. Once created, sign in immediately with your email and PIN.</p>
+      <div class="reg-confirm-box">
+        <div class="reg-confirm-row"><span class="reg-confirm-key">Email</span><span class="reg-confirm-val" id="confirm_email">—</span></div>
+        <div class="reg-confirm-row"><span class="reg-confirm-key">Name</span><span class="reg-confirm-val" id="confirm_name" style="font-family:'Outfit',sans-serif;font-size:13px;">—</span></div>
+        <div class="reg-confirm-row"><span class="reg-confirm-key">PIN</span><span class="reg-confirm-val">●●●●●●</span></div>
+      </div>
+      <div class="reg-error" id="regError"></div>
+      <div class="reg-nav"><button class="btn-reg-back" onclick="goRegStep(2)">← Back</button><span class="reg-nav-counter">Step 3 of 3</span><button class="btn-reg-next" id="createBtn" onclick="submitRegistration()">Create Account</button></div>
+    </div>
+    <div class="reg-security-note">🔒 Your PIN is stored securely. We never store passwords or share your data.</div>
+  </div>
+  <div class="auth-switch-link">Already have an account? <a onclick="showLoginScreen()">Sign in →</a></div>
+</div>
+
+<!-- ══ REGISTER SUCCESS SCREEN ══ -->
+<div id="regSuccessScreen" style="display:none;">
+  <div class="success-card">
+    <span class="success-emoji">🌿</span>
+    <div class="success-heading">Account Created!</div>
+    <p class="success-sub">Your Phytomedix Digital Twin account is ready. Sign in now to begin your first assessment.</p>
+    <div class="pin-reveal">
+      <div class="pin-reveal-label">Your Login PIN</div>
+      <div class="pin-reveal-value" id="success_pin_display">——————</div>
+      <div class="pin-reveal-note">Save this PIN somewhere safe — you need it every time you sign in.</div>
+    </div>
+    <div class="pin-save-warning">⚠️ <strong>Important:</strong> This is the only time your PIN is shown in full. Copy it or save it in your password manager before continuing.</div>
+    <button class="btn-go-login" onclick="afterRegSuccess()">Sign In to Your Twin →</button>
   </div>
 </div>
 
@@ -621,7 +768,7 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
       <div class="spinner-dna">🧬</div>
       <div class="loading-stage" id="loadingStage">Initializing engine...</div>
       <div class="loading-bar-wrap"><div class="loading-bar" id="loadingBar"></div></div>
-      <div class="loading-sub">Engine v29.0 · Diagnostic Gap Engine Active · Session Authenticated</div>
+      <div class="loading-sub">Engine v29.1 · Diagnostic Gap Engine Active · Session Authenticated</div>
     </div>
 
     <!-- Dashboard -->
@@ -720,7 +867,7 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
 // CONFIG
 // No API key. Authentication uses PIN → session token.
 // ════════════════════════════════════════════════════════════
-var GAS_URL = "https://script.google.com/macros/s/AKfycbw2m4F_hpl27icjrNzy5U5W6o8DExSKYQ45cv4T_mkiPk-FLA87KYbBSc5n027HRtf6/exec";
+var GAS_URL = "https://script.google.com/macros/s/AKfycbyXmQROrpFAQ87Y4r36TjTu2JZ6gElJh-S7I3ZPGyXPmzMRalywNjDOshrOfZ_yAgYJ/exec";
 
 // ════════════════════════════════════════════════════════════
 // SESSION — sessionStorage only (auto-clears on tab close)
@@ -754,10 +901,12 @@ var Session = {
 // SCREEN MANAGEMENT
 // ════════════════════════════════════════════════════════════
 function showLoginScreen(msg) {
-  document.getElementById('loginScreen').style.display  = 'block';
-  document.getElementById('mainApp').style.display      = 'none';
-  document.getElementById('logoutBtn').style.display    = 'none';
-  document.getElementById('sessionIndicator').className = 'session-indicator';
+  document.getElementById('loginScreen').style.display      = 'block';
+  document.getElementById('registerScreen').style.display   = 'none';
+  document.getElementById('regSuccessScreen').style.display = 'none';
+  document.getElementById('mainApp').style.display          = 'none';
+  document.getElementById('logoutBtn').style.display        = 'none';
+  document.getElementById('sessionIndicator').className     = 'session-indicator';
   if (msg) {
     var errEl = document.getElementById('loginError');
     errEl.textContent   = msg;
@@ -765,11 +914,32 @@ function showLoginScreen(msg) {
   }
 }
 
+function showRegisterScreen() {
+  document.getElementById('loginScreen').style.display      = 'none';
+  document.getElementById('registerScreen').style.display   = 'block';
+  document.getElementById('regSuccessScreen').style.display = 'none';
+  document.getElementById('mainApp').style.display          = 'none';
+  document.getElementById('logoutBtn').style.display        = 'none';
+  document.getElementById('sessionIndicator').className     = 'session-indicator';
+  // Reset register form state
+  regCurrentStep = 1;
+  for (var i = 1; i <= 3; i++) {
+    var panel = document.getElementById('rpanel_' + i);
+    var step  = document.getElementById('rstep_' + i);
+    if (panel) panel.classList.toggle('active', i === 1);
+    if (step)  { step.classList.remove('active','done'); if (i === 1) step.classList.add('active'); }
+  }
+  var errEl = document.getElementById('regError');
+  if (errEl) errEl.style.display = 'none';
+}
+
 function showMainApp() {
-  document.getElementById('loginScreen').style.display  = 'none';
-  document.getElementById('mainApp').style.display      = 'block';
-  document.getElementById('logoutBtn').style.display    = 'block';
-  document.getElementById('sessionIndicator').className = 'session-indicator active';
+  document.getElementById('loginScreen').style.display      = 'none';
+  document.getElementById('registerScreen').style.display   = 'none';
+  document.getElementById('regSuccessScreen').style.display = 'none';
+  document.getElementById('mainApp').style.display          = 'block';
+  document.getElementById('logoutBtn').style.display        = 'block';
+  document.getElementById('sessionIndicator').className     = 'session-indicator active';
   var userId = Session.get().userId || '';
   var ciDisplay = document.getElementById('ci_user_display');
   if (ciDisplay) ciDisplay.textContent = userId;
@@ -1495,8 +1665,151 @@ function renderGapFallback(gap) {
     '<div class="test-rec-meta"><span class="test-meta-tag">📍 ' + esc(gap.domain) + ' domain</span></div>' +
     '</div>';
 }
+// ════════════════════════════════════════════════════════════
+// REGISTRATION FLOW
+// ════════════════════════════════════════════════════════════
+var regCurrentStep = 1;
+
+function goRegStep(n) {
+  if (n > regCurrentStep && !validateRegStep(regCurrentStep)) return;
+  for (var i = 1; i <= 3; i++) {
+    var panel = document.getElementById('rpanel_' + i);
+    var step  = document.getElementById('rstep_' + i);
+    if (panel) panel.classList.toggle('active', i === n);
+    if (!step) continue;
+    step.classList.remove('active', 'done');
+    if (i < n) step.classList.add('done');
+    if (i === n) step.classList.add('active');
+  }
+  if (n === 3) {
+    var email = document.getElementById('r_email').value.trim();
+    var name  = document.getElementById('r_name').value.trim();
+    document.getElementById('confirm_email').textContent = email;
+    document.getElementById('confirm_name').textContent  = name || '(not provided)';
+    document.getElementById('regError').style.display   = 'none';
+  }
+  regCurrentStep = n;
+}
+
+function validateRegStep(n) {
+  if (n === 1) {
+    var email  = document.getElementById('r_email').value.trim();
+    var emailEl = document.getElementById('r_email');
+    if (!email || email.indexOf('@') === -1 || email.indexOf('.') === -1) {
+      emailEl.classList.add('error'); emailEl.focus(); return false;
+    }
+    emailEl.classList.remove('error'); return true;
+  }
+  if (n === 2) {
+    var pin   = document.getElementById('r_pin').value.trim();
+    var pinC  = document.getElementById('r_pin_confirm').value.trim();
+    var pinEl = document.getElementById('r_pin');
+    if (!pin || pin.length < 6) { pinEl.classList.add('error'); pinEl.focus(); return false; }
+    if (pin !== pinC) {
+      document.getElementById('r_pin_confirm').classList.add('error');
+      document.getElementById('pinMatchMsg').textContent = '✗ PINs do not match';
+      document.getElementById('pinMatchMsg').className   = 'pin-match-msg nomatch';
+      document.getElementById('r_pin_confirm').focus();
+      return false;
+    }
+    return true;
+  }
+  return true;
+}
+
+function checkPinStrength() {
+  var pin   = document.getElementById('r_pin').value;
+  var fill  = document.getElementById('pinStrengthFill');
+  var label = document.getElementById('pinStrengthText');
+  if (!pin) { fill.style.width = '0'; label.textContent = ''; return; }
+  var score = 0;
+  if (pin.length >= 6)  score++;
+  if (pin.length >= 8)  score++;
+  if (pin.length >= 10) score++;
+  if (/[^0-9]/.test(pin)) score++;
+  if (score <= 1) {
+    fill.style.width = '33%'; fill.style.background = '#c53030';
+    label.textContent = 'Weak'; label.className = 'pin-strength-text weak';
+  } else if (score <= 2) {
+    fill.style.width = '66%'; fill.style.background = '#d97706';
+    label.textContent = 'Moderate'; label.className = 'pin-strength-text medium';
+  } else {
+    fill.style.width = '100%'; fill.style.background = '#4caf71';
+    label.textContent = 'Strong'; label.className = 'pin-strength-text strong';
+  }
+  checkPinMatch();
+}
+
+function checkPinMatch() {
+  var pin  = document.getElementById('r_pin').value;
+  var pinC = document.getElementById('r_pin_confirm').value;
+  var msg  = document.getElementById('pinMatchMsg');
+  var pinCEl = document.getElementById('r_pin_confirm');
+  if (!pinC) { msg.textContent = ''; msg.className = 'pin-match-msg'; return; }
+  if (pin === pinC) {
+    msg.textContent = '✓ PINs match'; msg.className = 'pin-match-msg match';
+    pinCEl.classList.remove('error'); pinCEl.classList.add('success');
+  } else {
+    msg.textContent = '✗ PINs do not match'; msg.className = 'pin-match-msg nomatch';
+    pinCEl.classList.remove('success'); pinCEl.classList.add('error');
+  }
+}
+
+function submitRegistration() {
+  var email  = document.getElementById('r_email').value.trim();
+  var name   = document.getElementById('r_name').value.trim();
+  var pin    = document.getElementById('r_pin').value.trim();
+  var errEl  = document.getElementById('regError');
+  var btn    = document.getElementById('createBtn');
+
+  errEl.style.display = 'none';
+  btn.disabled = true;
+  btn.innerHTML = '<span class="btn-spinner"></span>Creating...';
+
+  postToGAS({ action: 'register', email: email, name: name, pin: pin }, 20000)
+  .then(function(data) {
+    btn.disabled = false; btn.textContent = 'Create Account';
+    if (data.status === 'ok') {
+      showRegSuccess(pin, email);
+    } else {
+      var msgs = {
+        'USER_EXISTS':         'An account with this email already exists. Sign in instead.',
+        'INVALID_EMAIL':       'Please enter a valid email address.',
+        'PIN_TOO_SHORT':       'PIN must be at least 6 characters.',
+        'REGISTRATION_CLOSED': 'New registrations are currently closed. Please contact your practitioner.',
+        'SERVICE_UNAVAILABLE': 'Service is temporarily offline. Please try again shortly.',
+        'MISSING_FIELDS':      'Email and PIN are required.'
+      };
+      errEl.textContent   = msgs[data.code] || (data.message || 'Registration failed. Please try again.');
+      errEl.style.display = 'block';
+    }
+  })
+  .catch(function(err) {
+    btn.disabled = false; btn.textContent = 'Create Account';
+    errEl.textContent   = err === 'timeout'
+      ? 'Request timed out. Please try again.'
+      : 'Connection error. Please check your network.';
+    errEl.style.display = 'block';
+  });
+}
+
+function showRegSuccess(pin, email) {
+  document.getElementById('registerScreen').style.display   = 'none';
+  document.getElementById('regSuccessScreen').style.display = 'block';
+  document.getElementById('success_pin_display').textContent = pin;
+  // Pre-fill login email for convenience
+  var loginEmailEl = document.getElementById('login_email');
+  if (loginEmailEl) loginEmailEl.value = email;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function afterRegSuccess() {
+  document.getElementById('regSuccessScreen').style.display = 'none';
+  document.getElementById('loginScreen').style.display      = 'block';
+  var errEl = document.getElementById('loginError');
+  if (errEl) { errEl.textContent = '✓ Account created! Sign in with your email and PIN.'; errEl.style.cssText = 'display:block;background:#f0fdf4;border-color:#bbf7d0;color:#166534;'; }
+}
 
 </script>
 </body>
 </html>
-
