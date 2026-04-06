@@ -3,405 +3,402 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Phytomedix | Digital Twin Engine v29.2</title>
+<title>Phytomedix | Bio-OS v30.0</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --forest:   #1a3d2b;
-  --green:    #2e7d4f;
-  --leaf:     #4caf71;
-  --mint:     #e6f5ec;
-  --ink:      #1a2332;
-  --slate:    #4a5568;
-  --mist:     #f7f9f8;
-  --white:    #ffffff;
-  --border:   #e2e8e5;
-  --red:      #c53030;
-  --amber:    #d97706;
-  --blue:     #1d4ed8;
-  --improving:#2e7d4f;
-  --stable:   #1d4ed8;
-  --declining:#c53030;
-  --baseline: #6b7280;
+  --forest:#1a3d2b; --green:#2e7d4f; --leaf:#4caf71; --mint:#e6f5ec;
+  --ink:#1a2332; --slate:#4a5568; --mist:#f7f9f8; --white:#ffffff;
+  --border:#e2e8e5; --red:#c53030; --amber:#d97706; --blue:#1d4ed8;
+  --improving:#2e7d4f; --stable:#1d4ed8; --declining:#c53030; --baseline:#6b7280;
+  --bioOs:#0F3460; --gold:#B8860B; --goldBg:#FFFBEB;
 }
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-* { -webkit-tap-highlight-color: transparent; }
-body { font-family: 'Outfit', sans-serif; background: var(--mist); color: var(--ink); min-height: 100vh; padding: 20px 16px 40px; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
-.site-header { width: 100%; max-width: 700px; display: flex; align-items: center; justify-content: space-between; padding: 18px 0 24px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
-.logo-img { height: 36px; width: auto; display: block; }
-.header-right { display: flex; align-items: center; gap: 10px; }
-.engine-badge { font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 500; color: var(--green); background: var(--mint); border: 1px solid #b7d9c3; padding: 4px 10px; border-radius: 20px; letter-spacing: 0.6px; }
-.session-indicator { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--green); background: var(--mint); border: 1px solid #b7d9c3; padding: 4px 10px; border-radius: 20px; display: none; }
-.session-indicator.active { display: inline-flex; align-items: center; gap: 5px; }
-.session-indicator::before { content: '●'; font-size: 8px; }
-.logout-btn { font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 600; color: var(--slate); background: none; border: 1px solid var(--border); padding: 5px 12px; border-radius: 20px; cursor: pointer; transition: all 0.15s; touch-action: manipulation; display: none; }
-.logout-btn:hover { border-color: var(--slate); background: var(--mist); }
-.container { width: 100%; max-width: 700px; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+*{-webkit-tap-highlight-color:transparent;}
+body{font-family:'Outfit',sans-serif;background:var(--mist);color:var(--ink);min-height:100vh;padding:20px 16px 40px;display:flex;flex-direction:column;align-items:center;overflow-x:hidden;}
+.site-header{width:100%;max-width:700px;display:flex;align-items:center;justify-content:space-between;padding:18px 0 24px;border-bottom:1px solid var(--border);margin-bottom:24px;}
+.logo-text{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--forest);letter-spacing:1px;}
+.logo-sub{font-size:9px;font-family:'DM Mono',monospace;color:var(--green);letter-spacing:1px;display:block;}
+.header-right{display:flex;align-items:center;gap:10px;}
+.engine-badge{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;color:var(--green);background:var(--mint);border:1px solid #b7d9c3;padding:4px 10px;border-radius:20px;letter-spacing:0.6px;}
+.session-indicator{font-family:'DM Mono',monospace;font-size:9px;color:var(--green);background:var(--mint);border:1px solid #b7d9c3;padding:4px 10px;border-radius:20px;display:none;}
+.session-indicator.active{display:inline-flex;align-items:center;gap:5px;}
+.session-indicator::before{content:'●';font-size:8px;}
+.logout-btn{font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;color:var(--slate);background:none;border:1px solid var(--border);padding:5px 12px;border-radius:20px;cursor:pointer;transition:all .15s;display:none;}
+.logout-btn:hover{border-color:var(--slate);background:var(--mist);}
+.container{width:100%;max-width:700px;}
 
-/* LOGIN */
-#loginScreen { width: 100%; max-width: 420px; margin: 0 auto; animation: fadeUp 0.4s ease; }
-.login-card { background: var(--white); border-radius: 20px; padding: 36px 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.08), 0 0 0 1px var(--border); }
-.login-heading { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--forest); margin-bottom: 6px; text-align: center; }
-.login-sub { font-size: 13px; color: var(--slate); margin-bottom: 28px; text-align: center; line-height: 1.6; }
-.login-field { margin-bottom: 14px; }
-.login-field label { display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; color: var(--slate); text-transform: uppercase; margin-bottom: 6px; }
-.login-field input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'Outfit', sans-serif; font-size: 16px; color: var(--ink); background: var(--white); transition: border-color 0.15s; -webkit-appearance: none; min-height: 48px; }
-.login-field input:focus { outline: none; border-color: var(--green); }
-.login-field input.error { border-color: var(--red); }
-.pin-hint { font-size: 11px; color: var(--slate); margin-top: 4px; opacity: 0.8; display: block; }
-.login-btn { width: 100%; padding: 15px; background: var(--forest); color: white; border: none; border-radius: 12px; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: 0.3px; transition: all 0.2s; touch-action: manipulation; min-height: 52px; margin-top: 6px; }
-.login-btn:hover { background: var(--green); transform: translateY(-1px); }
-.login-btn:active { transform: none; }
-.login-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-.login-error { background: #fff0f0; border: 1px solid #fca5a5; border-radius: 8px; padding: 10px 13px; font-size: 12px; color: var(--red); margin-top: 12px; display: none; line-height: 1.5; }
-.login-note { background: var(--mint); border: 1px solid #c8e6d5; border-radius: 8px; padding: 10px 13px; font-size: 11px; color: var(--forest); margin-top: 16px; line-height: 1.6; text-align: center; }
+/* AUTH SCREENS */
+#loginScreen{width:100%;max-width:420px;margin:0 auto;animation:fadeUp .4s ease;}
+.login-card{background:var(--white);border-radius:20px;padding:36px 32px;box-shadow:0 4px 24px rgba(0,0,0,.08),0 0 0 1px var(--border);}
+.login-heading{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--forest);margin-bottom:6px;text-align:center;}
+.login-sub{font-size:13px;color:var(--slate);margin-bottom:28px;text-align:center;line-height:1.6;}
+.login-field{margin-bottom:14px;}
+.login-field label{display:block;font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--slate);text-transform:uppercase;margin-bottom:6px;}
+.login-field input{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'Outfit',sans-serif;font-size:16px;color:var(--ink);background:var(--white);transition:border-color .15s;-webkit-appearance:none;min-height:48px;}
+.login-field input:focus{outline:none;border-color:var(--green);}
+.login-field input.error{border-color:var(--red);}
+.pin-hint{font-size:11px;color:var(--slate);margin-top:4px;opacity:.8;display:block;}
+.login-btn{width:100%;padding:15px;background:var(--forest);color:white;border:none;border-radius:12px;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;min-height:52px;margin-top:6px;}
+.login-btn:hover{background:var(--green);transform:translateY(-1px);}
+.login-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.login-error{background:#fff0f0;border:1px solid #fca5a5;border-radius:8px;padding:10px 13px;font-size:12px;color:var(--red);margin-top:12px;display:none;line-height:1.5;}
+.login-note{background:var(--mint);border:1px solid #c8e6d5;border-radius:8px;padding:10px 13px;font-size:11px;color:var(--forest);margin-top:16px;line-height:1.6;text-align:center;}
+.auth-switch-link{text-align:center;font-size:12px;color:var(--slate);margin-top:14px;}
+.auth-switch-link a{color:var(--green);font-weight:700;text-decoration:none;cursor:pointer;}
 
 /* REGISTER */
-#registerScreen { width: 100%; max-width: 460px; margin: 0 auto; animation: fadeUp 0.4s ease; display: none; }
-.reg-card { background: var(--white); border-radius: 20px; padding: 36px 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.08), 0 0 0 1px var(--border); margin-bottom: 16px; }
-.reg-steps { display: flex; align-items: center; gap: 0; margin-bottom: 26px; padding: 0 4px; }
-.reg-step { display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 1; position: relative; }
-.reg-step:not(:last-child)::after { content: ''; position: absolute; top: 13px; left: 50%; width: 100%; height: 2px; background: var(--border); transition: background 0.3s; z-index: 0; }
-.reg-step.done:not(:last-child)::after { background: var(--green); }
-.reg-step .step-dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border); background: var(--white); color: var(--slate); display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; transition: all 0.2s; z-index: 1; position: relative; flex-shrink: 0; }
-.reg-step.active .step-dot { border-color: var(--green); background: var(--green); color: white; }
-.reg-step.done .step-dot { border-color: var(--green); background: var(--green); color: white; }
-.reg-step.done .step-dot::after { content: '✓'; font-size: 12px; }
-.reg-step.done .step-dot span { display: none; }
-.reg-step-label { font-size: 9px; font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; color: var(--slate); text-align: center; white-space: nowrap; }
-.reg-step.active .reg-step-label { color: var(--green); }
-.reg-step.done .reg-step-label { color: var(--forest); }
-.reg-panel { display: none; }
-.reg-panel.active { display: block; animation: fadeUp 0.25s ease; }
-.reg-panel-heading { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--forest); margin-bottom: 4px; }
-.reg-panel-sub { font-size: 13px; color: var(--slate); margin-bottom: 20px; line-height: 1.55; }
-.reg-field { margin-bottom: 14px; }
-.reg-field label { display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; color: var(--slate); text-transform: uppercase; margin-bottom: 6px; }
-.reg-field input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'Outfit', sans-serif; font-size: 16px; color: var(--ink); background: var(--white); transition: border-color 0.15s; -webkit-appearance: none; min-height: 48px; }
-.reg-field input:focus { outline: none; border-color: var(--green); }
-.reg-field input.error { border-color: var(--red); }
-.reg-field input.success { border-color: var(--leaf); }
-.reg-field .reg-hint { font-size: 11px; color: var(--slate); margin-top: 4px; opacity: 0.8; display: block; }
-.pin-strength-bar { height: 3px; background: var(--border); border-radius: 2px; margin: 6px 0 3px; overflow: hidden; }
-.pin-strength-fill { height: 100%; border-radius: 2px; width: 0; transition: width 0.3s, background 0.3s; }
-.pin-strength-text { font-size: 10px; font-weight: 600; }
-.pin-strength-text.weak { color: var(--red); }
-.pin-strength-text.medium { color: var(--amber); }
-.pin-strength-text.strong { color: var(--green); }
-.pin-match-msg { font-size: 11px; font-weight: 600; margin-top: 5px; min-height: 16px; }
-.pin-match-msg.match { color: var(--green); }
-.pin-match-msg.nomatch { color: var(--red); }
-.reg-nav { display: flex; gap: 10px; margin-top: 6px; align-items: center; justify-content: space-between; }
-.reg-nav-counter { font-size: 11px; color: var(--slate); }
-.btn-reg-back { padding: 13px 18px; border: 1.5px solid var(--border); border-radius: 10px; background: none; cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; color: var(--slate); transition: all 0.15s; touch-action: manipulation; min-height: 48px; }
-.btn-reg-back:hover { background: var(--mist); border-color: var(--slate); }
-.btn-reg-next { padding: 13px 24px; background: var(--forest); color: white; border: none; border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; letter-spacing: 0.3px; transition: all 0.2s; touch-action: manipulation; min-height: 48px; }
-.btn-reg-next:hover { background: var(--green); }
-.btn-reg-next:disabled { opacity: 0.6; cursor: not-allowed; }
-.reg-confirm-box { background: var(--mist); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin-bottom: 18px; display: grid; gap: 10px; }
-.reg-confirm-row { display: flex; justify-content: space-between; align-items: center; }
-.reg-confirm-key { font-size: 10px; font-weight: 700; color: var(--slate); text-transform: uppercase; letter-spacing: 0.5px; }
-.reg-confirm-val { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--ink); }
-.reg-error { background: #fff0f0; border: 1px solid #fca5a5; border-radius: 8px; padding: 10px 13px; font-size: 12px; color: var(--red); margin-top: 12px; display: none; line-height: 1.5; }
-.reg-security-note { background: var(--mint); border: 1px solid #c8e6d5; border-radius: 8px; padding: 10px 13px; font-size: 11px; color: var(--forest); margin-top: 16px; line-height: 1.6; text-align: center; }
-.auth-switch-link { text-align: center; font-size: 12px; color: var(--slate); margin-top: 14px; }
-.auth-switch-link a { color: var(--green); font-weight: 700; text-decoration: none; cursor: pointer; }
+#registerScreen{width:100%;max-width:460px;margin:0 auto;animation:fadeUp .4s ease;display:none;}
+.reg-card{background:var(--white);border-radius:20px;padding:36px 32px;box-shadow:0 4px 24px rgba(0,0,0,.08),0 0 0 1px var(--border);margin-bottom:16px;}
+.reg-steps{display:flex;align-items:center;gap:0;margin-bottom:26px;padding:0 4px;}
+.reg-step{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;position:relative;}
+.reg-step:not(:last-child)::after{content:'';position:absolute;top:13px;left:50%;width:100%;height:2px;background:var(--border);z-index:0;}
+.reg-step.done:not(:last-child)::after{background:var(--green);}
+.reg-step .step-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:var(--white);color:var(--slate);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;z-index:1;position:relative;flex-shrink:0;}
+.reg-step.active .step-dot{border-color:var(--green);background:var(--green);color:white;}
+.reg-step.done .step-dot{border-color:var(--green);background:var(--green);color:white;}
+.reg-step.done .step-dot::after{content:'✓';font-size:12px;}
+.reg-step.done .step-dot span{display:none;}
+.reg-step-label{font-size:9px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--slate);}
+.reg-step.active .reg-step-label{color:var(--green);}
+.reg-step.done .reg-step-label{color:var(--forest);}
+.reg-panel{display:none;}
+.reg-panel.active{display:block;animation:fadeUp .25s ease;}
+.reg-panel-heading{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--forest);margin-bottom:4px;}
+.reg-panel-sub{font-size:13px;color:var(--slate);margin-bottom:20px;line-height:1.55;}
+.reg-field{margin-bottom:14px;}
+.reg-field label{display:block;font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--slate);text-transform:uppercase;margin-bottom:6px;}
+.reg-field input{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'Outfit',sans-serif;font-size:16px;color:var(--ink);background:var(--white);transition:border-color .15s;min-height:48px;}
+.reg-field input:focus{outline:none;border-color:var(--green);}
+.reg-field input.error{border-color:var(--red);}
+.reg-field input.success{border-color:var(--leaf);}
+.reg-field .reg-hint{font-size:11px;color:var(--slate);margin-top:4px;opacity:.8;display:block;}
+.pin-strength-bar{height:3px;background:var(--border);border-radius:2px;margin:6px 0 3px;overflow:hidden;}
+.pin-strength-fill{height:100%;border-radius:2px;width:0;transition:width .3s,background .3s;}
+.pin-strength-text{font-size:10px;font-weight:600;}
+.pin-strength-text.weak{color:var(--red);}
+.pin-strength-text.medium{color:var(--amber);}
+.pin-strength-text.strong{color:var(--green);}
+.pin-match-msg{font-size:11px;font-weight:600;margin-top:5px;min-height:16px;}
+.pin-match-msg.match{color:var(--green);}
+.pin-match-msg.nomatch{color:var(--red);}
+.reg-nav{display:flex;gap:10px;margin-top:6px;align-items:center;justify-content:space-between;}
+.reg-nav-counter{font-size:11px;color:var(--slate);}
+.btn-reg-back{padding:13px 18px;border:1.5px solid var(--border);border-radius:10px;background:none;cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;color:var(--slate);min-height:48px;}
+.btn-reg-next{padding:13px 24px;background:var(--forest);color:white;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;min-height:48px;}
+.btn-reg-next:hover{background:var(--green);}
+.btn-reg-next:disabled{opacity:.6;cursor:not-allowed;}
+.reg-confirm-box{background:var(--mist);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:18px;display:grid;gap:10px;}
+.reg-confirm-row{display:flex;justify-content:space-between;align-items:center;}
+.reg-confirm-key{font-size:10px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.5px;}
+.reg-confirm-val{font-family:'DM Mono',monospace;font-size:12px;color:var(--ink);}
+.reg-error{background:#fff0f0;border:1px solid #fca5a5;border-radius:8px;padding:10px 13px;font-size:12px;color:var(--red);margin-top:12px;display:none;line-height:1.5;}
+.reg-security-note{background:var(--mint);border:1px solid #c8e6d5;border-radius:8px;padding:10px 13px;font-size:11px;color:var(--forest);margin-top:16px;line-height:1.6;text-align:center;}
 
 /* SUCCESS */
-#regSuccessScreen { display: none; width: 100%; max-width: 460px; margin: 0 auto; animation: fadeUp 0.4s ease; }
-.success-card { background: var(--white); border-radius: 20px; padding: 36px 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.08), 0 0 0 1px var(--border); text-align: center; }
-.success-emoji { font-size: 52px; display: block; margin-bottom: 14px; }
-.success-heading { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--forest); margin-bottom: 8px; }
-.success-sub { font-size: 13px; color: var(--slate); margin-bottom: 24px; line-height: 1.65; }
-.pin-reveal { background: var(--mint); border: 1px solid #b7d9c3; border-radius: 14px; padding: 20px 24px; margin-bottom: 20px; text-align: left; }
-.pin-reveal-label { font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500; color: var(--green); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-.pin-reveal-value { font-family: 'DM Mono', monospace; font-size: 30px; font-weight: 500; color: var(--forest); letter-spacing: 8px; margin-bottom: 8px; }
-.pin-reveal-note { font-size: 12px; color: var(--slate); line-height: 1.6; }
-.pin-save-warning { background: #fff7ed; border: 1px solid #fde68a; border-radius: 10px; padding: 12px 16px; font-size: 12px; color: #78350f; margin-bottom: 20px; line-height: 1.6; text-align: left; }
-.btn-go-login { width: 100%; padding: 15px; background: var(--forest); color: white; border: none; border-radius: 12px; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; touch-action: manipulation; min-height: 52px; }
-.btn-go-login:hover { background: var(--green); }
-.btn-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin-s 0.7s linear infinite; vertical-align: middle; margin-right: 7px; }
-@keyframes spin-s { to { transform: rotate(360deg); } }
+#regSuccessScreen{display:none;width:100%;max-width:460px;margin:0 auto;animation:fadeUp .4s ease;}
+.success-card{background:var(--white);border-radius:20px;padding:36px 32px;box-shadow:0 4px 24px rgba(0,0,0,.08),0 0 0 1px var(--border);text-align:center;}
+.success-emoji{font-size:52px;display:block;margin-bottom:14px;}
+.success-heading{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--forest);margin-bottom:8px;}
+.success-sub{font-size:13px;color:var(--slate);margin-bottom:24px;line-height:1.65;}
+.pin-reveal{background:var(--mint);border:1px solid #b7d9c3;border-radius:14px;padding:20px 24px;margin-bottom:20px;text-align:left;}
+.pin-reveal-label{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.pin-reveal-value{font-family:'DM Mono',monospace;font-size:30px;font-weight:500;color:var(--forest);letter-spacing:8px;margin-bottom:8px;}
+.pin-reveal-note{font-size:12px;color:var(--slate);line-height:1.6;}
+.pin-save-warning{background:#fff7ed;border:1px solid #fde68a;border-radius:10px;padding:12px 16px;font-size:12px;color:#78350f;margin-bottom:20px;line-height:1.6;text-align:left;}
+.btn-go-login{width:100%;padding:15px;background:var(--forest);color:white;border:none;border-radius:12px;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;min-height:52px;}
+.btn-go-login:hover{background:var(--green);}
+.btn-spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:white;border-radius:50%;animation:spin-s .7s linear infinite;vertical-align:middle;margin-right:7px;}
+@keyframes spin-s{to{transform:rotate(360deg);}}
 
 /* SESSION WARNING */
-.session-warning { background: #fff7ed; border: 1px solid #fde68a; border-radius: 10px; padding: 10px 14px; font-size: 12px; color: #78350f; margin-bottom: 14px; display: none; line-height: 1.5; }
-.session-warning a { color: #78350f; font-weight: 700; }
+.session-warning{background:#fff7ed;border:1px solid #fde68a;border-radius:10px;padding:10px 14px;font-size:12px;color:#78350f;margin-bottom:14px;display:none;line-height:1.5;}
+.session-warning a{color:#78350f;font-weight:700;}
 
 /* TAB BAR */
-.tab-bar { display: flex; gap: 6px; background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 5px; margin-bottom: 18px; }
-.tab-btn { flex: 1; padding: 9px 14px; border: none; border-radius: 8px; background: none; cursor: pointer; color: var(--slate); font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; transition: all 0.15s; touch-action: manipulation; min-height: 44px; }
-.tab-btn.active { background: var(--forest); color: white; }
-.tab-btn .tab-icon { font-size: 14px; margin-right: 6px; }
+.tab-bar{display:flex;gap:6px;background:var(--white);border:1px solid var(--border);border-radius:12px;padding:5px;margin-bottom:18px;}
+.tab-btn{flex:1;padding:9px 14px;border:none;border-radius:8px;background:none;cursor:pointer;color:var(--slate);font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;transition:all .15s;min-height:44px;}
+.tab-btn.active{background:var(--forest);color:white;}
+.tab-btn .tab-icon{font-size:14px;margin-right:6px;}
 
 /* CARDS */
-.card { background: var(--white); border-radius: 16px; padding: 26px 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.05), 0 0 0 1px var(--border); margin-bottom: 14px; }
-.card-title { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--slate); margin-bottom: 18px; }
-.container { width: 100%; max-width: 700px; }
+.card{background:var(--white);border-radius:16px;padding:26px 24px;box-shadow:0 2px 12px rgba(0,0,0,.05),0 0 0 1px var(--border);margin-bottom:14px;}
+.card-title{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--slate);margin-bottom:18px;}
 
-/* PHASE WIZARD */
-.phase-stepper { display: flex; align-items: center; gap: 0; margin-bottom: 24px; padding: 0 4px; overflow: hidden; }
-.phase-step { display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 1; position: relative; cursor: default; min-width: 0; }
-.phase-step:not(:last-child)::after { content: ''; position: absolute; top: 13px; left: 50%; width: 100%; height: 2px; background: var(--border); transition: background 0.3s; z-index: 0; }
-.phase-step.done:not(:last-child)::after { background: var(--green); }
-.step-dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border); background: var(--white); color: var(--slate); display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; transition: all 0.2s; z-index: 1; position: relative; flex-shrink: 0; }
-.phase-step.active .step-dot { border-color: var(--green); background: var(--green); color: white; }
-.phase-step.done .step-dot { border-color: var(--green); background: var(--green); color: white; }
-.phase-step.done .step-dot::after { content: '✓'; font-size: 12px; }
-.phase-step.done .step-dot span { display: none; }
-.step-label { font-size: 9px; font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; color: var(--slate); text-align: center; white-space: nowrap; }
-.phase-step.active .step-label { color: var(--green); }
-.phase-step.done .step-label { color: var(--forest); }
-.phase-panel { display: none; }
-.phase-panel.active { display: block; }
-.phase-heading { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: var(--forest); margin-bottom: 4px; }
-.phase-sub { font-size: 13px; color: var(--slate); margin-bottom: 22px; font-weight: 400; }
+/* PHASE WIZARD — 6 steps */
+.phase-stepper{display:flex;align-items:center;gap:0;margin-bottom:24px;padding:0 2px;overflow:hidden;}
+.phase-step{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;position:relative;cursor:default;min-width:0;}
+.phase-step:not(:last-child)::after{content:'';position:absolute;top:13px;left:50%;width:100%;height:2px;background:var(--border);z-index:0;}
+.phase-step.done:not(:last-child)::after{background:var(--green);}
+.step-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:var(--white);color:var(--slate);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:10px;z-index:1;position:relative;flex-shrink:0;}
+.phase-step.active .step-dot{border-color:var(--green);background:var(--green);color:white;}
+.phase-step.done .step-dot{border-color:var(--green);background:var(--green);color:white;}
+.phase-step.done .step-dot::after{content:'✓';font-size:11px;}
+.phase-step.done .step-dot span{display:none;}
+.step-label{font-size:8px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;color:var(--slate);text-align:center;white-space:nowrap;}
+.phase-step.active .step-label{color:var(--green);}
+.phase-step.done .step-label{color:var(--forest);}
+.phase-panel{display:none;}
+.phase-panel.active{display:block;}
+.phase-heading{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--forest);margin-bottom:4px;}
+.phase-sub{font-size:13px;color:var(--slate);margin-bottom:22px;font-weight:400;}
 
 /* FORM ELEMENTS */
-.field-label { display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; color: var(--slate); margin-bottom: 6px; text-transform: uppercase; }
-input[type="text"], input[type="number"], input[type="email"], select { width: 100%; padding: 11px 13px; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'Outfit', sans-serif; font-size: 16px; color: var(--ink); background: var(--white); transition: border-color 0.15s; -webkit-appearance: none; min-height: 44px; }
-input:focus, select:focus { outline: none; border-color: var(--green); }
-input.error, select.error { border-color: var(--red); }
-.field-row { display: grid; gap: 12px; margin-bottom: 14px; }
-.field-row.two-col { grid-template-columns: 1fr 1fr; }
-.field-row.three-col { grid-template-columns: 1fr 1fr 1fr; }
-.field-hint { font-size: 11px; color: var(--slate); margin-top: 4px; opacity: 0.8; }
+.field-label{display:block;font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--slate);margin-bottom:6px;text-transform:uppercase;}
+input[type="text"],input[type="number"],input[type="email"],select,textarea{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:10px;font-family:'Outfit',sans-serif;font-size:16px;color:var(--ink);background:var(--white);transition:border-color .15s;-webkit-appearance:none;min-height:44px;}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--green);}
+input.error,select.error{border-color:var(--red);}
+textarea{resize:vertical;font-size:14px;}
+.field-row{display:grid;gap:12px;margin-bottom:14px;}
+.field-row.two-col{grid-template-columns:1fr 1fr;}
+.field-hint{font-size:11px;color:var(--slate);margin-top:4px;opacity:.8;}
 
-/* RADIO TILES */
-.radio-group { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
-.radio-opt { flex: 1; min-width: calc(33.33% - 8px); padding: 12px 8px; border: 1.5px solid var(--border); border-radius: 10px; cursor: pointer; text-align: center; font-size: 13px; color: var(--slate); transition: all 0.15s; display: flex; flex-direction: column; align-items: center; gap: 3px; min-height: 64px; justify-content: center; touch-action: manipulation; user-select: none; }
-.radio-opt input[type="radio"] { display: none; }
-.radio-opt:has(input:checked) { border-color: var(--green); background: var(--mint); color: var(--forest); }
-.radio-opt.selected { border-color: var(--green); background: var(--mint); color: var(--forest); }
-.radio-opt .radio-icon { font-size: 16px; }
-.radio-opt .radio-text { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+/* RADIO + TILE */
+.radio-group{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.radio-opt{flex:1;min-width:calc(33.33% - 8px);padding:12px 8px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;text-align:center;font-size:13px;color:var(--slate);transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:64px;justify-content:center;user-select:none;}
+.radio-opt input[type="radio"]{display:none;}
+.radio-opt.selected{border-color:var(--green);background:var(--mint);color:var(--forest);}
+.radio-opt .radio-icon{font-size:16px;}
+.radio-opt .radio-text{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.3px;}
 
-/* CHECKBOXES */
-.signals-label { font-size: 10px; font-weight: 700; color: var(--slate); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; display: block; }
-.signal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 12px; }
-.signal-label { display: flex; align-items: center; gap: 9px; padding: 12px 13px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13px; color: var(--ink); cursor: pointer; transition: all 0.15s; background: var(--white); min-height: 48px; touch-action: manipulation; user-select: none; }
-.signal-label:hover { background: var(--mint); border-color: #b7d9c3; }
-.signal-label input[type="checkbox"] { display: none; }
-.signal-label .dot { width: 18px; height: 18px; border: 2px solid var(--border); border-radius: 4px; flex-shrink: 0; transition: all 0.15s; position: relative; }
-.signal-label input:checked ~ .dot { background: var(--green); border-color: var(--green); }
-.signal-label input:checked ~ .dot::after { content: ''; position: absolute; left: 4px; top: 1px; width: 6px; height: 9px; border: 2px solid white; border-top: none; border-left: none; transform: rotate(45deg); }
-.signal-label:has(input:checked) { border-color: var(--green); background: var(--mint); }
-.signal-label.selected { border-color: var(--green); background: var(--mint); }
-.signal-label .sig-icon { font-size: 14px; flex-shrink: 0; }
-.conditional-field { display: none; }
+.signals-label{font-size:10px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;display:block;}
+.signal-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px;}
+.signal-label{display:flex;align-items:center;gap:9px;padding:12px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;color:var(--ink);cursor:pointer;transition:all .15s;background:var(--white);min-height:48px;user-select:none;}
+.signal-label input[type="checkbox"]{display:none;}
+.signal-label .dot{width:18px;height:18px;border:2px solid var(--border);border-radius:4px;flex-shrink:0;transition:all .15s;position:relative;}
+.signal-label.selected .dot{background:var(--green);border-color:var(--green);}
+.signal-label.selected .dot::after{content:'';position:absolute;left:4px;top:1px;width:6px;height:9px;border:2px solid white;border-top:none;border-left:none;transform:rotate(45deg);}
+.signal-label.selected{border-color:var(--green);background:var(--mint);}
+.signal-label .sig-icon{font-size:14px;flex-shrink:0;}
+.conditional-field{display:none;}
 
-/* TILE SELECTS */
-.tile-select { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; margin-bottom: 14px; }
-.tile-select.two-col { grid-template-columns: 1fr 1fr; }
-.tile-opt { padding: 12px 8px; border: 1.5px solid var(--border); border-radius: 10px; cursor: pointer; text-align: center; transition: all 0.15s; background: var(--white); min-height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; touch-action: manipulation; user-select: none; }
-.tile-opt input[type="radio"] { display: none; }
-.tile-opt:has(input:checked) { border-color: var(--green); background: var(--mint); }
-.tile-opt.selected { border-color: var(--green); background: var(--mint); }
-.tile-opt .tile-icon { font-size: 18px; display: block; }
-.tile-opt .tile-text { font-size: 10px; font-weight: 600; color: var(--slate); text-transform: uppercase; letter-spacing: 0.3px; }
-.tile-opt:has(input:checked) .tile-text { color: var(--forest); }
-.tile-opt.selected .tile-text { color: var(--forest); }
+.tile-select{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:14px;}
+.tile-select.two-col{grid-template-columns:1fr 1fr;}
+.tile-select.three-col{grid-template-columns:1fr 1fr 1fr;}
+.tile-opt{padding:12px 8px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;text-align:center;transition:all .15s;background:var(--white);min-height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;user-select:none;}
+.tile-opt input[type="radio"]{display:none;}
+.tile-opt.selected{border-color:var(--green);background:var(--mint);}
+.tile-opt .tile-icon{font-size:18px;display:block;}
+.tile-opt .tile-text{font-size:10px;font-weight:600;color:var(--slate);text-transform:uppercase;letter-spacing:.3px;}
+.tile-opt.selected .tile-text{color:var(--forest);}
 
 /* SLIDERS */
-.subjective-slider { margin-bottom: 20px; }
-.slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.slider-label { font-size: 12px; font-weight: 600; color: var(--ink); text-transform: uppercase; letter-spacing: 0.4px; font-family: 'Outfit', sans-serif; }
-.slider-value { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; color: var(--green); }
-input[type="range"] { width: 100%; height: 6px; -webkit-appearance: none; appearance: none; background: var(--border); border-radius: 3px; outline: none; touch-action: pan-x; }
-input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 26px; height: 26px; border-radius: 50%; background: var(--forest); cursor: pointer; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
-input[type="range"]::-moz-range-thumb { width: 26px; height: 26px; border-radius: 50%; background: var(--forest); cursor: pointer; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
-.slider-ticks { display: flex; justify-content: space-between; font-size: 10px; color: var(--slate); margin-top: 4px; }
-.slider-group { margin-bottom: 20px; }
+.subjective-slider{margin-bottom:20px;}
+.slider-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.slider-label{font-size:12px;font-weight:600;color:var(--ink);text-transform:uppercase;letter-spacing:.4px;}
+.slider-value{font-family:'DM Mono',monospace;font-size:15px;font-weight:500;color:var(--green);}
+input[type="range"]{width:100%;height:6px;-webkit-appearance:none;appearance:none;background:var(--border);border-radius:3px;outline:none;}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:var(--forest);cursor:pointer;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+input[type="range"]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--forest);cursor:pointer;border:3px solid white;}
+.slider-ticks{display:flex;justify-content:space-between;font-size:10px;color:var(--slate);margin-top:4px;}
+.slider-group{margin-bottom:20px;}
 
 /* PHASE NAV */
-.phase-nav { display: flex; gap: 10px; margin-top: 6px; justify-content: space-between; align-items: center; }
-.btn-back { padding: 13px 20px; border: 1.5px solid var(--border); border-radius: 10px; background: none; cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; color: var(--slate); transition: all 0.15s; touch-action: manipulation; min-height: 48px; }
-.btn-back:hover { background: var(--mist); border-color: var(--slate); }
-.btn-next { flex: 1; padding: 14px 20px; background: var(--forest); color: white; border: none; border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; letter-spacing: 0.3px; transition: all 0.2s; touch-action: manipulation; min-height: 48px; }
-.btn-next:hover { background: var(--green); transform: translateY(-1px); }
-.btn-next:active { transform: none; }
-.phase-counter { font-size: 11px; color: var(--slate); white-space: nowrap; }
+.phase-nav{display:flex;gap:10px;margin-top:6px;justify-content:space-between;align-items:center;}
+.btn-back{padding:13px 20px;border:1.5px solid var(--border);border-radius:10px;background:none;cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;color:var(--slate);transition:all .15s;min-height:48px;}
+.btn-back:hover{background:var(--mist);border-color:var(--slate);}
+.btn-next{flex:1;padding:14px 20px;background:var(--forest);color:white;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;min-height:48px;}
+.btn-next:hover{background:var(--green);transform:translateY(-1px);}
+.btn-next:active{transform:none;}
+.phase-counter{font-size:11px;color:var(--slate);white-space:nowrap;}
 
 /* CTA */
-.cta-btn { width: 100%; padding: 16px; background: var(--forest); color: white; border: none; border-radius: 12px; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: 0.3px; transition: all 0.2s; touch-action: manipulation; min-height: 52px; }
-.cta-btn:hover { background: var(--green); transform: translateY(-1px); }
-.cta-btn:active { transform: none; }
-.cta-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.cta-btn{width:100%;padding:16px;background:var(--forest);color:white;border:none;border-radius:12px;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;min-height:52px;}
+.cta-btn:hover{background:var(--green);}
+.cta-btn:disabled{opacity:.6;cursor:not-allowed;}
 
 /* LOADING */
-#loadingOverlay { display: none; text-align: center; padding: 40px 0; }
-.spinner-dna { font-size: 48px; animation: spin-dna 2s ease-in-out infinite; display: inline-block; margin-bottom: 16px; }
-@keyframes spin-dna { 0%,100% { transform: scale(1); } 50% { transform: scale(1.2) rotate(10deg); } }
-.loading-stage { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--green); letter-spacing: 0.5px; min-height: 20px; }
-.loading-bar-wrap { width: 200px; height: 3px; background: var(--border); border-radius: 2px; margin: 14px auto 0; }
-.loading-bar { height: 100%; background: var(--green); border-radius: 2px; width: 0; transition: width 0.7s ease; }
-.loading-sub { font-size: 12px; color: var(--slate); margin-top: 8px; }
+#loadingOverlay{display:none;text-align:center;padding:40px 0;}
+.spinner-dna{font-size:48px;animation:spin-dna 2s ease-in-out infinite;display:inline-block;margin-bottom:16px;}
+@keyframes spin-dna{0%,100%{transform:scale(1);}50%{transform:scale(1.2) rotate(10deg);}}
+.loading-stage{font-family:'DM Mono',monospace;font-size:12px;color:var(--green);letter-spacing:.5px;min-height:20px;}
+.loading-bar-wrap{width:200px;height:3px;background:var(--border);border-radius:2px;margin:14px auto 0;}
+.loading-bar{height:100%;background:var(--green);border-radius:2px;width:0;transition:width .7s ease;}
+.loading-sub{font-size:12px;color:var(--slate);margin-top:8px;}
 
 /* DASHBOARD */
-#dashboard { display: none; animation: fadeUp 0.5s ease; }
-@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-.coach-bar { background: linear-gradient(135deg, var(--forest) 0%, #1f4d36 100%); color: white; padding: 18px 20px; border-radius: 14px; margin-bottom: 14px; display: flex; gap: 14px; align-items: flex-start; }
-.coach-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
-.coach-text { font-size: 13px; line-height: 1.7; color: rgba(255,255,255,0.9); font-weight: 400; }
-.badge-lifecycle-row { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
-.evo-badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; border-radius: 20px; font-size: 10px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; }
-.evo-badge.baseline  { background: #f3f4f6; color: var(--baseline); border: 1px solid #d1d5db; }
-.evo-badge.improving { background: #dcfce7; color: var(--improving); border: 1px solid #bbf7d0; }
-.evo-badge.stable    { background: #dbeafe; color: var(--stable); border: 1px solid #bfdbfe; }
-.evo-badge.declining { background: #fee2e2; color: var(--declining); border: 1px solid #fecaca; }
-.lifecycle-pill { display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; border-radius: 20px; background: #f0fdf4; color: var(--forest); border: 1px solid #bbf7d0; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
-.lifecycle-pill.recovery { background: #fee2e2; color: var(--declining); border-color: #fecaca; }
-.lifecycle-pill.recalib  { background: #fff7ed; color: var(--amber); border-color: #fed7aa; }
-.resp-badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; border-radius: 20px; border: 1px solid; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
-.resp-badge.accelerating { background: #dcfce7; color: var(--green); border-color: #bbf7d0; }
-.resp-badge.neutral      { background: #e0f2fe; color: #0369a1; border-color: #bae6fd; }
-.resp-badge.slowed       { background: #fff7ed; color: var(--amber); border-color: #fed7aa; }
-.resp-badge.stagnating   { background: #fee2e2; color: var(--red); border-color: #fecaca; }
-.stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-.stat-tile { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 16px 12px; text-align: center; position: relative; overflow: hidden; }
-.stat-tile::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--green); }
-.stat-tile.declining::after { background: var(--red); }
-.stat-tile.improving::after { background: var(--leaf); }
-.stat-tile.stable::after    { background: var(--blue); }
-.stat-label { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--slate); font-weight: 700; margin-bottom: 7px; }
-.stat-value { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; color: var(--forest); line-height: 1; }
-.stat-sub { font-size: 10px; color: var(--slate); margin-top: 5px; }
-.meta-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
-.meta-tile { background: var(--mint); border: 1px solid #c8e6d5; border-radius: 11px; padding: 10px; text-align: center; }
-.meta-label { font-size: 8px; letter-spacing: 1px; text-transform: uppercase; color: var(--green); font-weight: 700; margin-bottom: 4px; }
-.meta-value { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; color: var(--forest); }
+#dashboard{display:none;animation:fadeUp .5s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.coach-bar{background:linear-gradient(135deg,var(--forest) 0%,#1f4d36 100%);color:white;padding:18px 20px;border-radius:14px;margin-bottom:14px;display:flex;gap:14px;align-items:flex-start;}
+.coach-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+.coach-text{font-size:13px;line-height:1.7;color:rgba(255,255,255,.9);}
+
+/* PAE URGENT */
+.pae-urgent{background:#fff0f0;border:2px solid var(--red);border-radius:14px;padding:24px 20px;margin-bottom:14px;}
+.pae-urgent-icon{font-size:36px;display:block;margin-bottom:12px;}
+.pae-urgent-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--red);margin-bottom:8px;}
+.pae-urgent-msg{font-size:14px;color:var(--ink);line-height:1.7;}
+.pae-hold{background:#fff7ed;border:2px solid var(--amber);border-radius:14px;padding:24px 20px;margin-bottom:14px;}
+.pae-hold-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--amber);margin-bottom:8px;}
+.pae-hold-msg{font-size:13px;color:var(--ink);line-height:1.7;}
+.pae-ref{font-family:'DM Mono',monospace;font-size:11px;color:var(--slate);margin-top:10px;}
+
+/* PBU + TCM CARDS */
+.pbu-card{background:var(--bioOs);border-radius:14px;padding:18px 20px;margin-bottom:12px;position:relative;overflow:hidden;}
+.pbu-card::before{content:'';position:absolute;right:-20px;top:-20px;width:100px;height:100px;background:rgba(255,255,255,.04);border-radius:50%;}
+.pbu-title{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:10px;}
+.pbu-narrative{font-size:13px;line-height:1.75;color:rgba(255,255,255,.92);}
+.pbu-confidence{display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,.6);}
+.pbu-confidence-bar{width:80px;height:3px;background:rgba(255,255,255,.2);border-radius:2px;overflow:hidden;}
+.pbu-confidence-fill{height:100%;background:#4caf71;border-radius:2px;}
+.tcm-card{background:var(--goldBg);border:1.5px solid #e8c840;border-radius:14px;padding:16px 18px;margin-bottom:12px;}
+.tcm-title{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.tcm-pattern-label{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:#78350f;margin-bottom:6px;}
+.tcm-narrative{font-size:12px;color:#92400e;line-height:1.65;}
+.tcm-climate-note{font-size:11px;color:#a05020;margin-top:8px;font-style:italic;}
+
+/* BADGES */
+.badge-lifecycle-row{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-bottom:14px;}
+.evo-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;}
+.evo-badge.baseline{background:#f3f4f6;color:var(--baseline);border:1px solid #d1d5db;}
+.evo-badge.improving{background:#dcfce7;color:var(--improving);border:1px solid #bbf7d0;}
+.evo-badge.stable{background:#dbeafe;color:var(--stable);border:1px solid #bfdbfe;}
+.evo-badge.declining{background:#fee2e2;color:var(--declining);border:1px solid #fecaca;}
+.evo-badge.urgent{background:#fee2e2;color:var(--red);border:1px solid #fecaca;}
+.lifecycle-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;background:#f0fdf4;color:var(--forest);border:1px solid #bbf7d0;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
+.lifecycle-pill.recovery{background:#fee2e2;color:var(--declining);border-color:#fecaca;}
+.lifecycle-pill.recalib{background:#fff7ed;color:var(--amber);border-color:#fed7aa;}
+.resp-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;border:1px solid;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
+.resp-badge.accelerating{background:#dcfce7;color:var(--green);border-color:#bbf7d0;}
+.resp-badge.neutral{background:#e0f2fe;color:#0369a1;border-color:#bae6fd;}
+.resp-badge.slowed{background:#fff7ed;color:var(--amber);border-color:#fed7aa;}
+.resp-badge.stagnating{background:#fee2e2;color:var(--red);border-color:#fecaca;}
+
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;}
+.stat-tile{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:16px 12px;text-align:center;position:relative;overflow:hidden;}
+.stat-tile::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--green);}
+.stat-tile.declining::after{background:var(--red);}
+.stat-tile.improving::after{background:var(--leaf);}
+.stat-tile.stable::after{background:var(--blue);}
+.stat-label{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--slate);font-weight:700;margin-bottom:7px;}
+.stat-value{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--forest);line-height:1;}
+.stat-sub{font-size:10px;color:var(--slate);margin-top:5px;}
+.meta-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
+.meta-tile{background:var(--mint);border:1px solid #c8e6d5;border-radius:11px;padding:10px;text-align:center;}
+.meta-label{font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--green);font-weight:700;margin-bottom:4px;}
+.meta-value{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;color:var(--forest);}
 
 /* GAP CARD */
-.gap-card { background: #fffbf0; border: 1.5px solid #f5d87a; border-radius: 14px; margin-bottom: 12px; overflow: hidden; }
-.gap-card-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; background: #fffbf0; border-bottom: 1px solid transparent; cursor: pointer; touch-action: manipulation; min-height: 52px; }
-.gap-card-header.has-body { border-bottom-color: #f5d87a; }
-.gap-card-title { display: flex; align-items: center; gap: 8px; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: #92400e; }
-.gap-count-badge { background: #f59e0b; color: white; border-radius: 100px; padding: 2px 9px; font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500; }
-.gap-toggle { font-size: 10px; color: #a06000; opacity: 0.7; white-space: nowrap; }
-.gap-card-body { display: none; }
-.gap-card-body.open { display: block; }
-.depth-banner { display: flex; align-items: flex-start; gap: 10px; background: #fffbf0; border-bottom: 1px solid #fde68a; padding: 12px 18px; font-size: 12px; color: #78350f; line-height: 1.6; }
-.depth-banner-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
-.test-rec-card { border-top: 1px solid #fde68a; padding: 16px 18px; background: #fffbf0; }
-.test-rec-card:last-child { border-radius: 0 0 12px 12px; }
-.test-rec-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
-.test-rec-name { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--ink); }
-.priority-pill { font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 100px; flex-shrink: 0; white-space: nowrap; }
-.priority-pill.p1 { background: #fee2e2; color: #991b1b; }
-.priority-pill.p2 { background: #fff7ed; color: #92400e; }
-.priority-pill.p3 { background: #f0fdf4; color: #166534; }
-.test-rec-biomarkers { font-size: 11px; color: var(--slate); font-style: italic; margin-bottom: 7px; }
-.test-rec-reason { font-size: 12px; color: var(--slate); line-height: 1.65; margin-bottom: 10px; }
-.test-rec-meta { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; }
-.test-meta-tag { background: white; border: 1px solid #fde68a; border-radius: 6px; padding: 4px 10px; font-size: 11px; color: #78350f; font-family: 'DM Mono', monospace; }
-.test-rec-how { font-size: 11px; color: var(--forest); background: white; border: 1px solid #fde68a; border-radius: 8px; padding: 10px 12px; margin-top: 10px; line-height: 1.55; }
+.gap-card{background:#fffbf0;border:1.5px solid #f5d87a;border-radius:14px;margin-bottom:12px;overflow:hidden;}
+.gap-card-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:#fffbf0;border-bottom:1px solid transparent;cursor:pointer;min-height:52px;}
+.gap-card-header.has-body{border-bottom-color:#f5d87a;}
+.gap-card-title{display:flex;align-items:center;gap:8px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#92400e;}
+.gap-count-badge{background:#f59e0b;color:white;border-radius:100px;padding:2px 9px;font-family:'DM Mono',monospace;font-size:10px;}
+.gap-toggle{font-size:10px;color:#a06000;opacity:.7;white-space:nowrap;}
+.gap-card-body{display:none;}
+.gap-card-body.open{display:block;}
+.depth-banner{display:flex;align-items:flex-start;gap:10px;background:#fffbf0;border-bottom:1px solid #fde68a;padding:12px 18px;font-size:12px;color:#78350f;line-height:1.6;}
+.test-rec-card{border-top:1px solid #fde68a;padding:16px 18px;background:#fffbf0;}
+.test-rec-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px;}
+.test-rec-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--ink);}
+.priority-pill{font-family:'DM Mono',monospace;font-size:10px;font-weight:600;padding:3px 9px;border-radius:100px;flex-shrink:0;white-space:nowrap;}
+.priority-pill.p1{background:#fee2e2;color:#991b1b;}
+.priority-pill.p2{background:#fff7ed;color:#92400e;}
+.priority-pill.p3{background:#f0fdf4;color:#166534;}
+.test-rec-biomarkers{font-size:11px;color:var(--slate);font-style:italic;margin-bottom:7px;}
+.test-rec-reason{font-size:12px;color:var(--slate);line-height:1.65;margin-bottom:10px;}
+.test-rec-meta{display:flex;gap:7px;flex-wrap:wrap;align-items:center;}
+.test-meta-tag{background:white;border:1px solid #fde68a;border-radius:6px;padding:4px 10px;font-size:11px;color:#78350f;font-family:'DM Mono',monospace;}
+.test-rec-how{font-size:11px;color:var(--forest);background:white;border:1px solid #fde68a;border-radius:8px;padding:10px 12px;margin-top:10px;line-height:1.55;}
 
-/* NARRATIVE + CHART */
-.narrative-card { background: #f8fffe; border: 1px solid #c8e6d5; border-radius: 14px; padding: 18px 20px; margin-bottom: 12px; }
-.narrative-title { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--green); margin-bottom: 12px; }
-.narrative-main { font-size: 13px; line-height: 1.75; color: var(--ink); margin-bottom: 10px; }
-.narrative-sub { font-size: 12px; color: var(--slate); line-height: 1.65; border-top: 1px solid var(--border); padding-top: 10px; display: flex; flex-direction: column; gap: 5px; }
-.narrative-sub span { display: block; }
-.chart-wrap { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 12px; }
-.chart-wrap canvas { max-height: 260px; }
+/* NARRATIVE */
+.narrative-card{background:#f8fffe;border:1px solid #c8e6d5;border-radius:14px;padding:18px 20px;margin-bottom:12px;}
+.narrative-title{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:12px;}
+.narrative-main{font-size:13px;line-height:1.75;color:var(--ink);margin-bottom:10px;}
+.narrative-sub{font-size:12px;color:var(--slate);line-height:1.65;border-top:1px solid var(--border);padding-top:10px;display:flex;flex-direction:column;gap:5px;}
+.narrative-sub span{display:block;}
+.chart-wrap{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:12px;}
+.chart-wrap canvas{max-height:260px;}
 
 /* SUPPLEMENT CARDS */
-.stack-header { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--forest); padding: 10px 0; border-bottom: 1px solid var(--border); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-.supp-card { border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 9px; position: relative; overflow: hidden; transition: box-shadow 0.15s; }
-.supp-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
-.supp-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--green); }
-.supp-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
-.supp-name { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--ink); }
-.supp-dose-tag { background: var(--mint); color: var(--forest); padding: 3px 8px; border-radius: 6px; font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500; white-space: nowrap; flex-shrink: 0; }
-.supp-hero { font-size: 12px; color: var(--green); font-style: italic; margin-bottom: 7px; display: block; line-height: 1.45; }
-.supp-ing { font-size: 11px; color: var(--slate); margin-bottom: 9px; display: block; }
-details.clinical-details { background: var(--mist); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-details.clinical-details summary { cursor: pointer; padding: 10px 12px; font-size: 11px; font-weight: 600; color: var(--green); letter-spacing: 0.3px; list-style: none; display: flex; align-items: center; gap: 6px; user-select: none; touch-action: manipulation; min-height: 44px; }
-details.clinical-details summary::-webkit-details-marker { display: none; }
-details.clinical-details summary::before { content: '▶'; font-size: 8px; transition: transform 0.15s; }
-details[open].clinical-details summary::before { transform: rotate(90deg); }
-.clinical-body { padding: 12px; display: grid; gap: 6px; }
-.clinical-row { font-size: 11px; color: var(--ink); line-height: 1.5; }
-.clinical-row strong { color: var(--slate); }
-.clinical-row.warn { color: var(--red); }
-.empty-stack { padding: 14px; text-align: center; font-size: 13px; color: var(--slate); font-style: italic; }
-.life-card { background: #fffbf0; border: 1px solid #f3e0a8; border-radius: 12px; padding: 14px 16px; margin-bottom: 9px; }
-.life-cat { font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 500; color: var(--amber); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 5px; }
-.life-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
-.life-text { font-size: 12px; color: var(--slate); line-height: 1.65; }
-.reset-btn { width: 100%; padding: 14px; background: none; border: 1px solid var(--border); border-radius: 10px; color: var(--slate); font-size: 13px; cursor: pointer; margin-top: 6px; transition: all 0.15s; touch-action: manipulation; min-height: 48px; }
-.reset-btn:hover { background: var(--mist); border-color: var(--slate); }
+.stack-header{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--forest);padding:10px 0;border-bottom:1px solid var(--border);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.supp-card{border:1px solid var(--border);border-radius:12px;padding:15px;margin-bottom:9px;position:relative;overflow:hidden;transition:box-shadow .15s;}
+.supp-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.07);}
+.supp-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--green);}
+.supp-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px;}
+.supp-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--ink);}
+.supp-dose-tag{background:var(--mint);color:var(--forest);padding:3px 8px;border-radius:6px;font-family:'DM Mono',monospace;font-size:10px;white-space:nowrap;flex-shrink:0;}
+.supp-hero{font-size:12px;color:var(--green);font-style:italic;margin-bottom:7px;display:block;line-height:1.45;}
+.supp-ing{font-size:11px;color:var(--slate);margin-bottom:9px;display:block;}
+details.clinical-details{background:var(--mist);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+details.clinical-details summary{cursor:pointer;padding:10px 12px;font-size:11px;font-weight:600;color:var(--green);list-style:none;display:flex;align-items:center;gap:6px;min-height:44px;}
+details.clinical-details summary::-webkit-details-marker{display:none;}
+details.clinical-details summary::before{content:'▶';font-size:8px;transition:transform .15s;}
+details[open].clinical-details summary::before{transform:rotate(90deg);}
+.clinical-body{padding:12px;display:grid;gap:6px;}
+.clinical-row{font-size:11px;color:var(--ink);line-height:1.5;}
+.clinical-row strong{color:var(--slate);}
+.clinical-row.warn{color:var(--red);}
+.empty-stack{padding:14px;text-align:center;font-size:13px;color:var(--slate);font-style:italic;}
+
+/* LIFESTYLE */
+.life-card{background:#fffbf0;border:1px solid #f3e0a8;border-radius:12px;padding:14px 16px;margin-bottom:9px;}
+.life-cat{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;color:var(--amber);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:5px;}
+.life-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--ink);margin-bottom:5px;}
+.life-text{font-size:12px;color:var(--slate);line-height:1.65;}
+.reset-btn{width:100%;padding:14px;background:none;border:1px solid var(--border);border-radius:10px;color:var(--slate);font-size:13px;cursor:pointer;margin-top:6px;transition:all .15s;min-height:48px;}
+.reset-btn:hover{background:var(--mist);border-color:var(--slate);}
 
 /* CHECK-IN */
-#checkinTab { display: none; }
-#checkinTab h2 { font-family: 'Syne', sans-serif; font-size: 21px; font-weight: 800; color: var(--forest); margin-bottom: 5px; }
-.preview-card { background: linear-gradient(135deg, var(--forest) 0%, #1f4d36 100%); border-radius: 14px; padding: 18px 20px; margin-bottom: 22px; }
-.preview-title { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 14px; }
-.preview-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 14px; }
-.preview-tile { text-align: center; }
-.preview-tile-label { font-size: 9px; letter-spacing: 0.8px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 5px; }
-.preview-tile-val { font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 500; color: white; }
-.preview-tile-sub { font-size: 9px; color: rgba(255,255,255,0.55); margin-top: 3px; }
-.preview-stmt { font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.65; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 12px; }
-.ci-user-note { background: var(--mint); border: 1px solid #c8e6d5; border-radius: 10px; padding: 11px 14px; font-size: 12px; color: var(--forest); margin-bottom: 16px; line-height: 1.5; }
+#checkinTab{display:none;}
+.preview-card{background:linear-gradient(135deg,var(--forest) 0%,#1f4d36 100%);border-radius:14px;padding:18px 20px;margin-bottom:22px;}
+.preview-title{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:14px;}
+.preview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.preview-tile{text-align:center;}
+.preview-tile-label{font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:5px;}
+.preview-tile-val{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:white;}
+.preview-tile-sub{font-size:9px;color:rgba(255,255,255,.55);margin-top:3px;}
+.preview-stmt{font-size:12px;color:rgba(255,255,255,.75);line-height:1.65;border-top:1px solid rgba(255,255,255,.12);padding-top:12px;}
+.ci-user-note{background:var(--mint);border:1px solid #c8e6d5;border-radius:10px;padding:11px 14px;font-size:12px;color:var(--forest);margin-bottom:16px;line-height:1.5;}
 
 /* RESPONSIVE */
-@media (max-width: 640px) {
-  .meta-row { grid-template-columns: 1fr 1fr; }
-  .preview-grid { grid-template-columns: 1fr; gap: 6px; }
-  .preview-tile { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
-  .preview-tile:last-child { border-bottom: none; }
-  .preview-tile-label { margin-bottom: 0; font-size: 10px; }
-  .preview-tile-val { font-size: 16px; }
-  .preview-tile-sub { margin-top: 0; font-size: 10px; }
+@media(max-width:640px){
+  .meta-row{grid-template-columns:1fr 1fr;}
+  .preview-grid{grid-template-columns:1fr;gap:6px;}
+  .preview-tile{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.08);}
+  .preview-tile:last-child{border-bottom:none;}
+  .preview-tile-label,.preview-tile-sub{margin:0;}
 }
-@media (max-width: 520px) {
-  body { padding: 14px 12px 40px; }
-  .card { padding: 20px 16px; }
-  .login-card { padding: 28px 20px; }
-  .stats-row { grid-template-columns: 1fr 1fr; }
-  .stats-row .stat-tile:last-child { grid-column: span 2; }
-  .signal-grid { grid-template-columns: 1fr; }
-  .field-row.two-col, .field-row.three-col { grid-template-columns: 1fr; }
-  .radio-group { flex-direction: column; }
-  .radio-opt { min-width: 100%; flex-direction: row; justify-content: flex-start; gap: 12px; min-height: 48px; }
-  .radio-opt .radio-icon { font-size: 20px; }
-  .tile-select { grid-template-columns: 1fr 1fr; }
-  .tile-select.two-col { grid-template-columns: 1fr 1fr; }
-  .phase-step .step-label { display: none; }
-  .phase-heading { font-size: 18px; }
-  .phase-nav { gap: 8px; }
-  .btn-back { padding: 13px 14px; font-size: 12px; }
-  .btn-next { font-size: 13px; }
-  .supp-top { flex-wrap: wrap; }
-  .gap-card-header { padding: 12px 14px; }
-  .test-rec-card { padding: 14px; }
-}
-@media (max-width: 400px) {
-  .tab-btn { font-size: 12px; padding: 9px 8px; }
-  .tab-btn .tab-icon { margin-right: 3px; }
-  .stat-value { font-size: 22px; }
-  .preview-tile-val { font-size: 14px; }
+@media(max-width:520px){
+  body{padding:14px 12px 40px;}
+  .card{padding:20px 16px;}
+  .login-card{padding:28px 20px;}
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .stats-row .stat-tile:last-child{grid-column:span 2;}
+  .signal-grid{grid-template-columns:1fr;}
+  .field-row.two-col{grid-template-columns:1fr;}
+  .radio-group{flex-direction:column;}
+  .radio-opt{min-width:100%;flex-direction:row;justify-content:flex-start;gap:12px;min-height:48px;}
+  .tile-select{grid-template-columns:1fr 1fr;}
+  .tile-select.three-col{grid-template-columns:1fr 1fr;}
+  .phase-step .step-label{display:none;}
+  .phase-heading{font-size:18px;}
+  .btn-back{padding:13px 14px;font-size:12px;}
+  .btn-next{font-size:13px;}
 }
 </style>
 </head>
 <body>
 
 <header class="site-header">
-  <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/wAARCABuAS4DASIAAhEBAxEB/8QAGAABAQEBAQAAAAAAAAAAAAAAAAcIBQb/xAAwEAEAAgEDAgQDBgcAAAAAAAAAAQIDBAURBgcIEiFhIjFREyMyQVKBFUNicZGy0f/EABoBAQACAwEAAAAAAAAAAAAAAAAEBQMGBwj/xAAoEQEAAgECBgEDBQAAAAAAAAAAAQIDBBEFBiExQVESE2GBkaHBwvD/2gAMAwEAAhEDEQA/AMZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKx2z7EdYdYYsWv1la7FteSItXPqqTOTJX60x+kzHvM1ifymVE8MHaXb42nB171Tp8ea2T7zbtPmiPs8dI/nWifSZnjmvPpEevzmONGbfrdJuGlrqtFnpqNPf8GXHPNL+9Z+Ux7x6OZ8zc8X02S2m0Eda9JvPWIn1EdvzP6eVvo+HReIvl8+EC6u7a9uO0fQGr6i1e2Tv+6U4xaT+JW82PJnt+GPs44r5Y4m0xMTPFZ9WXNx1mo3DWZNXqrxfLktzPlrFax7RWOIrEflEREQ0h4391vz01slLTFPvtXkr9Z+GlJ/3/AMszr3k2ubNoI1mpvN75JnrM9oidoiPUdN+ntG4hNa5fp0jaIAG3oIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADZnQ9I7l58NYtanQew0xaTTaSvpXc9RSleZyfqxU9IivytPrPPHCx0rWlYrWsVrEcRERxEQkHhH3nbtf2k021aa9I1m2Z8tNVj5+L48lr1tx9Ji3HP9M/RYHnDmH5Ytdk0221cczER/afc27zP39RDbNLtOOL+Z/wBt+GR/Gvkme420YufSu0Vtx/fNl/4g6n+J7qTTdSd29dfRZa5tNt+KmhpkrPMWmnM249ova0fsmDufLWC+DhOnpeNp+Mfv1/lrmrtFs9pj2ALxGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdjpLqbfek93ruvT25ZtBq6x5ZtTiYvX9NqzzFo9piXsuoO+Xcretsvt+ffY02HJXy5J0uCmK94+nmiOY/aYTUQc/DNHqMsZcuKtrR2mYiZZK5slY+NbTEACcxgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP//Z" alt="Phytomedix" class="logo-img">
+  <div>
+    <div class="logo-text">PHYTOMEDIX</div>
+    <span class="logo-sub">BIOLOGICAL OPERATING SYSTEM</span>
+  </div>
   <div class="header-right">
     <span class="session-indicator" id="sessionIndicator">Session Active</span>
-    <span class="engine-badge">ENGINE v29.2</span>
+    <span class="engine-badge">BIO-OS v30.0</span>
     <button class="logout-btn" id="logoutBtn" onclick="handleLogout()">Sign Out</button>
   </div>
 </header>
 
-<!-- ══ LOGIN ══ -->
+<!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-card">
     <div class="login-heading">Sign In</div>
-    <p class="login-sub">Enter your member email and PIN to access your Digital Twin Protocol.</p>
+    <p class="login-sub">Enter your member email and PIN to access your Biological Operating System.</p>
     <div class="login-field">
       <label for="login_email">Email Address</label>
       <input type="email" id="login_email" placeholder="your@email.com" autocomplete="email" autocapitalize="none" spellcheck="false">
@@ -409,20 +406,20 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
     <div class="login-field">
       <label for="login_pin">PIN</label>
       <input type="password" id="login_pin" placeholder="Your PIN" inputmode="numeric" maxlength="20" autocomplete="current-password">
-      <span class="pin-hint">Your PIN was set when your Phytomedix account was created.</span>
+      <span class="pin-hint">Your PIN was set when your account was created.</span>
     </div>
     <button class="login-btn" id="loginBtn" onclick="handleLogin()">Sign In →</button>
     <div class="login-error" id="loginError"></div>
-    <div class="login-note">🔒 Session expires automatically after 30 minutes. No credentials are stored in this browser.</div>
+    <div class="login-note">🔒 Session expires after 30 minutes. No credentials stored in browser.</div>
     <div class="auth-switch-link" style="margin-top:14px;">New member? <a onclick="showRegisterScreen()">Create account →</a></div>
   </div>
 </div>
 
-<!-- ══ REGISTER ══ -->
-<div id="registerScreen" style="display:none;">
+<!-- REGISTER -->
+<div id="registerScreen">
   <div class="reg-card">
     <div class="login-heading" style="margin-bottom:6px;">Create Account</div>
-    <p class="login-sub">Set up your Phytomedix Digital Twin account in 3 steps.</p>
+    <p class="login-sub">Set up your Phytomedix Bio-OS account in 3 steps.</p>
     <div class="reg-steps">
       <div class="reg-step active" id="rstep_1"><div class="step-dot"><span>1</span></div><div class="reg-step-label">Identity</div></div>
       <div class="reg-step" id="rstep_2"><div class="step-dot"><span>2</span></div><div class="reg-step-label">Security</div></div>
@@ -430,38 +427,21 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
     </div>
     <div class="reg-panel active" id="rpanel_1">
       <h3 class="reg-panel-heading">Your Identity</h3>
-      <p class="reg-panel-sub">Enter your email — this becomes your login ID and links to your Twin State.</p>
-      <div class="reg-field">
-        <label for="r_email">Email Address</label>
-        <input type="email" id="r_email" placeholder="your@email.com" autocomplete="email" autocapitalize="none" spellcheck="false">
-        <span class="reg-hint">Used to log in. Never shared or used for marketing.</span>
-      </div>
-      <div class="reg-field">
-        <label for="r_name">Full Name <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
-        <input type="text" id="r_name" placeholder="Your name" autocomplete="name">
-        <span class="reg-hint">Personalises your Twin coach messages.</span>
-      </div>
+      <p class="reg-panel-sub">Your email becomes your login ID and links to your Twin State.</p>
+      <div class="reg-field"><label for="r_email">Email Address</label><input type="email" id="r_email" placeholder="your@email.com" autocomplete="email" autocapitalize="none" spellcheck="false"><span class="reg-hint">Never shared or used for marketing.</span></div>
+      <div class="reg-field"><label for="r_name">Full Name <span style="font-weight:400;text-transform:none;">(optional)</span></label><input type="text" id="r_name" placeholder="Your name" autocomplete="name"></div>
       <div class="reg-nav"><span class="reg-nav-counter">Step 1 of 3</span><button class="btn-reg-next" onclick="goRegStep(2)">Continue →</button></div>
     </div>
     <div class="reg-panel" id="rpanel_2">
       <h3 class="reg-panel-heading">Set Your PIN</h3>
-      <p class="reg-panel-sub">Choose a PIN you'll use every time you sign in. Minimum 6 characters.</p>
-      <div class="reg-field">
-        <label for="r_pin">Your PIN</label>
-        <input type="password" id="r_pin" placeholder="Minimum 6 characters" inputmode="numeric" maxlength="20" autocomplete="new-password" oninput="checkPinStrength()">
-        <div class="pin-strength-bar"><div class="pin-strength-fill" id="pinStrengthFill"></div></div>
-        <span class="pin-strength-text" id="pinStrengthText"></span>
-      </div>
-      <div class="reg-field">
-        <label for="r_pin_confirm">Confirm PIN</label>
-        <input type="password" id="r_pin_confirm" placeholder="Re-enter your PIN" inputmode="numeric" maxlength="20" autocomplete="new-password" oninput="checkPinMatch()">
-        <div class="pin-match-msg" id="pinMatchMsg"></div>
-      </div>
+      <p class="reg-panel-sub">Minimum 6 characters. Used every time you sign in.</p>
+      <div class="reg-field"><label for="r_pin">Your PIN</label><input type="password" id="r_pin" placeholder="Minimum 6 characters" inputmode="numeric" maxlength="20" autocomplete="new-password" oninput="checkPinStrength()"><div class="pin-strength-bar"><div class="pin-strength-fill" id="pinStrengthFill"></div></div><span class="pin-strength-text" id="pinStrengthText"></span></div>
+      <div class="reg-field"><label for="r_pin_confirm">Confirm PIN</label><input type="password" id="r_pin_confirm" placeholder="Re-enter your PIN" inputmode="numeric" maxlength="20" autocomplete="new-password" oninput="checkPinMatch()"><div class="pin-match-msg" id="pinMatchMsg"></div></div>
       <div class="reg-nav"><button class="btn-reg-back" onclick="goRegStep(1)">← Back</button><span class="reg-nav-counter">Step 2 of 3</span><button class="btn-reg-next" onclick="goRegStep(3)">Continue →</button></div>
     </div>
     <div class="reg-panel" id="rpanel_3">
       <h3 class="reg-panel-heading">Confirm &amp; Create</h3>
-      <p class="reg-panel-sub">Review your details. Once created, sign in immediately with your email and PIN.</p>
+      <p class="reg-panel-sub">Review your details before creating your account.</p>
       <div class="reg-confirm-box">
         <div class="reg-confirm-row"><span class="reg-confirm-key">Email</span><span class="reg-confirm-val" id="confirm_email">—</span></div>
         <div class="reg-confirm-row"><span class="reg-confirm-key">Name</span><span class="reg-confirm-val" id="confirm_name" style="font-family:'Outfit',sans-serif;font-size:13px;">—</span></div>
@@ -470,33 +450,26 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
       <div class="reg-error" id="regError"></div>
       <div class="reg-nav"><button class="btn-reg-back" onclick="goRegStep(2)">← Back</button><span class="reg-nav-counter">Step 3 of 3</span><button class="btn-reg-next" id="createBtn" onclick="submitRegistration()">Create Account</button></div>
     </div>
-    <div class="reg-security-note">🔒 Your PIN is stored securely. We never store passwords or share your data.</div>
+    <div class="reg-security-note">🔒 Your data is stored securely. We never share your information.</div>
   </div>
   <div class="auth-switch-link">Already have an account? <a onclick="showLoginScreen()">Sign in →</a></div>
 </div>
 
-<!-- ══ REGISTER SUCCESS ══ -->
-<div id="regSuccessScreen" style="display:none;">
+<!-- REGISTER SUCCESS -->
+<div id="regSuccessScreen">
   <div class="success-card">
     <span class="success-emoji">🌿</span>
     <div class="success-heading">Account Created!</div>
-    <p class="success-sub">Your Phytomedix Digital Twin account is ready. Sign in now to begin your first assessment.</p>
-    <div class="pin-reveal">
-      <div class="pin-reveal-label">Your Login PIN</div>
-      <div class="pin-reveal-value" id="success_pin_display">——————</div>
-      <div class="pin-reveal-note">Save this PIN somewhere safe — you need it every time you sign in.</div>
-    </div>
-    <div class="pin-save-warning">⚠️ <strong>Important:</strong> This is the only time your PIN is shown in full. Copy it or save it in your password manager before continuing.</div>
-    <button class="btn-go-login" onclick="afterRegSuccess()">Sign In to Your Twin →</button>
+    <p class="success-sub">Your Phytomedix Bio-OS account is ready. Sign in to begin your first assessment.</p>
+    <div class="pin-reveal"><div class="pin-reveal-label">Your Login PIN</div><div class="pin-reveal-value" id="success_pin_display">——————</div><div class="pin-reveal-note">Save this PIN — you need it every time you sign in.</div></div>
+    <div class="pin-save-warning">⚠️ <strong>Important:</strong> This is the only time your full PIN is shown. Save it before continuing.</div>
+    <button class="btn-go-login" onclick="afterRegSuccess()">Sign In to Your Bio-OS →</button>
   </div>
 </div>
 
-<!-- ══ MAIN APP ══ -->
+<!-- MAIN APP -->
 <div class="container" id="mainApp" style="display:none;">
-  <div class="session-warning" id="sessionWarning">
-    ⏱ Your session expires in 5 minutes. Complete and submit your assessment to save progress, or
-    <a href="#" onclick="handleLogout();return false;">sign out now</a>.
-  </div>
+  <div class="session-warning" id="sessionWarning">⏱ Your session expires in 5 minutes. <a href="#" onclick="handleLogout();return false;">Sign out now</a>.</div>
   <div class="tab-bar" id="tabBar">
     <button class="tab-btn active" id="tab_assess" onclick="switchTab('assess')"><span class="tab-icon">🧬</span> Full Assessment</button>
     <button class="tab-btn" id="tab_checkin" onclick="switchTab('checkin')"><span class="tab-icon">🔄</span> Micro Check-in</button>
@@ -505,21 +478,24 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
   <!-- ASSESSMENT TAB -->
   <div id="assessTab">
     <div class="card" id="formCard">
+      <!-- 6-STEP STEPPER -->
       <div class="phase-stepper" id="phaseStepper">
         <div class="phase-step active" id="pstep_1"><div class="step-dot"><span>1</span></div><div class="step-label">Biometrics</div></div>
         <div class="phase-step" id="pstep_2"><div class="step-dot"><span>2</span></div><div class="step-label">Conditions</div></div>
         <div class="phase-step" id="pstep_3"><div class="step-dot"><span>3</span></div><div class="step-label">Lifestyle</div></div>
-        <div class="phase-step" id="pstep_4"><div class="step-dot"><span>4</span></div><div class="step-label">Signals</div></div>
+        <div class="phase-step" id="pstep_4"><div class="step-dot"><span>4</span></div><div class="step-label">Environment</div></div>
+        <div class="phase-step" id="pstep_5"><div class="step-dot"><span>5</span></div><div class="step-label">Medications</div></div>
+        <div class="phase-step" id="pstep_6"><div class="step-dot"><span>6</span></div><div class="step-label">Signals</div></div>
       </div>
-      <!-- PHASE 1 -->
+
+      <!-- PHASE 1: BIOMETRICS -->
       <div class="phase-panel active" id="phase1">
         <h2 class="phase-heading">Identity &amp; Biometrics</h2>
-        <p class="phase-sub">Core clinical parameters for Twin initialization and tier calculation.</p>
+        <p class="phase-sub">Core clinical parameters for Bio-OS initialisation and tier calculation.</p>
         <div class="field-row"><div><label class="field-label">Full name (optional)</label><input type="text" id="a_name" placeholder="Your name" autocomplete="name"></div></div>
         <div class="field-row two-col">
           <div><label class="field-label">Age</label><input type="number" id="a_age" placeholder="35" value="35" min="18" max="100" inputmode="numeric"></div>
-          <div>
-            <label class="field-label">Biological sex</label>
+          <div><label class="field-label">Biological sex</label>
             <div class="radio-group" id="sex_group" style="margin-bottom:0;">
               <label class="radio-opt" onclick="markSelected(this,'sex_group')"><input type="radio" name="sex" value="Female"><span class="radio-icon">♀</span><span class="radio-text">Female</span></label>
               <label class="radio-opt selected" onclick="markSelected(this,'sex_group')"><input type="radio" name="sex" value="Male" checked><span class="radio-icon">♂</span><span class="radio-text">Male</span></label>
@@ -527,51 +503,55 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
           </div>
         </div>
         <div class="field-row two-col">
-          <div><label class="field-label">Weight (kg)</label><input type="number" id="a_weight" placeholder="75" min="30" max="250" inputmode="decimal"><span class="field-hint">Used for dose tier calculation</span></div>
-          <div><label class="field-label">Height (cm)</label><input type="number" id="a_height" placeholder="170" min="100" max="250" inputmode="decimal"><span class="field-hint">Used for BMI context</span></div>
+          <div><label class="field-label">Weight (kg)</label><input type="number" id="a_weight" placeholder="75" min="30" max="250" inputmode="decimal"><span class="field-hint">Dose tier calculation</span></div>
+          <div><label class="field-label">Height (cm)</label><input type="number" id="a_height" placeholder="170" min="100" max="250" inputmode="decimal"><span class="field-hint">BMI calculation</span></div>
         </div>
         <div class="field-row" style="margin-bottom:22px;">
-          <div>
-            <label class="field-label">Smoking status</label>
-            <div class="radio-group" id="smoking_group">
-              <label class="radio-opt selected" onclick="markSelected(this,'smoking_group')"><input type="radio" name="smoking" value="Never" checked><span class="radio-icon">🚭</span><span class="radio-text">Never</span></label>
-              <label class="radio-opt" onclick="markSelected(this,'smoking_group')"><input type="radio" name="smoking" value="Former"><span class="radio-icon">🕐</span><span class="radio-text">Former</span></label>
-              <label class="radio-opt" onclick="markSelected(this,'smoking_group')"><input type="radio" name="smoking" value="Current"><span class="radio-icon">⚠️</span><span class="radio-text">Current</span></label>
-            </div>
-            <span class="field-hint">Activates safety veto logic for certain compounds</span>
+          <label class="field-label">Smoking status</label>
+          <div class="radio-group" id="smoking_group">
+            <label class="radio-opt selected" onclick="markSelected(this,'smoking_group')"><input type="radio" name="smoking" value="Never" checked><span class="radio-icon">🚭</span><span class="radio-text">Never</span></label>
+            <label class="radio-opt" onclick="markSelected(this,'smoking_group')"><input type="radio" name="smoking" value="Former"><span class="radio-icon">🕐</span><span class="radio-text">Former</span></label>
+            <label class="radio-opt" onclick="markSelected(this,'smoking_group')"><input type="radio" name="smoking" value="Current"><span class="radio-icon">⚠️</span><span class="radio-text">Current</span></label>
           </div>
         </div>
-        <div class="phase-nav"><span class="phase-counter">Step 1 of 4</span><button class="btn-next" onclick="goPhase(2)">Continue → Conditions</button></div>
+        <div class="phase-nav"><span class="phase-counter">Step 1 of 6</span><button class="btn-next" onclick="goPhase(2)">Continue → Conditions</button></div>
       </div>
-      <!-- PHASE 2 -->
+
+      <!-- PHASE 2: CONDITIONS -->
       <div class="phase-panel" id="phase2">
         <h2 class="phase-heading">Clinical Signals</h2>
-        <p class="phase-sub">Select all conditions that apply. Each activates a specific domain scoring pathway.</p>
+        <p class="phase-sub">Select all that apply. Each activates a specific domain scoring pathway.</p>
         <span class="signals-label">Metabolic &amp; Cardiovascular</span>
         <div class="signal-grid">
-          <label class="signal-label" onclick="markCheckSelected(this)"><input type="checkbox" id="sym_diabetes" value="Diabetes Type 2"><span class="dot"></span><span class="sig-icon">🩸</span><span>High Blood Sugar / T2D</span></label>
-          <label class="signal-label" onclick="markCheckSelected(this)"><input type="checkbox" id="sym_bp" value="Hypertension"><span class="dot"></span><span class="sig-icon">❤️</span><span>High Blood Pressure</span></label>
-          <label class="signal-label" onclick="markCheckSelected(this)"><input type="checkbox" id="sym_chol" value="High Cholesterol"><span class="dot"></span><span class="sig-icon">🧪</span><span>High Cholesterol</span></label>
-          <label class="signal-label" onclick="markCheckSelected(this)"><input type="checkbox" id="sym_obesity" value="Obesity / Weight Management"><span class="dot"></span><span class="sig-icon">⚖️</span><span>Obesity / Weight Mgmt</span></label>
+          <label class="signal-label" onclick="toggleSignal(this)"><input type="checkbox" id="sym_diabetes" value="Diabetes Type 2"><span class="dot"></span><span class="sig-icon">🩸</span><span>High Blood Sugar / T2D</span></label>
+          <label class="signal-label" onclick="toggleSignal(this)"><input type="checkbox" id="sym_bp" value="Hypertension"><span class="dot"></span><span class="sig-icon">❤️</span><span>High Blood Pressure</span></label>
+          <label class="signal-label" onclick="toggleSignal(this)"><input type="checkbox" id="sym_chol" value="High Cholesterol"><span class="dot"></span><span class="sig-icon">🧪</span><span>High Cholesterol</span></label>
+          <label class="signal-label" onclick="toggleSignal(this)"><input type="checkbox" id="sym_obesity" value="Obesity / Weight Management"><span class="dot"></span><span class="sig-icon">⚖️</span><span>Obesity / Weight</span></label>
         </div>
         <span class="signals-label">Neurological &amp; Cognitive</span>
         <div class="signal-grid">
-          <label class="signal-label" onclick="markCheckSelected(this)"><input type="checkbox" id="sym_brain" value="Brain Fog"><span class="dot"></span><span class="sig-icon">🧠</span><span>Brain Fog / Focus</span></label>
-          <label class="signal-label" onclick="markCheckSelected(this)"><input type="checkbox" id="sym_anxiety" value="Anxiety / Chronic Stress"><span class="dot"></span><span class="sig-icon">😟</span><span>Anxiety / Chronic Stress</span></label>
+          <label class="signal-label" onclick="toggleSignal(this)"><input type="checkbox" id="sym_brain" value="Brain Fog"><span class="dot"></span><span class="sig-icon">🧠</span><span>Brain Fog / Focus</span></label>
+          <label class="signal-label" onclick="toggleSignal(this)"><input type="checkbox" id="sym_anxiety" value="Anxiety / Chronic Stress"><span class="dot"></span><span class="sig-icon">😟</span><span>Anxiety / Stress</span></label>
         </div>
         <span class="signals-label">Musculoskeletal &amp; Digestive</span>
         <div class="signal-grid">
-          <label class="signal-label" onclick="markCheckSelected(this)"><input type="checkbox" id="sym_joints" value="Joint Pain / Arthritis"><span class="dot"></span><span class="sig-icon">🦴</span><span>Joint Pain / Arthritis</span></label>
-          <label class="signal-label" onclick="markCheckSelected(this)"><input type="checkbox" id="sym_gut" value="IBS / Digestive Issues"><span class="dot"></span><span class="sig-icon">🌿</span><span>IBS / Digestive Issues</span></label>
+          <label class="signal-label" onclick="toggleSignal(this)"><input type="checkbox" id="sym_joints" value="Joint Pain / Arthritis"><span class="dot"></span><span class="sig-icon">🦴</span><span>Joint Pain / Arthritis</span></label>
+          <label class="signal-label" onclick="toggleSignal(this)"><input type="checkbox" id="sym_gut" value="IBS / Digestive Issues"><span class="dot"></span><span class="sig-icon">🌿</span><span>IBS / Digestive</span></label>
         </div>
         <span class="signals-label">Hormonal</span>
         <div class="signal-grid">
-          <label class="signal-label" onclick="markCheckSelected(this)"><input type="checkbox" id="sym_hormone" value="Hormonal Imbalance / Low Libido"><span class="dot"></span><span class="sig-icon">⚡</span><span>Hormonal / Low Libido</span></label>
-          <label class="signal-label conditional-field" id="field_menopause" onclick="markCheckSelected(this)"><input type="checkbox" id="sym_menopause" value="Menopause"><span class="dot"></span><span class="sig-icon">🌸</span><span>Menopause / Perimenopause</span></label>
+          <label class="signal-label" onclick="toggleSignal(this)"><input type="checkbox" id="sym_hormone" value="Hormonal Imbalance / Low Libido"><span class="dot"></span><span class="sig-icon">⚡</span><span>Hormonal / Low Libido</span></label>
+          <label class="signal-label conditional-field" id="field_menopause" onclick="toggleSignal(this)"><input type="checkbox" id="sym_menopause" value="Menopause"><span class="dot"></span><span class="sig-icon">🌸</span><span>Menopause / Peri</span></label>
+          <label class="signal-label" onclick="toggleSignal(this)"><input type="checkbox" id="sym_thyroid" value="Thyroid / Hypothyroid"><span class="dot"></span><span class="sig-icon">🦋</span><span>Thyroid</span></label>
+          <label class="signal-label" onclick="toggleSignal(this)"><input type="checkbox" id="sym_copd" value="COPD / Asthma"><span class="dot"></span><span class="sig-icon">🫁</span><span>COPD / Asthma</span></label>
         </div>
-        <div class="phase-nav"><button class="btn-back" onclick="goPhase(1)">← Back</button><span class="phase-counter">Step 2 of 4</span><button class="btn-next" onclick="goPhase(3)">Continue → Lifestyle</button></div>
+        <div style="background:var(--mist);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:18px;font-size:12px;color:var(--slate);line-height:1.6;">
+          💡 <strong>Important:</strong> If you have a known condition and are on prescription medication, you will be on our <strong>Group B pathway</strong> — your protocol will be reviewed by a clinical reviewer before delivery. Enter your medications in Step 5.
+        </div>
+        <div class="phase-nav"><button class="btn-back" onclick="goPhase(1)">← Back</button><span class="phase-counter">Step 2 of 6</span><button class="btn-next" onclick="goPhase(3)">Continue → Lifestyle</button></div>
       </div>
-      <!-- PHASE 3 -->
+
+      <!-- PHASE 3: LIFESTYLE -->
       <div class="phase-panel" id="phase3">
         <h2 class="phase-heading">Lifestyle Context</h2>
         <p class="phase-sub">Environmental inputs that modulate your domain load calculations.</p>
@@ -590,17 +570,15 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
           <label class="tile-opt" onclick="markSelected(this,'exercise_group')"><input type="radio" name="exercise" value="Daily / Athletic"><span class="tile-icon">🏋️</span><span class="tile-text">Daily</span></label>
         </div>
         <div class="field-row two-col">
-          <div>
-            <label class="field-label" style="margin-bottom:10px;">Avg. nightly sleep</label>
+          <div><label class="field-label" style="margin-bottom:10px;">Avg. nightly sleep</label>
             <div class="tile-select two-col" id="sleep_group" style="margin-bottom:0;">
-              <label class="tile-opt" onclick="markSelected(this,'sleep_group')"><input type="radio" name="sleep_hrs" value="Under 5h"><span class="tile-icon">😴</span><span class="tile-text">&lt; 5h</span></label>
+              <label class="tile-opt" onclick="markSelected(this,'sleep_group')"><input type="radio" name="sleep_hrs" value="Under 5h"><span class="tile-icon">😴</span><span class="tile-text">&lt;5h</span></label>
               <label class="tile-opt" onclick="markSelected(this,'sleep_group')"><input type="radio" name="sleep_hrs" value="5–6h"><span class="tile-icon">😑</span><span class="tile-text">5–6h</span></label>
               <label class="tile-opt selected" onclick="markSelected(this,'sleep_group')"><input type="radio" name="sleep_hrs" value="7–8h" checked><span class="tile-icon">😌</span><span class="tile-text">7–8h</span></label>
               <label class="tile-opt" onclick="markSelected(this,'sleep_group')"><input type="radio" name="sleep_hrs" value="8h+"><span class="tile-icon">😴</span><span class="tile-text">8h+</span></label>
             </div>
           </div>
-          <div>
-            <label class="field-label" style="margin-bottom:10px;">Alcohol consumption</label>
+          <div><label class="field-label" style="margin-bottom:10px;">Alcohol consumption</label>
             <div class="tile-select two-col" id="alcohol_group" style="margin-bottom:0;">
               <label class="tile-opt selected" onclick="markSelected(this,'alcohol_group')"><input type="radio" name="alcohol" value="None" checked><span class="tile-icon">🚱</span><span class="tile-text">None</span></label>
               <label class="tile-opt" onclick="markSelected(this,'alcohol_group')"><input type="radio" name="alcohol" value="Occasional (1–2 / wk)"><span class="tile-icon">🍷</span><span class="tile-text">Occasional</span></label>
@@ -609,48 +587,148 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
             </div>
           </div>
         </div>
-        <div class="phase-nav" style="margin-top:20px;"><button class="btn-back" onclick="goPhase(2)">← Back</button><span class="phase-counter">Step 3 of 4</span><button class="btn-next" onclick="goPhase(4)">Continue → Signals</button></div>
+        <div class="phase-nav" style="margin-top:20px;"><button class="btn-back" onclick="goPhase(2)">← Back</button><span class="phase-counter">Step 3 of 6</span><button class="btn-next" onclick="goPhase(4)">Continue → Environment</button></div>
       </div>
-      <!-- PHASE 4 -->
+
+      <!-- PHASE 4: ENVIRONMENT -->
       <div class="phase-panel" id="phase4">
+        <h2 class="phase-heading">Environment &amp; Location</h2>
+        <p class="phase-sub">Your climate and location directly calibrate your TCM pattern, Vitamin D dose, and lifestyle protocol.</p>
+        <label class="field-label" style="margin-bottom:10px;">Your country</label>
+        <div class="tile-select" id="country_group" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px;">
+          <label class="tile-opt selected" onclick="markSelected(this,'country_group')"><input type="radio" name="country" value="AE" checked><span class="tile-icon">🇦🇪</span><span class="tile-text">UAE</span></label>
+          <label class="tile-opt" onclick="markSelected(this,'country_group')"><input type="radio" name="country" value="SA"><span class="tile-icon">🇸🇦</span><span class="tile-text">Saudi</span></label>
+          <label class="tile-opt" onclick="markSelected(this,'country_group')"><input type="radio" name="country" value="QA"><span class="tile-icon">🇶🇦</span><span class="tile-text">Qatar</span></label>
+          <label class="tile-opt" onclick="markSelected(this,'country_group')"><input type="radio" name="country" value="KW"><span class="tile-icon">🇰🇼</span><span class="tile-text">Kuwait</span></label>
+          <label class="tile-opt" onclick="markSelected(this,'country_group')"><input type="radio" name="country" value="GB"><span class="tile-icon">🇬🇧</span><span class="tile-text">UK</span></label>
+          <label class="tile-opt" onclick="markSelected(this,'country_group')"><input type="radio" name="country" value="IN"><span class="tile-icon">🇮🇳</span><span class="tile-text">India</span></label>
+          <label class="tile-opt" onclick="markSelected(this,'country_group')"><input type="radio" name="country" value="PK"><span class="tile-icon">🇵🇰</span><span class="tile-text">Pakistan</span></label>
+          <label class="tile-opt" onclick="markSelected(this,'country_group')"><input type="radio" name="country" value="US"><span class="tile-icon">🇺🇸</span><span class="tile-text">USA</span></label>
+        </div>
+        <label class="field-label" style="margin-bottom:10px;">Daily outdoor sun exposure</label>
+        <div class="tile-select three-col" id="sun_group" style="margin-bottom:20px;">
+          <label class="tile-opt selected" onclick="markSelected(this,'sun_group')"><input type="radio" name="sun_exposure" value="Minimal" checked><span class="tile-icon">🏠</span><span class="tile-text">Minimal (AC / indoor)</span></label>
+          <label class="tile-opt" onclick="markSelected(this,'sun_group')"><input type="radio" name="sun_exposure" value="Moderate"><span class="tile-icon">⛅</span><span class="tile-text">Moderate (30 min+)</span></label>
+          <label class="tile-opt" onclick="markSelected(this,'sun_group')"><input type="radio" name="sun_exposure" value="High"><span class="tile-icon">☀️</span><span class="tile-text">High (outdoor work)</span></label>
+        </div>
+        <label class="field-label" style="margin-bottom:10px;">Work environment</label>
+        <div class="tile-select three-col" id="work_group" style="margin-bottom:20px;">
+          <label class="tile-opt selected" onclick="markSelected(this,'work_group')"><input type="radio" name="work_env" value="Office" checked><span class="tile-icon">💻</span><span class="tile-text">Office / Desk</span></label>
+          <label class="tile-opt" onclick="markSelected(this,'work_group')"><input type="radio" name="work_env" value="Outdoor"><span class="tile-icon">🏗️</span><span class="tile-text">Outdoor / Physical</span></label>
+          <label class="tile-opt" onclick="markSelected(this,'work_group')"><input type="radio" name="work_env" value="Mixed"><span class="tile-icon">🔄</span><span class="tile-text">Mixed</span></label>
+        </div>
+        <div style="background:var(--mint);border:1px solid #c8e6d5;border-radius:10px;padding:12px 14px;margin-bottom:18px;font-size:12px;color:var(--forest);line-height:1.6;">
+          🌍 UAE/Gulf patients are calibrated for <strong>Yin Deficiency</strong> pattern with 4000IU Vitamin D. UK patients receive a <strong>Yang Deficiency</strong> protocol with SAD lamp recommendation. Your location matters clinically.
+        </div>
+        <div class="phase-nav"><button class="btn-back" onclick="goPhase(3)">← Back</button><span class="phase-counter">Step 4 of 6</span><button class="btn-next" onclick="goPhase(5)">Continue → Medications</button></div>
+      </div>
+
+      <!-- PHASE 5: MEDICATIONS -->
+      <div class="phase-panel" id="phase5">
+        <h2 class="phase-heading">Current Medications</h2>
+        <p class="phase-sub">Required for drug-nutrient safety checking. Any medication routes you to our clinically supervised Group B pathway.</p>
+        <label class="field-label" style="margin-bottom:10px;">Are you currently taking prescription medications?</label>
+        <div class="tile-select two-col" id="meds_yesno" style="margin-bottom:16px;">
+          <label class="tile-opt selected" onclick="markSelected(this,'meds_yesno');toggleMedEntry(false)"><input type="radio" name="has_meds" value="No" checked><span class="tile-icon">✅</span><span class="tile-text">No medications</span></label>
+          <label class="tile-opt" onclick="markSelected(this,'meds_yesno');toggleMedEntry(true)"><input type="radio" name="has_meds" value="Yes"><span class="tile-icon">💊</span><span class="tile-text">Yes — on medication</span></label>
+        </div>
+        <div id="medEntryPanel" style="display:none;margin-bottom:14px;">
+          <label class="field-label">List your medications</label>
+          <textarea id="a_medications" rows="4" placeholder="e.g. Metformin 1000mg twice daily, Amlodipine 5mg, Omeprazole 20mg once daily"></textarea>
+          <span class="field-hint">One per line or comma-separated. Include dose if known.</span>
+          <div style="background:#fff7ed;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;margin-top:10px;font-size:12px;color:#78350f;line-height:1.6;">
+            ⏳ <strong>Group B pathway:</strong> Your personalised protocol will be generated and held for clinical review within 48 hours. This ensures complete drug-nutrient safety checking before delivery.
+          </div>
+        </div>
+        <div id="noMedNote" style="background:var(--mint);border:1px solid #c8e6d5;border-radius:10px;padding:12px 14px;margin-bottom:18px;font-size:12px;color:var(--forest);line-height:1.6;">
+          ✅ <strong>Group A pathway:</strong> No medications detected. Your protocol will be generated and delivered immediately after assessment.
+        </div>
+        <div class="phase-nav"><button class="btn-back" onclick="goPhase(4)">← Back</button><span class="phase-counter">Step 5 of 6</span><button class="btn-next" onclick="goPhase(6)">Continue → Final Signals</button></div>
+      </div>
+
+      <!-- PHASE 6: SUBJECTIVE SIGNALS -->
+      <div class="phase-panel" id="phase6">
         <h2 class="phase-heading">Subjective Signals</h2>
-        <p class="phase-sub">How have you felt over the past 2 weeks? These calibrate your cognitive and hormonal baseline.</p>
+        <p class="phase-sub">How have you felt over the past 2 weeks? These calibrate your cognitive, hormonal, and TCM pattern classification.</p>
         <div class="subjective-slider">
           <div class="slider-header"><span class="slider-label">⚡ Daily Energy</span><span class="slider-value" id="lbl_energy_a">6 / 10</span></div>
           <input type="range" id="a_energy" min="1" max="10" value="6" oninput="updateSliderLabels()">
-          <div class="slider-ticks"><span>1 Low</span><span>5 Avg</span><span>10 High</span></div>
+          <div class="slider-ticks"><span>1 Very Low</span><span>5 Average</span><span>10 Excellent</span></div>
         </div>
         <div class="subjective-slider">
           <div class="slider-header"><span class="slider-label">🌙 Sleep Quality</span><span class="slider-value" id="lbl_sleep_a">6 / 10</span></div>
           <input type="range" id="a_sleep_q" min="1" max="10" value="6" oninput="updateSliderLabels()">
-          <div class="slider-ticks"><span>1 Poor</span><span>5 Avg</span><span>10 Excellent</span></div>
+          <div class="slider-ticks"><span>1 Very Poor</span><span>5 Average</span><span>10 Excellent</span></div>
         </div>
         <div class="subjective-slider">
           <div class="slider-header"><span class="slider-label">😮‍💨 Stress Level</span><span class="slider-value" id="lbl_stress_a">5 / 10</span></div>
           <input type="range" id="a_stress" min="1" max="10" value="5" oninput="updateSliderLabels()">
-          <div class="slider-ticks"><span>1 Calm</span><span>5 Moderate</span><span>10 High</span></div>
+          <div class="slider-ticks"><span>1 Very Calm</span><span>5 Moderate</span><span>10 Overwhelming</span></div>
         </div>
-        <div style="background:var(--mint);border:1px solid #c8e6d5;border-radius:10px;padding:12px 14px;margin:18px 0 22px;font-size:12px;color:var(--forest);line-height:1.6;">
-          <strong>✓ Ready to generate.</strong> Your 4-phase intake is complete. The engine will apply biometric tier weighting, safety vetoes, domain scoring, and behaviour calibration to your protocol.
+
+        <!-- Optional red flag symptoms -->
+        <div style="margin-bottom:18px;">
+          <label class="field-label" style="margin-bottom:8px;">Any current urgent symptoms? (optional — for safety screening)</label>
+          <textarea id="a_symptoms" rows="2" placeholder="e.g. chest pain, severe headache, breathlessness at rest, rectal bleeding. Leave blank if none." style="font-size:13px;min-height:70px;"></textarea>
+          <span class="field-hint">This enables our safety engine to identify any symptoms requiring urgent attention before protocol generation.</span>
+        </div>
+
+        <div style="background:var(--mint);border:1px solid #c8e6d5;border-radius:10px;padding:12px 14px;margin:0 0 22px;font-size:12px;color:var(--forest);line-height:1.6;">
+          ✅ <strong>Assessment complete.</strong> The Bio-OS will now run: Preliminary Assessment Engine → Domain scoring → TCM pattern classification → Climate calibration → Protocol assembly.
         </div>
         <div class="phase-nav">
-          <button class="btn-back" onclick="goPhase(3)">← Back</button>
-          <span class="phase-counter">Step 4 of 4</span>
-          <button class="btn-next" id="generateBtn" onclick="runAssessment()" style="background:#0a5c30;">🧬 Generate Digital Twin Protocol</button>
+          <button class="btn-back" onclick="goPhase(5)">← Back</button>
+          <span class="phase-counter">Step 6 of 6</span>
+          <button class="btn-next" id="generateBtn" onclick="runAssessment()" style="background:#0a5c30;">🧬 Generate Bio-OS Protocol</button>
         </div>
       </div>
-    </div>
+    </div><!-- /formCard -->
 
     <div id="loadingOverlay" class="card">
       <div class="spinner-dna">🧬</div>
-      <div class="loading-stage" id="loadingStage">Initializing engine...</div>
+      <div class="loading-stage" id="loadingStage">Initialising Bio-OS...</div>
       <div class="loading-bar-wrap"><div class="loading-bar" id="loadingBar"></div></div>
-      <div class="loading-sub">Engine v29.2 · Auth Layer Active · Session Authenticated</div>
+      <div class="loading-sub">PAE · TCM Engine · Climate Calibration · Safety Vetoes</div>
     </div>
 
+    <!-- DASHBOARD -->
     <div id="dashboard">
       <div class="coach-bar"><div class="coach-icon">🤖</div><div class="coach-text" id="disp_coach">—</div></div>
       <div class="badge-lifecycle-row" id="badge_row"></div>
+
+      <!-- PAE: URGENT ALERT (shown instead of protocol if red flag) -->
+      <div class="pae-urgent" id="paeUrgentCard" style="display:none;">
+        <span class="pae-urgent-icon">🚨</span>
+        <div class="pae-urgent-title">Urgent Clinical Attention Required</div>
+        <div class="pae-urgent-msg" id="paeUrgentMsg">—</div>
+        <div class="pae-ref">Assessment Ref: <span id="paeRef">—</span></div>
+      </div>
+
+      <!-- PAE: HOLD (Group B — awaiting review) -->
+      <div class="pae-hold" id="paeHoldCard" style="display:none;">
+        <div class="pae-hold-title">⏳ Protocol Under Clinical Review</div>
+        <div class="pae-hold-msg" id="paeHoldMsg">—</div>
+        <div class="pae-ref" style="margin-top:8px;">Your biological assessment and domain scores are shown below. Your protocol will be delivered once reviewed.</div>
+      </div>
+
+      <!-- PBU CARD (always shown) -->
+      <div class="pbu-card" id="pbuCard" style="display:none;">
+        <div class="pbu-title">🔬 Provisional Biological Understanding</div>
+        <div class="pbu-narrative" id="disp_pbu">—</div>
+        <div class="pbu-confidence">
+          <span id="disp_confidence_pct">72</span>% confidence
+          <div class="pbu-confidence-bar"><div class="pbu-confidence-fill" id="pbuConfFill" style="width:72%"></div></div>
+        </div>
+      </div>
+
+      <!-- TCM PATTERN CARD -->
+      <div class="tcm-card" id="tcmCard" style="display:none;">
+        <div class="tcm-title">🌿 Current Biological Pattern</div>
+        <div class="tcm-pattern-label" id="disp_tcm_label">—</div>
+        <div class="tcm-narrative" id="disp_tcm_narrative">—</div>
+        <div class="tcm-climate-note" id="disp_tcm_climate">—</div>
+      </div>
+
       <div class="stats-row">
         <div class="stat-tile" id="tile_score"><div class="stat-label">Functional Score</div><div class="stat-value" id="disp_score">—</div><div class="stat-sub">/100</div></div>
         <div class="stat-tile" id="tile_bioage"><div class="stat-label">Biological Age</div><div class="stat-value" id="disp_bioage">—</div><div class="stat-sub">years</div></div>
@@ -662,35 +740,39 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
         <div class="meta-tile"><div class="meta-label">Multiplier</div><div class="meta-value" id="disp_mult">—</div></div>
         <div class="meta-tile"><div class="meta-label">Responsiveness</div><div class="meta-value" id="disp_resp">—</div></div>
       </div>
+
+      <!-- GAP CARD -->
       <div class="gap-card" id="gapCard" style="display:none;">
         <div class="gap-card-header" id="gapCardHeader" onclick="toggleGapCard()">
-          <div class="gap-card-title">🧪 Complete Your Health Profile<span class="gap-count-badge" id="gapCountBadge">— tests</span></div>
+          <div class="gap-card-title">🧪 Sharpen Your Protocol<span class="gap-count-badge" id="gapCountBadge">—</span></div>
           <span class="gap-toggle" id="gapToggleIcon">▼ Show</span>
         </div>
         <div class="gap-card-body" id="gapCardBody">
-          <div class="depth-banner"><span class="depth-banner-icon">📊</span><span id="depthMessage"><strong>Your protocol is running at partial depth.</strong></span></div>
+          <div class="depth-banner"><span style="font-size:15px;flex-shrink:0;">📊</span><span id="depthMessage">Your protocol can be sharpened with additional lab data.</span></div>
           <div id="testRecList"></div>
         </div>
       </div>
+
       <div class="narrative-card">
         <div class="narrative-title">🧬 Twin Evolution Summary</div>
         <div class="narrative-main" id="narr_main">—</div>
         <div class="narrative-sub" id="narr_sub"></div>
       </div>
+
       <div class="chart-wrap"><div class="card-title">6-Domain Load Map</div><canvas id="twinRadar"></canvas></div>
-      <div class="card"><div class="stack-header">☀️ Morning Stack (AM)</div><div id="am_list"></div></div>
-      <div class="card"><div class="stack-header">🌙 Evening Stack (PM)</div><div id="pm_list"></div></div>
+      <div class="card" id="protocolSection"><div class="stack-header">☀️ Morning Stack (AM)</div><div id="am_list"></div></div>
+      <div class="card" id="protocolSectionPM"><div class="stack-header">🌙 Evening Stack (PM)</div><div id="pm_list"></div></div>
       <div class="card"><div class="stack-header">🥗 Lifestyle Engine</div><div id="life_list"></div></div>
       <button class="reset-btn" onclick="resetAssessment()">↩ New Assessment</button>
     </div>
-  </div>
+  </div><!-- /assessTab -->
 
   <!-- CHECK-IN TAB -->
   <div id="checkinTab">
     <div class="card">
-      <h2>Recalibrate My Twin</h2>
-      <p style="font-size:13px;color:var(--slate);margin-bottom:18px;">Behaviour signals — influence your trajectory without a full assessment.</p>
-      <div class="ci-user-note"><strong>Signed in as:</strong> <span id="ci_user_display">—</span><br>This check-in will link to your active Twin State and increment your cycle.</div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:21px;font-weight:800;color:var(--forest);margin-bottom:5px;">Recalibrate My Twin</h2>
+      <p style="font-size:13px;color:var(--slate);margin-bottom:18px;">Behaviour signals — update your trajectory without a full assessment.</p>
+      <div class="ci-user-note"><strong>Signed in as:</strong> <span id="ci_user_display">—</span></div>
       <div class="preview-card">
         <div class="preview-title">Today's Twin Response — Live Preview</div>
         <div class="preview-grid">
@@ -700,918 +782,600 @@ details[open].clinical-details summary::before { transform: rotate(90deg); }
         </div>
         <div class="preview-stmt" id="prev_stmt">If you submit today: your Twin will recalibrate with a Neutral trajectory.</div>
       </div>
-      <div class="slider-group">
-        <div class="slider-header"><span class="slider-label">⚡ Daily Energy</span><span class="slider-value" id="lbl_energy">7 / 10</span></div>
-        <input type="range" id="ci_energy" min="1" max="10" value="7" oninput="updatePreview()">
-        <div class="slider-ticks"><span>1</span><span>5</span><span>10</span></div>
-      </div>
-      <div class="slider-group">
-        <div class="slider-header"><span class="slider-label">🌙 Sleep Quality</span><span class="slider-value" id="lbl_sleep">7 / 10</span></div>
-        <input type="range" id="ci_sleep" min="1" max="10" value="7" oninput="updatePreview()">
-        <div class="slider-ticks"><span>1</span><span>5</span><span>10</span></div>
-      </div>
-      <div class="slider-group">
-        <div class="slider-header"><span class="slider-label">😮‍💨 Stress Level</span><span class="slider-value" id="lbl_stress">4 / 10</span></div>
-        <input type="range" id="ci_stress" min="1" max="10" value="4" oninput="updatePreview()">
-        <div class="slider-ticks"><span>1</span><span>5</span><span>10</span></div>
-      </div>
-      <div class="slider-group">
-        <div class="slider-header"><span class="slider-label">💊 Protocol Adherence</span><span class="slider-value" id="lbl_adherence">80 %</span></div>
-        <input type="range" id="ci_adherence" min="1" max="10" value="8" oninput="updatePreview()">
-        <div class="slider-ticks"><span>10%</span><span>50%</span><span>100%</span></div>
-      </div>
+      <div class="slider-group"><div class="slider-header"><span class="slider-label">⚡ Daily Energy</span><span class="slider-value" id="lbl_energy">7 / 10</span></div><input type="range" id="ci_energy" min="1" max="10" value="7" oninput="updatePreview()"><div class="slider-ticks"><span>1</span><span>5</span><span>10</span></div></div>
+      <div class="slider-group"><div class="slider-header"><span class="slider-label">🌙 Sleep Quality</span><span class="slider-value" id="lbl_sleep">7 / 10</span></div><input type="range" id="ci_sleep" min="1" max="10" value="7" oninput="updatePreview()"><div class="slider-ticks"><span>1</span><span>5</span><span>10</span></div></div>
+      <div class="slider-group"><div class="slider-header"><span class="slider-label">😮‍💨 Stress Level</span><span class="slider-value" id="lbl_stress">4 / 10</span></div><input type="range" id="ci_stress" min="1" max="10" value="4" oninput="updatePreview()"><div class="slider-ticks"><span>1</span><span>5</span><span>10</span></div></div>
+      <div class="slider-group"><div class="slider-header"><span class="slider-label">💊 Protocol Adherence</span><span class="slider-value" id="lbl_adherence">80 %</span></div><input type="range" id="ci_adherence" min="1" max="10" value="8" oninput="updatePreview()"><div class="slider-ticks"><span>10%</span><span>50%</span><span>100%</span></div></div>
       <button class="cta-btn" id="checkinBtn" onclick="runCheckin()">Recalibrate My Twin</button>
-      <div id="ci_loading" style="display:none;text-align:center;padding:30px 0;">
-        <div class="spinner-dna" style="font-size:36px;">🔄</div>
-        <div class="loading-stage" id="ci_stage">Recalibrating...</div>
-      </div>
-      <div id="ci_result" style="display:none;margin-top:14px;" class="card">
-        <div class="card-title">Twin Recalibrated</div>
-        <div id="ci_result_body" style="font-size:13px;line-height:1.7;color:var(--ink);"></div>
-      </div>
+      <div id="ci_loading" style="display:none;text-align:center;padding:30px 0;"><div class="spinner-dna" style="font-size:36px;">🔄</div><div class="loading-stage" id="ci_stage">Recalibrating...</div></div>
+      <div id="ci_result" style="display:none;margin-top:14px;" class="card"><div class="card-title">Twin Recalibrated</div><div id="ci_result_body" style="font-size:13px;line-height:1.7;color:var(--ink);"></div></div>
     </div>
   </div>
-</div>
+</div><!-- /mainApp -->
 
 <script>
-// ═══════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
 // CONFIG
-// ═══════════════════════════════════════════════════
-var GAS_URL = "https://script.google.com/macros/s/AKfycbzHED_dg0Zbhy3rIvrIL826O7e6Dcw8Mx_QTyi3AKbQ1Ejm9Y4uIFb8bliWiEqao2ZN/exec";
+// ════════════════════════════════════════════════════════════
+var GAS_URL = "https://script.google.com/macros/s/AKfycbyb8-zsO4GOi9Dpa-J2Elg2NfDKTlAvcvjBCpXQYEKMZ98xhWBqtfwqjDccfkphwE9L7A/exec";
 
-// ═══════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
 // SESSION
-// ═══════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
 var Session = {
-  save: function(token, userId, expiresAt) {
-    sessionStorage.setItem('phyto_token',      token);
-    sessionStorage.setItem('phyto_user_id',    userId);
-    sessionStorage.setItem('phyto_expires_at', expiresAt);
-  },
-  get: function() {
-    return {
-      token:     sessionStorage.getItem('phyto_token'),
-      userId:    sessionStorage.getItem('phyto_user_id'),
-      expiresAt: sessionStorage.getItem('phyto_expires_at')
-    };
-  },
-  clear: function() {
-    sessionStorage.removeItem('phyto_token');
-    sessionStorage.removeItem('phyto_user_id');
-    sessionStorage.removeItem('phyto_expires_at');
-  },
-  isValid: function() {
-    var s = this.get();
-    if (!s.token || !s.expiresAt) return false;
-    return new Date(s.expiresAt) > new Date();
-  }
+  save: function(t,u,e){ sessionStorage.setItem('phyto_token',t); sessionStorage.setItem('phyto_user_id',u); sessionStorage.setItem('phyto_expires_at',e); },
+  get:  function(){ return { token:sessionStorage.getItem('phyto_token'), userId:sessionStorage.getItem('phyto_user_id'), expiresAt:sessionStorage.getItem('phyto_expires_at') }; },
+  clear:function(){ sessionStorage.removeItem('phyto_token'); sessionStorage.removeItem('phyto_user_id'); sessionStorage.removeItem('phyto_expires_at'); },
+  isValid:function(){ var s=this.get(); if(!s.token||!s.expiresAt) return false; return new Date(s.expiresAt)>new Date(); }
 };
 
-// ═══════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
 // SCREEN MANAGEMENT
-// ═══════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
 function showLoginScreen(msg) {
-  document.getElementById('loginScreen').style.display      = 'block';
-  document.getElementById('registerScreen').style.display   = 'none';
-  document.getElementById('regSuccessScreen').style.display = 'none';
-  document.getElementById('mainApp').style.display          = 'none';
-  document.getElementById('logoutBtn').style.display        = 'none';
-  document.getElementById('sessionIndicator').className     = 'session-indicator';
-  if (msg) {
-    var errEl = document.getElementById('loginError');
-    errEl.textContent   = msg;
-    errEl.style.display = 'block';
-  }
+  ['loginScreen','registerScreen','regSuccessScreen','mainApp'].forEach(function(id,i){
+    document.getElementById(id).style.display = i===0?'block':'none';
+  });
+  document.getElementById('logoutBtn').style.display = 'none';
+  document.getElementById('sessionIndicator').className = 'session-indicator';
+  if(msg){ var e=document.getElementById('loginError'); e.textContent=msg; e.style.display='block'; }
 }
-
 function showRegisterScreen() {
-  document.getElementById('loginScreen').style.display      = 'none';
-  document.getElementById('registerScreen').style.display   = 'block';
-  document.getElementById('regSuccessScreen').style.display = 'none';
-  document.getElementById('mainApp').style.display          = 'none';
-  document.getElementById('logoutBtn').style.display        = 'none';
-  document.getElementById('sessionIndicator').className     = 'session-indicator';
+  document.getElementById('loginScreen').style.display    = 'none';
+  document.getElementById('registerScreen').style.display = 'block';
+  document.getElementById('regSuccessScreen').style.display='none';
+  document.getElementById('mainApp').style.display        = 'none';
+  document.getElementById('logoutBtn').style.display      = 'none';
+  document.getElementById('sessionIndicator').className   = 'session-indicator';
   regCurrentStep = 1;
-  for (var i = 1; i <= 3; i++) {
-    var panel = document.getElementById('rpanel_' + i);
-    var step  = document.getElementById('rstep_' + i);
-    if (panel) panel.classList.toggle('active', i === 1);
-    if (step)  { step.classList.remove('active','done'); if (i === 1) step.classList.add('active'); }
+  for(var i=1;i<=3;i++){
+    var p=document.getElementById('rpanel_'+i), s=document.getElementById('rstep_'+i);
+    if(p) p.classList.toggle('active',i===1);
+    if(s){ s.classList.remove('active','done'); if(i===1)s.classList.add('active'); }
   }
-  var errEl = document.getElementById('regError');
-  if (errEl) errEl.style.display = 'none';
+  var e=document.getElementById('regError'); if(e) e.style.display='none';
 }
-
 function showMainApp() {
-  document.getElementById('loginScreen').style.display      = 'none';
-  document.getElementById('registerScreen').style.display   = 'none';
-  document.getElementById('regSuccessScreen').style.display = 'none';
-  document.getElementById('mainApp').style.display          = 'block';
-  document.getElementById('logoutBtn').style.display        = 'block';
-  document.getElementById('sessionIndicator').className     = 'session-indicator active';
-  var userId = Session.get().userId || '';
-  var ciDisplay = document.getElementById('ci_user_display');
-  if (ciDisplay) ciDisplay.textContent = userId;
+  document.getElementById('loginScreen').style.display    = 'none';
+  document.getElementById('registerScreen').style.display = 'none';
+  document.getElementById('regSuccessScreen').style.display='none';
+  document.getElementById('mainApp').style.display        = 'block';
+  document.getElementById('logoutBtn').style.display      = 'block';
+  document.getElementById('sessionIndicator').className   = 'session-indicator active';
+  var u=Session.get().userId||'';
+  var cd=document.getElementById('ci_user_display'); if(cd) cd.textContent=u;
   startSessionWatcher();
 }
 
-// ═══════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
 // LOGIN
-// ═══════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
 function handleLogin() {
-  var emailEl = document.getElementById('login_email');
-  var pinEl   = document.getElementById('login_pin');
-  var errEl   = document.getElementById('loginError');
-  var btn     = document.getElementById('loginBtn');
-  var email   = emailEl.value.trim();
-  var pin     = pinEl.value.trim();
-
-  errEl.style.display = 'none';
-  emailEl.classList.remove('error');
-  pinEl.classList.remove('error');
-
-  if (!email || email.indexOf('@') === -1) {
-    emailEl.classList.add('error'); emailEl.focus();
-    errEl.textContent = 'Please enter a valid email address.';
-    errEl.style.display = 'block'; return;
-  }
-  if (!pin || pin.length < 4) {
-    pinEl.classList.add('error'); pinEl.focus();
-    errEl.textContent = 'Please enter your PIN.';
-    errEl.style.display = 'block'; return;
-  }
-
-  btn.disabled = true; btn.textContent = 'Signing in...';
-
-  postToGAS({ action: 'login', user_id: email, pin: pin }, 20000)
-  .then(function(data) {
-    btn.disabled = false; btn.textContent = 'Sign In →';
-    if (data.status === 'ok' && data.token) {
-      Session.save(data.token, data.user_id, data.expires_at);
-      pinEl.value = '';
-      showMainApp();
-    } else {
-      var msgs = {
-        'INVALID_CREDENTIALS': 'Incorrect email or PIN. Please try again.',
-        'ACCOUNT_LOCKED':      data.message || 'Account temporarily locked.',
-        'SERVICE_UNAVAILABLE': 'System is temporarily offline. Please try again shortly.',
-        'MISSING_CREDENTIALS': 'Please enter both email and PIN.'
-      };
-      errEl.textContent   = msgs[data.code] || (data.message || 'Sign-in failed. Please try again.');
-      errEl.style.display = 'block';
+  var emailEl=document.getElementById('login_email'),pinEl=document.getElementById('login_pin');
+  var errEl=document.getElementById('loginError'),btn=document.getElementById('loginBtn');
+  var email=emailEl.value.trim(), pin=pinEl.value.trim();
+  errEl.style.display='none';
+  emailEl.classList.remove('error'); pinEl.classList.remove('error');
+  if(!email||email.indexOf('@')===-1){ emailEl.classList.add('error'); emailEl.focus(); errEl.textContent='Please enter a valid email address.'; errEl.style.display='block'; return; }
+  if(!pin||pin.length<4){ pinEl.classList.add('error'); pinEl.focus(); errEl.textContent='Please enter your PIN.'; errEl.style.display='block'; return; }
+  btn.disabled=true; btn.textContent='Signing in...';
+  postToGAS({action:'login',user_id:email,pin:pin},20000)
+  .then(function(d){
+    btn.disabled=false; btn.textContent='Sign In →';
+    if(d.status==='ok'&&d.token){ Session.save(d.token,d.user_id,d.expires_at); pinEl.value=''; showMainApp(); }
+    else{
+      var msgs={'INVALID_CREDENTIALS':'Incorrect email or PIN. Please try again.','ACCOUNT_LOCKED':d.message||'Account temporarily locked.','MISSING_CREDENTIALS':'Please enter both email and PIN.'};
+      errEl.textContent=msgs[d.code]||(d.message||'Sign-in failed. Please try again.'); errEl.style.display='block';
     }
   })
-  .catch(function(err) {
-    btn.disabled = false; btn.textContent = 'Sign In →';
-    errEl.textContent   = err === 'timeout' ? 'Request timed out. Please try again.' : 'Connection error. Please check your network.';
-    errEl.style.display = 'block';
-  });
+  .catch(function(err){ btn.disabled=false; btn.textContent='Sign In →'; errEl.textContent=err==='timeout'?'Request timed out. Please try again.':'Connection error. Check your network.'; errEl.style.display='block'; });
 }
 
-// ═══════════════════════════════════════════════════
-// LOGOUT
-// ═══════════════════════════════════════════════════
 function handleLogout() {
-  var session = Session.get();
-  if (session.token) {
-    postToGAS({ action: 'logout', user_id: session.userId, token: session.token }, 8000).catch(function() {});
-  }
+  var s=Session.get();
+  if(s.token) postToGAS({action:'logout',user_id:s.userId,token:s.token},8000).catch(function(){});
   Session.clear();
   showLoginScreen('You have been signed out.');
 }
 
-// ═══════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
 // SESSION WATCHER
-// ═══════════════════════════════════════════════════
-var _sessionWatcher = null;
-function startSessionWatcher() {
-  if (_sessionWatcher) clearInterval(_sessionWatcher);
-  _sessionWatcher = setInterval(function() {
-    var session = Session.get();
-    if (!session.token) return;
-    var msLeft = new Date(session.expiresAt) - new Date();
-    var warnEl = document.getElementById('sessionWarning');
-    if (msLeft <= 0) {
-      clearInterval(_sessionWatcher);
-      Session.clear();
-      showLoginScreen('Your session has expired. Please sign in again.');
-      return;
-    }
-    if (warnEl) warnEl.style.display = msLeft <= 300000 ? 'block' : 'none';
-  }, 10000);
+// ════════════════════════════════════════════════════════════
+var _sw=null;
+function startSessionWatcher(){
+  if(_sw) clearInterval(_sw);
+  _sw=setInterval(function(){
+    var s=Session.get(); if(!s.token) return;
+    var ms=new Date(s.expiresAt)-new Date();
+    var w=document.getElementById('sessionWarning');
+    if(ms<=0){ clearInterval(_sw); Session.clear(); showLoginScreen('Session expired. Please sign in again.'); return; }
+    if(w) w.style.display=ms<=300000?'block':'none';
+  },10000);
 }
 
-// ═══════════════════════════════════════════════════
-// AUTHENTICATED API CALL
-// ═══════════════════════════════════════════════════
-function callAPI(action, extraPayload, timeoutMs) {
-  if (!Session.isValid()) {
-    Session.clear();
-    showLoginScreen('Your session has expired. Please sign in again.');
-    return Promise.reject('session_expired');
-  }
-  var session = Session.get();
-  var payload = {};
-  if (extraPayload) {
-    for (var k in extraPayload) { if (extraPayload.hasOwnProperty(k)) payload[k] = extraPayload[k]; }
-  }
-  payload.action  = action;
-  payload.user_id = session.userId;
-  payload.token   = session.token;
-
-  return postToGAS(payload, timeoutMs || 30000).then(function(data) {
-    if (data.code === 'SESSION_EXPIRED' || data.code === 'MISSING_TOKEN') {
-      Session.clear();
-      showLoginScreen('Your session has expired. Please sign in again.');
-      throw 'session_expired';
-    }
-    if (data.code === 'SERVICE_UNAVAILABLE') throw 'service_unavailable';
-    if (data.code === 'RATE_LIMITED')        throw 'rate_limited';
-    return data;
+// ════════════════════════════════════════════════════════════
+// AUTHENTICATED API
+// ════════════════════════════════════════════════════════════
+function callAPI(action,extra,ms){
+  if(!Session.isValid()){ Session.clear(); showLoginScreen('Session expired. Please sign in again.'); return Promise.reject('session_expired'); }
+  var s=Session.get(), p={};
+  if(extra) for(var k in extra){ if(extra.hasOwnProperty(k)) p[k]=extra[k]; }
+  p.action=action; p.user_id=s.userId; p.token=s.token;
+  return postToGAS(p,ms||30000).then(function(d){
+    if(d.code==='SESSION_EXPIRED'||d.code==='MISSING_TOKEN'){ Session.clear(); showLoginScreen('Session expired.'); throw 'session_expired'; }
+    return d;
   });
 }
 
-// ═══════════════════════════════════════════════════
-// POST TRANSPORT
-// ═══════════════════════════════════════════════════
-function postToGAS(payload, timeoutMs) {
-  return new Promise(function(resolve, reject) {
-    var controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
-    var timer = setTimeout(function() {
-      if (controller) controller.abort();
-      reject('timeout');
-    }, timeoutMs || 30000);
-
-    fetch(GAS_URL, {
-      method:   'POST',
-      redirect: 'follow',
-      headers:  { 'Content-Type': 'text/plain;charset=utf-8' },
-      body:     JSON.stringify(payload),
-      signal:   controller ? controller.signal : undefined
-    })
-    .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-    .then(function(data) { clearTimeout(timer); resolve(data); })
-    .catch(function(err) {
-      clearTimeout(timer);
-      reject((err && err.name === 'AbortError') ? 'timeout' : 'network');
-    });
+function postToGAS(payload,ms){
+  return new Promise(function(res,rej){
+    var ctrl=(typeof AbortController!=='undefined')?new AbortController():null;
+    var t=setTimeout(function(){ if(ctrl)ctrl.abort(); rej('timeout'); },ms||30000);
+    fetch(GAS_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),signal:ctrl?ctrl.signal:undefined})
+    .then(function(r){ if(!r.ok)throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(d){ clearTimeout(t); res(d); })
+    .catch(function(e){ clearTimeout(t); rej((e&&e.name==='AbortError')?'timeout':'network'); });
   });
 }
 
-// ═══════════════════════════════════════════════════
-// PAGE INIT
-// ═══════════════════════════════════════════════════
-document.addEventListener('DOMContentLoaded', function() {
-  var pinEl = document.getElementById('login_pin');
-  if (pinEl) pinEl.addEventListener('keydown', function(e) { if (e.key === 'Enter') handleLogin(); });
-  var emailEl = document.getElementById('login_email');
-  if (emailEl) emailEl.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') { var p = document.getElementById('login_pin'); if (p) p.focus(); }
-  });
-  if (Session.isValid()) { showMainApp(); } else { Session.clear(); showLoginScreen(); }
+// ════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',function(){
+  var pe=document.getElementById('login_pin'); if(pe) pe.addEventListener('keydown',function(e){if(e.key==='Enter')handleLogin();});
+  var ee=document.getElementById('login_email'); if(ee) ee.addEventListener('keydown',function(e){if(e.key==='Enter'){var p=document.getElementById('login_pin');if(p)p.focus();}});
+  if(Session.isValid()) showMainApp(); else{ Session.clear(); showLoginScreen(); }
   initSelectedTiles();
   updatePreview();
 });
 
-// ═══════════════════════════════════════════════════
-// LOADING ANIMATOR
-// ═══════════════════════════════════════════════════
-var STAGES = [
-  'Loading clinical profiles...', 'Running 6-domain scoring...',
-  'Querying PRODUCT_CATALOG_DB...', 'Applying safety vetoes...',
-  'Applying tier multipliers...', 'Calculating confidence tiers...',
-  'Running Diagnostic Gap Engine...', 'Writing TWIN_STATE + SNAPSHOTS...',
-  'Generating coach message...'
-];
-var _stageIdx = 0, _stageTimer = null;
-function startStages() {
-  _stageIdx = 0;
-  document.getElementById('loadingStage').textContent = STAGES[0];
-  document.getElementById('loadingBar').style.width   = '5%';
-  _stageTimer = setInterval(function() {
-    _stageIdx = (_stageIdx + 1) % STAGES.length;
-    document.getElementById('loadingStage').textContent = STAGES[_stageIdx];
-    document.getElementById('loadingBar').style.width   = Math.round((_stageIdx / STAGES.length) * 90 + 5) + '%';
-  }, 700);
-}
-function stopStages() {
-  clearInterval(_stageTimer);
-  document.getElementById('loadingBar').style.width = '100%';
-}
+// ════════════════════════════════════════════════════════════
+// LOADING STAGES
+// ════════════════════════════════════════════════════════════
+var STAGES=['Running Preliminary Assessment Engine...','Scanning for red flags...','Building Provisional Biological Understanding...','Running 6-domain scoring...','Applying climate + TCM calibration...','Classifying functional pattern...','Querying PRODUCT_CATALOG_DB...','Applying safety vetoes...','Assembling protocol...','Writing TWIN_STATE...','Generating biological narrative...'];
+var _si=0,_st=null;
+function startStages(){ _si=0; document.getElementById('loadingStage').textContent=STAGES[0]; document.getElementById('loadingBar').style.width='5%'; _st=setInterval(function(){ _si=(_si+1)%STAGES.length; document.getElementById('loadingStage').textContent=STAGES[_si]; document.getElementById('loadingBar').style.width=Math.round((_si/STAGES.length)*90+5)+'%'; },700); }
+function stopStages(){ clearInterval(_st); document.getElementById('loadingBar').style.width='100%'; }
 
-// ═══════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
 // UI HELPERS
-// ═══════════════════════════════════════════════════
-function markSelected(el, groupId) {
-  var group = document.getElementById(groupId);
-  if (!group) return;
-  var items = group.querySelectorAll('.radio-opt, .tile-opt');
-  for (var i = 0; i < items.length; i++) items[i].classList.remove('selected');
+// ════════════════════════════════════════════════════════════
+function markSelected(el,gid){
+  var g=document.getElementById(gid); if(!g) return;
+  var items=g.querySelectorAll('.radio-opt,.tile-opt');
+  for(var i=0;i<items.length;i++) items[i].classList.remove('selected');
   el.classList.add('selected');
 }
-function markCheckSelected(el) {
-  setTimeout(function() {
-    var cb = el.querySelector('input[type="checkbox"]');
-    if (cb) el.classList.toggle('selected', cb.checked);
-  }, 0);
+function toggleSignal(el){
+  setTimeout(function(){
+    var cb=el.querySelector('input[type="checkbox"]');
+    if(cb) el.classList.toggle('selected',cb.checked);
+  },0);
 }
-function initSelectedTiles() {
-  var checked = document.querySelectorAll('input[type="radio"]:checked');
-  for (var i = 0; i < checked.length; i++) {
-    var lbl = checked[i].closest('.radio-opt, .tile-opt');
-    if (lbl) lbl.classList.add('selected');
-  }
+function initSelectedTiles(){
+  var checked=document.querySelectorAll('input[type="radio"]:checked');
+  for(var i=0;i<checked.length;i++){ var l=checked[i].closest('.radio-opt,.tile-opt'); if(l)l.classList.add('selected'); }
 }
-function switchTab(tab) {
-  document.getElementById('assessTab').style.display  = tab === 'assess'  ? 'block' : 'none';
-  document.getElementById('checkinTab').style.display = tab === 'checkin' ? 'block' : 'none';
-  document.getElementById('tab_assess').classList.toggle('active',  tab === 'assess');
-  document.getElementById('tab_checkin').classList.toggle('active', tab === 'checkin');
+function switchTab(t){
+  document.getElementById('assessTab').style.display  = t==='assess' ?'block':'none';
+  document.getElementById('checkinTab').style.display = t==='checkin'?'block':'none';
+  document.getElementById('tab_assess').classList.toggle('active',  t==='assess');
+  document.getElementById('tab_checkin').classList.toggle('active', t==='checkin');
 }
-function esc(str) {
-  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function toggleMedEntry(show){
+  document.getElementById('medEntryPanel').style.display=show?'block':'none';
+  document.getElementById('noMedNote').style.display    =show?'none':'block';
 }
 
-// ═══════════════════════════════════════════════════
-// PHASE WIZARD
-// ═══════════════════════════════════════════════════
-var currentPhase = 1;
-function goPhase(n) {
-  if (n > currentPhase && !validatePhase(currentPhase)) return;
-  for (var i = 1; i <= 4; i++) {
-    var p = document.getElementById('phase' + i);
-    if (p) p.classList.toggle('active', i === n);
-    var s = document.getElementById('pstep_' + i);
-    if (!s) continue;
-    s.classList.remove('active', 'done');
-    if (i < n) s.classList.add('done');
-    if (i === n) s.classList.add('active');
+// ════════════════════════════════════════════════════════════
+// PHASE WIZARD — 6 phases
+// ════════════════════════════════════════════════════════════
+var currentPhase=1;
+function goPhase(n){
+  if(n>currentPhase&&!validatePhase(currentPhase)) return;
+  for(var i=1;i<=6;i++){
+    var p=document.getElementById('phase'+i); if(p) p.classList.toggle('active',i===n);
+    var s=document.getElementById('pstep_'+i); if(!s) continue;
+    s.classList.remove('active','done');
+    if(i<n) s.classList.add('done');
+    if(i===n) s.classList.add('active');
   }
-  if (n === 2) {
-    var sx = document.querySelector('input[name="sex"]:checked');
-    var mf = document.getElementById('field_menopause');
-    if (mf) mf.style.display = (sx && sx.value === 'Female') ? 'flex' : 'none';
+  if(n===2){
+    var sx=document.querySelector('input[name="sex"]:checked');
+    var mf=document.getElementById('field_menopause');
+    if(mf) mf.style.display=(sx&&sx.value==='Female')?'flex':'none';
   }
-  currentPhase = n;
-  var fc = document.getElementById('formCard');
-  if (fc) fc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  currentPhase=n;
+  var fc=document.getElementById('formCard'); if(fc) fc.scrollIntoView({behavior:'smooth',block:'start'});
 }
-function validatePhase(n) {
-  if (n === 1) {
-    var age = parseInt(document.getElementById('a_age').value) || 0;
-    if (age < 18 || age > 100) {
-      document.getElementById('a_age').classList.add('error');
-      document.getElementById('a_age').focus(); return false;
-    }
+function validatePhase(n){
+  if(n===1){
+    var age=parseInt(document.getElementById('a_age').value)||0;
+    if(age<18||age>100){ document.getElementById('a_age').classList.add('error'); document.getElementById('a_age').focus(); return false; }
     document.getElementById('a_age').classList.remove('error');
   }
   return true;
 }
-document.querySelectorAll('input[name="sex"]').forEach(function(r) {
-  r.addEventListener('change', function() {
-    if (currentPhase === 2) {
-      var mf = document.getElementById('field_menopause');
-      if (mf) mf.style.display = this.value === 'Female' ? 'flex' : 'none';
-    }
+document.querySelectorAll('input[name="sex"]').forEach(function(r){
+  r.addEventListener('change',function(){
+    if(currentPhase===2){ var mf=document.getElementById('field_menopause'); if(mf) mf.style.display=this.value==='Female'?'flex':'none'; }
   });
 });
-function updateSliderLabels() {
-  var e = document.getElementById('a_energy');
-  var s = document.getElementById('a_sleep_q');
-  var st = document.getElementById('a_stress');
-  if (e)  document.getElementById('lbl_energy_a').textContent = e.value  + ' / 10';
-  if (s)  document.getElementById('lbl_sleep_a').textContent  = s.value  + ' / 10';
-  if (st) document.getElementById('lbl_stress_a').textContent = st.value + ' / 10';
+function updateSliderLabels(){
+  var e=document.getElementById('a_energy'),s=document.getElementById('a_sleep_q'),st=document.getElementById('a_stress');
+  if(e)  document.getElementById('lbl_energy_a').textContent=e.value+' / 10';
+  if(s)  document.getElementById('lbl_sleep_a').textContent=s.value+' / 10';
+  if(st) document.getElementById('lbl_stress_a').textContent=st.value+' / 10';
 }
 
-// ═══════════════════════════════════════════════════
-// ASSESSMENT ENGINE CALL
-// ═══════════════════════════════════════════════════
-function runAssessment() {
-  if (!Session.isValid()) { showLoginScreen('Session expired. Please sign in.'); return; }
-  var session = Session.get();
-  var email   = session.userId;
+// ════════════════════════════════════════════════════════════
+// RUN ASSESSMENT
+// ════════════════════════════════════════════════════════════
+function runAssessment(){
+  if(!Session.isValid()){ showLoginScreen('Session expired. Please sign in.'); return; }
+  var session=Session.get();
 
-  var sexInput     = document.querySelector('input[name="sex"]:checked');
-  var smokingInput = document.querySelector('input[name="smoking"]:checked');
-  var dietInput    = document.querySelector('input[name="diet"]:checked');
-  var exInput      = document.querySelector('input[name="exercise"]:checked');
-  var sleepInput   = document.querySelector('input[name="sleep_hrs"]:checked');
-  var alcInput     = document.querySelector('input[name="alcohol"]:checked');
+  var sexI     =document.querySelector('input[name="sex"]:checked');
+  var smokingI =document.querySelector('input[name="smoking"]:checked');
+  var dietI    =document.querySelector('input[name="diet"]:checked');
+  var exI      =document.querySelector('input[name="exercise"]:checked');
+  var sleepI   =document.querySelector('input[name="sleep_hrs"]:checked');
+  var alcI     =document.querySelector('input[name="alcohol"]:checked');
+  var countryI =document.querySelector('input[name="country"]:checked');
+  var sunI     =document.querySelector('input[name="sun_exposure"]:checked');
+  var workI    =document.querySelector('input[name="work_env"]:checked');
+  var hasMedsI =document.querySelector('input[name="has_meds"]:checked');
+  var medsTA   =document.getElementById('a_medications');
+  var sympTA   =document.getElementById('a_symptoms');
 
-  var q10 = [];
-  var condMap = [
+  var q10=[];
+  var condMap=[
     ['sym_diabetes','Diabetes Type 2'],['sym_bp','Hypertension'],
     ['sym_chol','High Cholesterol'],['sym_obesity','Obesity / Weight Management'],
     ['sym_brain','Brain Fog'],['sym_anxiety','Anxiety / Chronic Stress'],
     ['sym_joints','Joint Pain / Arthritis'],['sym_gut','IBS / Digestive Issues'],
-    ['sym_hormone','Hormonal Imbalance / Low Libido'],['sym_menopause','Menopause']
+    ['sym_hormone','Hormonal Imbalance / Low Libido'],['sym_menopause','Menopause'],
+    ['sym_thyroid','Thyroid / Hypothyroid'],['sym_copd','COPD / Asthma']
   ];
-  condMap.forEach(function(pair) {
-    var el = document.getElementById(pair[0]);
-    if (el && el.checked) q10.push(pair[1]);
-  });
+  condMap.forEach(function(pair){ var el=document.getElementById(pair[0]); if(el&&el.checked) q10.push(pair[1]); });
 
-  var enginePayload = {
-    email: email,
-    name:  document.getElementById('a_name').value.trim(),
+  var payload={
+    email:   session.userId,
+    name:    document.getElementById('a_name').value.trim(),
+    // Phase 1
     'Q-001': document.getElementById('a_age').value,
-    'Q-002': sexInput     ? sexInput.value     : 'Male',
-    'Q-003': smokingInput ? smokingInput.value : 'Never',
-    'Q-010': q10.join('; '),
+    'Q-002': sexI     ? sexI.value     : 'Male',
+    'Q-003': smokingI ? smokingI.value : 'Never',
     'Q-019': document.getElementById('a_height').value,
     'Q-021': document.getElementById('a_weight').value,
-    'Q-006': dietInput  ? dietInput.value  : 'Balanced',
-    'Q-exercise':   exInput    ? exInput.value    : '1–2x / week',
-    'Q-sleep-hrs':  sleepInput ? sleepInput.value : '7–8h',
-    'Q-alcohol':    alcInput   ? alcInput.value   : 'None',
+    // Phase 2
+    'Q-010': q10.join('; '),
+    // Phase 3 — FIXED: Q-006=sleep, Q-007=diet
+    'Q-006': sleepI ? sleepI.value : '7–8h',
+    'Q-007': dietI  ? dietI.value  : 'Balanced',
+    'Q-exercise': exI  ? exI.value  : '1–2x / week',
+    'Q-alcohol':  alcI ? alcI.value : 'None',
+    // Phase 4
+    'Q-country':  countryI ? countryI.value : 'AE',
+    'Q-sun':      sunI     ? sunI.value     : 'Minimal',
+    'Q-work-env': workI    ? workI.value    : 'Office',
+    // Phase 5
+    'Q-has-meds':    hasMedsI ? hasMedsI.value : 'No',
+    'Q-medications': (hasMedsI&&hasMedsI.value==='Yes'&&medsTA) ? medsTA.value.trim() : '',
+    // Phase 6
     'Q-023':        document.getElementById('a_energy').value,
     'Q-sleep-qual': document.getElementById('a_sleep_q').value,
-    'Q-stress':     document.getElementById('a_stress').value
+    'Q-stress':     document.getElementById('a_stress').value,
+    'Q-symptoms':   sympTA ? sympTA.value.trim() : ''
   };
 
-  document.getElementById('formCard').style.display      = 'none';
+  document.getElementById('formCard').style.display       = 'none';
   document.getElementById('loadingOverlay').style.display = 'block';
   startStages();
 
-  callAPI('run_engine', enginePayload, 35000)
-  .then(function(data) {
+  callAPI('run_engine',payload,40000)
+  .then(function(data){
     stopStages();
-    document.getElementById('loadingOverlay').style.display = 'none';
-    if (data.status === 'success' && data.output) {
-      renderDashboard(data.output);
-    } else {
-      document.getElementById('formCard').style.display = 'block';
-      showErrorPanel(data.code || 'engine_error', 'assess');
-    }
+    document.getElementById('loadingOverlay').style.display='none';
+    if(data.status==='success'&&data.output){ renderDashboard(data.output); }
+    else{ document.getElementById('formCard').style.display='block'; showErrorPanel(data.code||'engine_error'); }
   })
-  .catch(function(err) {
+  .catch(function(err){
     stopStages();
-    document.getElementById('loadingOverlay').style.display = 'none';
-    if (err !== 'session_expired') {
-      document.getElementById('formCard').style.display = 'block';
-      showErrorPanel(err, 'assess');
-    }
+    document.getElementById('loadingOverlay').style.display='none';
+    if(err!=='session_expired'){ document.getElementById('formCard').style.display='block'; showErrorPanel(err); }
   });
 }
 
-// ═══════════════════════════════════════════════════
-// MICRO CHECK-IN CALL
-// ═══════════════════════════════════════════════════
-function runCheckin() {
-  if (!Session.isValid()) { showLoginScreen('Session expired. Please sign in.'); return; }
-  var session = Session.get();
-  var adherence100 = parseInt(document.getElementById('ci_adherence').value) * 10;
+// ════════════════════════════════════════════════════════════
+// RENDER DASHBOARD
+// ════════════════════════════════════════════════════════════
+function renderDashboard(twin){
+  document.getElementById('dashboard').style.display='block';
 
-  var ciPayload = {
-    email:         session.userId,
-    adherence:     adherence100,
-    energy_score:  document.getElementById('ci_energy').value,
-    sleep_quality: document.getElementById('ci_sleep').value,
-    stress_level:  document.getElementById('ci_stress').value,
-    age: 35, 'Q-002': 'Unknown', 'Q-010': ''
-  };
+  // Hide all special cards first
+  document.getElementById('paeUrgentCard').style.display='none';
+  document.getElementById('paeHoldCard').style.display='none';
+  document.getElementById('pbuCard').style.display='none';
+  document.getElementById('tcmCard').style.display='none';
 
-  document.getElementById('checkinBtn').style.display = 'none';
-  document.getElementById('ci_loading').style.display = 'block';
-  document.getElementById('ci_result').style.display  = 'none';
+  var dec = twin.paeDecision || 'GENERATE_NOW';
 
-  callAPI('checkin', ciPayload, 20000)
-  .then(function(data) {
-    document.getElementById('ci_loading').style.display = 'none';
-    document.getElementById('checkinBtn').style.display = 'block';
-    if (data.status === 'success' && data.output) {
-      var out      = data.output;
-      var resp     = parseFloat(out.responsiveness) || 1.0;
-      var respLabel = respToLabel(resp).label;
-      document.getElementById('ci_result_body').innerHTML =
-        '<strong>Cycle ' + (out.cycleNumber || '—') + ' complete.</strong><br><br>' +
-        'Your Twin recalibrated with <strong>' + respLabel + '</strong> responsiveness (' + resp.toFixed(1) + 'x).<br><br>' +
-        'Updated trajectory: <strong>' + esc(out.lifecycle || '—') + '</strong><br>' +
-        '90-day projection: <strong>' + (out.projection90d || '—') + '/100</strong><br>' +
-        'Momentum: <strong>' + (out.momentum >= 0 ? '+' : '') + (out.momentum || 0) + '</strong><br><br>' +
-        '<em>' + esc(out.coachMessage || '') + '</em>';
-      document.getElementById('ci_result').style.display = 'block';
-    } else {
-      showErrorPanel(data.code || 'engine_error', 'checkin');
-    }
-  })
-  .catch(function(err) {
-    document.getElementById('ci_loading').style.display = 'none';
-    document.getElementById('checkinBtn').style.display = 'block';
-    if (err !== 'session_expired') showErrorPanel(err, 'checkin');
-  });
-}
-
-// ═══════════════════════════════════════════════════
-// ERROR PANEL
-// ═══════════════════════════════════════════════════
-function showErrorPanel(reason, context) {
-  var old = document.getElementById('errorPanel');
-  if (old) old.remove();
-  var title = reason === 'timeout'            ? '⏱ Request timed out (35s)'  :
-              reason === 'rate_limited'        ? '⏳ Too many requests'        :
-              reason === 'service_unavailable' ? '🔧 Service offline'         :
-              reason === 'network'             ? '📡 Network error'           : '⚠️ Engine error';
-  var extraHint = reason === 'timeout'      ? '<li>Script cold start — wait 30s and retry</li>'  :
-                  reason === 'rate_limited' ? '<li>Wait 60 seconds before retrying</li>'          :
-                  reason === 'network'      ? '<li>Check internet connection</li>'                :
-                  '<li>Check Apps Script Executions log for runtime errors</li>';
-  var shortUrl = GAS_URL.length > 60 ? GAS_URL.substring(0,57) + '...' : GAS_URL;
-  var panel = document.createElement('div');
-  panel.id  = 'errorPanel';
-  panel.style.cssText = 'background:#fff0f0;border:1.5px solid #fca5a5;border-radius:14px;padding:20px 18px;margin-bottom:14px;';
-  panel.innerHTML =
-    '<div style="font-family:Syne,sans-serif;font-size:13px;font-weight:700;color:#c53030;margin-bottom:10px;">' + title + '</div>' +
-    '<ol style="font-size:12px;color:#1a2332;line-height:2;padding-left:18px;margin-bottom:14px;">' +
-      '<li>Deploy → Manage deployments → confirm Active</li>' +
-      '<li>Who has access must be <strong>Anyone</strong></li>' +
-      '<li>Execute as: must be <em>Me</em></li>' +
-      '<li>Use the <strong>/exec</strong> URL — not /dev</li>' +
-      extraHint +
-    '</ol>' +
-    '<div style="background:#f7f9f8;border:1px solid #e2e8e5;border-radius:8px;padding:9px 12px;font-family:DM Mono,monospace;font-size:10px;color:#4a5568;word-break:break-all;margin-bottom:14px;">URL: ' + esc(shortUrl) + '</div>' +
-    '<button onclick="document.getElementById(\'errorPanel\').remove();" style="width:100%;padding:12px;background:#1a3d2b;color:white;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;">Dismiss &amp; Try Again</button>';
-  var target = context === 'checkin' ? document.getElementById('checkinBtn') : document.getElementById('formCard');
-  if (target && target.parentNode) target.parentNode.insertBefore(panel, target);
-  else document.getElementById('mainApp').appendChild(panel);
-}
-
-// ═══════════════════════════════════════════════════
-// BEHAVIOUR PREVIEW
-// ═══════════════════════════════════════════════════
-function updatePreview() {
-  var adherence100 = parseInt(document.getElementById('ci_adherence').value) * 10;
-  document.getElementById('lbl_energy').textContent    = document.getElementById('ci_energy').value + ' / 10';
-  document.getElementById('lbl_sleep').textContent     = document.getElementById('ci_sleep').value  + ' / 10';
-  document.getElementById('lbl_stress').textContent    = document.getElementById('ci_stress').value + ' / 10';
-  document.getElementById('lbl_adherence').textContent = adherence100 + ' %';
-  var resp = calcResponsiveness(adherence100);
-  var info = respToLabel(resp);
-  document.getElementById('prev_resp').textContent       = resp.toFixed(1);
-  document.getElementById('prev_resp_label').textContent = info.label;
-  document.getElementById('prev_mfx').textContent        = info.mfx;
-  document.getElementById('prev_traj').textContent       = info.traj;
-  document.getElementById('prev_traj_label').textContent = info.trajLabel;
-  document.getElementById('prev_stmt').textContent       = 'If you submit today: your Twin will recalibrate with a ' + info.label + ' trajectory.';
-}
-function calcResponsiveness(a) {
-  if (a >= 90) return 1.1;
-  if (a >= 70) return 1.0;
-  if (a >= 50) return 0.8;
-  return 0.6;
-}
-function respToLabel(r) {
-  if (r >= 1.1) return { label: 'Accelerating', mfx: '↑ Compounding', traj: '↗', trajLabel: 'Improving' };
-  if (r >= 1.0) return { label: 'Neutral',      mfx: '→ Steady',      traj: '→', trajLabel: 'Stable'    };
-  if (r >= 0.8) return { label: 'Slowed',        mfx: '↓ Drag',        traj: '→', trajLabel: 'Slowing'   };
-  return               { label: 'Stagnating',   mfx: '⬇ Blocked',     traj: '↘', trajLabel: 'At Risk'   };
-}
-
-// ═══════════════════════════════════════════════════
-// RESET
-// ═══════════════════════════════════════════════════
-function resetAssessment() {
-  document.getElementById('dashboard').style.display = 'none';
-  document.getElementById('formCard').style.display  = 'block';
-  currentPhase = 1;
-  goPhase(1);
-  var ep = document.getElementById('errorPanel');
-  if (ep) ep.remove();
-}
-
-// ═══════════════════════════════════════════════════
-// DASHBOARD RENDER
-// ═══════════════════════════════════════════════════
-function renderDashboard(twin) {
-  document.getElementById('dashboard').style.display = 'block';
-  document.getElementById('disp_coach').textContent  = twin.coachMessage || '';
-
-  var evo      = (twin.evolutionStatus || 'baseline').toLowerCase();
-  var lifecycle = twin.lifecycle || '';
-  var resp     = parseFloat(twin.responsiveness) || 1.0;
-  var respInfo = respToLabel(resp);
-
-  var evoBadgeMap = {
-    baseline:  { icon: '◎', label: 'BASELINE' },
-    improving: { icon: '↑', label: 'IMPROVING' },
-    stable:    { icon: '→', label: 'STABLE'    },
-    declining: { icon: '↓', label: 'DECLINING' }
-  };
-  var badge     = evoBadgeMap[evo] || evoBadgeMap.baseline;
-  var lcClass   = lifecycle === 'Recovery Needed' ? ' recovery' : lifecycle === 'Recalibrating' ? ' recalib' : '';
-  var respClass = resp >= 1.1 ? 'accelerating' : resp >= 1.0 ? 'neutral' : resp >= 0.8 ? 'slowed' : 'stagnating';
-
-  document.getElementById('badge_row').innerHTML =
-    '<span class="evo-badge ' + evo + '">' + badge.icon + ' ' + badge.label + '</span>' +
-    (lifecycle ? '<span class="lifecycle-pill' + lcClass + '">⬡ ' + esc(lifecycle) + '</span>' : '') +
-    '<span class="resp-badge ' + respClass + '">⚡ ' + resp.toFixed(1) + 'x ' + respInfo.label + '</span>';
-
-  document.getElementById('disp_score').textContent  = twin.overallScore;
-  document.getElementById('disp_bioage').textContent = twin.biologicalAge;
-  document.getElementById('tile_score').className    = 'stat-tile ' + evo;
-  document.getElementById('tile_bioage').className   = 'stat-tile ' + evo;
-
-  var mom   = parseFloat(twin.momentum) || 0;
-  var momEl = document.getElementById('disp_momentum');
-  if (evo === 'baseline') {
-    momEl.textContent = '—';
-    document.getElementById('disp_momentum_sub').textContent = 'first run';
-  } else {
-    var arrow = mom > 3 ? '↑' : (mom < -3 ? '↓' : '→');
-    momEl.textContent = arrow + ' ' + (mom > 0 ? '+' : '') + mom;
-    momEl.style.color = mom > 3 ? 'var(--improving)' : (mom < -3 ? 'var(--declining)' : 'var(--stable)');
-    document.getElementById('tile_momentum').className = 'stat-tile ' + evo;
+  // PAE URGENT
+  if(dec==='WITHHOLD_URGENT'){
+    document.getElementById('paeUrgentCard').style.display='block';
+    document.getElementById('paeUrgentMsg').textContent = twin.patientMessage||'Please seek immediate medical attention.';
+    document.getElementById('paeRef').textContent = 'REF-'+Date.now();
+    document.getElementById('disp_coach').textContent='Your assessment flagged a symptom requiring urgent clinical attention. No supplement protocol has been generated.';
+    document.getElementById('badge_row').innerHTML='<span class="evo-badge urgent">🚨 URGENT REVIEW</span>';
+    // Show scores + radar but hide protocol
+    if(twin.scores) renderRadar(twin.scores);
+    showPBU(twin);
+    document.getElementById('protocolSection').style.display='none';
+    document.getElementById('protocolSectionPM').style.display='none';
+    return;
   }
 
-  document.getElementById('disp_cycle').textContent = 'C' + (twin.cycleNumber || 1);
-  document.getElementById('disp_proj').textContent  = (twin.projection90d || '—') + '/100';
-  document.getElementById('disp_mult').textContent  = (twin.multiplier || 1.0).toFixed(1) + 'x';
-  document.getElementById('disp_resp').textContent  = resp.toFixed(1) + 'x';
+  // PAE HOLD — Group B
+  if(dec==='HOLD_FOR_CONSULT'){
+    document.getElementById('paeHoldCard').style.display='block';
+    document.getElementById('paeHoldMsg').textContent = twin.patientMessage||'Your protocol is being reviewed. You will be notified within 48 hours.';
+    document.getElementById('disp_coach').textContent='Your protocol has been prepared and is with your clinical reviewer. Your biological assessment is shown below.';
+    document.getElementById('badge_row').innerHTML='<span class="evo-badge stable">⏳ UNDER REVIEW</span><span class="lifecycle-pill">Group B — 48h</span>';
+    if(twin.scores){ renderRadar(twin.scores); renderScoreTiles(twin); }
+    showPBU(twin); showTCM(twin);
+    document.getElementById('protocolSection').style.display='none';
+    document.getElementById('protocolSectionPM').style.display='none';
+    renderLifestyle(twin.lifestyle||[]);
+    return;
+  }
 
-  renderNarrative(evo, mom, resp, twin.projection90d, twin.overallScore);
-  if (twin.scores)   renderRadar(twin.scores);
-  if (twin.protocol) { renderStack(twin.protocol.AM, 'am_list'); renderStack(twin.protocol.PM, 'pm_list'); }
-  renderLifestyle(twin.lifestyle || []);
+  // GENERATE_NOW — full dashboard
+  document.getElementById('protocolSection').style.display='block';
+  document.getElementById('protocolSectionPM').style.display='block';
+  document.getElementById('disp_coach').textContent=twin.coachMessage||'';
+
+  var evo=(twin.evolutionStatus||'baseline').toLowerCase();
+  var lifecycle=twin.lifecycle||'';
+  var resp=parseFloat(twin.responsiveness)||1.0;
+  var ri=respToLabel(resp);
+  var evoMap={baseline:{icon:'◎',label:'BASELINE'},improving:{icon:'↑',label:'IMPROVING'},stable:{icon:'→',label:'STABLE'},declining:{icon:'↓',label:'DECLINING'}};
+  var badge=evoMap[evo]||evoMap.baseline;
+  var lcClass=lifecycle==='Recovery Needed'?' recovery':lifecycle==='Recalibrating'?' recalib':'';
+  var rClass=resp>=1.1?'accelerating':resp>=1.0?'neutral':resp>=0.8?'slowed':'stagnating';
+  document.getElementById('badge_row').innerHTML=
+    '<span class="evo-badge '+evo+'">'+badge.icon+' '+badge.label+'</span>'+
+    (lifecycle?'<span class="lifecycle-pill'+lcClass+'">⬡ '+esc(lifecycle)+'</span>':'')+
+    '<span class="resp-badge '+rClass+'">⚡ '+resp.toFixed(1)+'x '+ri.label+'</span>';
+
+  renderScoreTiles(twin);
+  renderNarrative(evo,twin.momentum||0,resp,twin.projection90d,twin.overallScore);
+  showPBU(twin);
+  showTCM(twin);
+  if(twin.scores) renderRadar(twin.scores);
+  if(twin.protocol){ renderStack(twin.protocol.AM,'am_list'); renderStack(twin.protocol.PM,'pm_list'); }
+  renderLifestyle(twin.lifestyle||[]);
   renderGapCard(twin);
 }
 
-function renderNarrative(evo, momentum, resp, proj90, score) {
-  var main = {
-    baseline:  'Your Digital Twin has been initialized. Initial biological load patterns are now mapped.',
-    improving: 'Your recent inputs indicate positive functional adaptation. Current trajectory suggests ongoing improvement.',
-    stable:    'Your system is maintaining functional stability. Future gains depend on sustained adherence.',
-    declining: 'Your recent trajectory suggests emerging biological stress. Guidance has been adjusted to stabilize progress.'
-  };
-  document.getElementById('narr_main').textContent = main[evo] || main.baseline;
-  var behText  = resp >= 1.1 ? 'High consistency is amplifying your improvement potential.' :
-                 resp >= 1.0 ? 'Your current consistency is maintaining steady progress.' :
-                 resp >= 0.8 ? 'Reduced adherence may be slowing optimization.' :
-                               'Low engagement is limiting adaptive gains.';
-  var momText  = momentum > 3  ? 'Functional gains are accelerating.'         :
-                 momentum < -3 ? 'System is entering recalibration phase.'    : 'System remains in stabilization phase.';
-  var projText = proj90 > score  ? 'Projected trajectory indicates forward improvement.' :
-                 proj90 === score ? 'Projected trajectory remains stable.'               : 'Projected trajectory suggests intervention may be required.';
-  document.getElementById('narr_sub').innerHTML =
-    '<span>⚡ ' + behText + '</span><span>📈 ' + momText + '</span><span>🎯 ' + projText + '</span>';
+function renderScoreTiles(twin){
+  var evo=(twin.evolutionStatus||'baseline').toLowerCase();
+  document.getElementById('disp_score').textContent  = twin.overallScore||'—';
+  document.getElementById('disp_bioage').textContent = twin.biologicalAge||'—';
+  document.getElementById('tile_score').className    = 'stat-tile '+evo;
+  document.getElementById('tile_bioage').className   = 'stat-tile '+evo;
+  var mom=parseFloat(twin.momentum)||0;
+  var momEl=document.getElementById('disp_momentum');
+  if(evo==='baseline'){ momEl.textContent='—'; document.getElementById('disp_momentum_sub').textContent='first run'; }
+  else{ var arr=mom>3?'↑':(mom<-3?'↓':'→'); momEl.textContent=arr+' '+(mom>0?'+':'')+mom; momEl.style.color=mom>3?'var(--improving)':(mom<-3?'var(--declining)':'var(--stable)'); document.getElementById('tile_momentum').className='stat-tile '+evo; }
+  document.getElementById('disp_cycle').textContent='C'+(twin.cycleNumber||1);
+  document.getElementById('disp_proj').textContent=(twin.projection90d||'—')+'/100';
+  document.getElementById('disp_mult').textContent=(twin.multiplier||1.0).toFixed(1)+'x';
+  document.getElementById('disp_resp').textContent=(parseFloat(twin.responsiveness)||1.0).toFixed(1)+'x';
 }
 
-function renderRadar(scores) {
-  var ctx = document.getElementById('twinRadar').getContext('2d');
-  new Chart(ctx, {
-    type: 'radar',
-    data: {
-      labels: ['Metabolic', 'Cardio', 'Cognitive', 'Joints', 'Gut', 'Hormonal'],
-      datasets: [{
-        label: 'Domain Load',
-        data: [scores.metabolic, scores.cardio, scores.cognitive, scores.joints, scores.gut, scores.hormonal],
-        backgroundColor: 'rgba(46,125,79,0.13)', borderColor: '#2e7d4f',
-        pointBackgroundColor: '#2e7d4f', pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff', pointHoverBorderColor: '#2e7d4f',
-        borderWidth: 2, pointRadius: 4
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        r: {
-          min: 0, max: 100,
-          ticks: { display: false, stepSize: 25 },
-          grid: { color: 'rgba(0,0,0,0.06)' },
-          pointLabels: { font: { family: 'Outfit', size: 11, weight: '600' }, color: '#4a5568' }
-        }
-      },
-      plugins: { legend: { display: false } }
-    }
-  });
+function showPBU(twin){
+  if(twin.pbuNarrative){
+    document.getElementById('pbuCard').style.display='block';
+    document.getElementById('disp_pbu').textContent=twin.pbuNarrative;
+    var conf=twin.paeConfidence||72;
+    document.getElementById('disp_confidence_pct').textContent=conf;
+    document.getElementById('pbuConfFill').style.width=conf+'%';
+  }
 }
 
-function renderStack(list, containerId) {
-  var el = document.getElementById(containerId);
-  if (!list || list.length === 0) { el.innerHTML = '<div class="empty-stack">No items for this time block.</div>'; return; }
-  el.innerHTML = list.map(function(item) {
-    var doseParts = [item.dose || ''];
-    if (item.final_dose_mg) doseParts.push(item.final_dose_mg + 'mg');
-    return '<div class="supp-card">' +
-      '<div class="supp-top"><span class="supp-name">' + esc(item.name) + '</span>' +
-      '<span class="supp-dose-tag">' + esc(doseParts.join(' · ')) + '</span></div>' +
-      (item.hero ? '<span class="supp-hero">&ldquo;' + esc(item.hero) + '&rdquo;</span>' : '') +
-      (item.ingredients ? '<span class="supp-ing">🧪 ' + esc(item.ingredients) + '</span>' : '') +
-      '<details class="clinical-details"><summary>Clinical rationale</summary>' +
-      '<div class="clinical-body">' +
-      (item.why  ? '<div class="clinical-row"><strong>Mechanism:</strong> ' + esc(item.why) + '</div>' : '') +
-      (item.safety ? '<div class="clinical-row warn"><strong>Safety note:</strong> ' + esc(item.safety) + '</div>' : '') +
-      (item.contraindications && item.contraindications !== 'None' ? '<div class="clinical-row warn"><strong>Contraindications:</strong> ' + esc(item.contraindications) + '</div>' : '') +
-      '</div></details></div>';
+function showTCM(twin){
+  if(twin.tcmPattern){
+    document.getElementById('tcmCard').style.display='block';
+    document.getElementById('disp_tcm_label').textContent=twin.tcmPattern.label||'';
+    document.getElementById('disp_tcm_narrative').textContent=twin.tcmPattern.narrative||'';
+    document.getElementById('disp_tcm_climate').textContent=twin.climateNarrative||'';
+  }
+}
+
+function renderNarrative(evo,mom,resp,proj,score){
+  var main={baseline:'Your Bio-OS has been initialised. Your biological load map and TCM pattern are now active.',improving:'Your biological patterns are showing positive adaptive response. Current trajectory indicates sustained improvement.',stable:'Your system is maintaining functional stability. Sustained adherence over this cycle will build forward momentum.',declining:'Your system has detected emerging biological stress. Your protocol has been recalibrated to stabilise your trajectory.'};
+  document.getElementById('narr_main').textContent=main[evo]||main.baseline;
+  var bt=resp>=1.1?'High consistency is amplifying your improvement potential.':resp>=1.0?'Your consistency is maintaining steady progress.':resp>=0.8?'Reduced adherence is slowing optimisation.':'Low engagement is limiting adaptive gains.';
+  var mt=mom>3?'Functional gains are accelerating.':mom<-3?'System entering recalibration phase.':'System remains in stabilisation phase.';
+  var pt=proj>score?'Projected trajectory indicates forward improvement.':proj===score?'Projected trajectory is stable.':'Intervention may be required to maintain trajectory.';
+  document.getElementById('narr_sub').innerHTML='<span>⚡ '+bt+'</span><span>📈 '+mt+'</span><span>🎯 '+pt+'</span>';
+}
+
+var _radarChart=null;
+function renderRadar(scores){
+  var ctx=document.getElementById('twinRadar').getContext('2d');
+  if(_radarChart){ _radarChart.destroy(); }
+  _radarChart=new Chart(ctx,{type:'radar',data:{labels:['Metabolic','Cardio','Cognitive','Joints','Gut','Hormonal'],datasets:[{label:'Domain Load',data:[scores.metabolic,scores.cardio,scores.cognitive,scores.joints,scores.gut,scores.hormonal],backgroundColor:'rgba(46,125,79,0.13)',borderColor:'#2e7d4f',pointBackgroundColor:'#2e7d4f',pointBorderColor:'#fff',borderWidth:2,pointRadius:4}]},options:{responsive:true,scales:{r:{min:0,max:100,ticks:{display:false},grid:{color:'rgba(0,0,0,0.06)'},pointLabels:{font:{family:'Outfit',size:11,weight:'600'},color:'#4a5568'}}},plugins:{legend:{display:false}}}});
+}
+
+function renderStack(list,cid){
+  var el=document.getElementById(cid);
+  if(!list||list.length===0){ el.innerHTML='<div class="empty-stack">No items for this time block.</div>'; return; }
+  el.innerHTML=list.map(function(item){
+    var dp=[item.dose||'']; if(item.final_dose_mg) dp.push(item.final_dose_mg+'mg');
+    return '<div class="supp-card"><div class="supp-top"><span class="supp-name">'+esc(item.name)+'</span><span class="supp-dose-tag">'+esc(dp.join(' · '))+'</span></div>'+(item.hero?'<span class="supp-hero">&ldquo;'+esc(item.hero)+'&rdquo;</span>':'')+(item.ingredients?'<span class="supp-ing">🧪 '+esc(item.ingredients)+'</span>':'')+'<details class="clinical-details"><summary>Clinical rationale</summary><div class="clinical-body">'+(item.why?'<div class="clinical-row"><strong>Mechanism:</strong> '+esc(item.why)+'</div>':'')+(item.safety?'<div class="clinical-row warn"><strong>Safety note:</strong> '+esc(item.safety)+'</div>':'')+(item.contraindications&&item.contraindications!=='None'?'<div class="clinical-row warn"><strong>Contraindications:</strong> '+esc(item.contraindications)+'</div>':'')+'</div></details></div>';
   }).join('');
 }
 
-function renderLifestyle(list) {
-  var el = document.getElementById('life_list');
-  if (!list || list.length === 0) { el.innerHTML = ''; return; }
-  el.innerHTML = list.map(function(l) {
-    return '<div class="life-card"><span class="life-cat">' + esc(l.category || '') + '</span>' +
-      '<div class="life-title">' + esc(l.title || '') + '</div>' +
-      '<div class="life-text">'  + esc(l.text  || '') + '</div></div>';
-  }).join('');
+function renderLifestyle(list){
+  var el=document.getElementById('life_list');
+  if(!list||list.length===0){ el.innerHTML=''; return; }
+  el.innerHTML=list.map(function(l){ return '<div class="life-card"><span class="life-cat">'+esc(l.category||'')+'</span><div class="life-title">'+esc(l.title||'')+'</div><div class="life-text">'+esc(l.text||'')+'</div></div>'; }).join('');
 }
 
-// ═══════════════════════════════════════════════════
 // GAP CARD
-// ═══════════════════════════════════════════════════
-function toggleGapCard() {
-  var body = document.getElementById('gapCardBody');
-  var icon = document.getElementById('gapToggleIcon');
-  var hdr  = document.getElementById('gapCardHeader');
-  var open = body.classList.contains('open');
-  body.classList.toggle('open', !open);
-  hdr.classList.toggle('has-body', !open);
-  icon.textContent = open ? '▼ Show' : '▲ Hide';
+function toggleGapCard(){
+  var b=document.getElementById('gapCardBody'),ic=document.getElementById('gapToggleIcon'),h=document.getElementById('gapCardHeader'),open=b.classList.contains('open');
+  b.classList.toggle('open',!open); h.classList.toggle('has-body',!open); ic.textContent=open?'▼ Show':'▲ Hide';
 }
-function renderGapCard(twin) {
-  var gaps = twin.gaps || [];
-  var recs = twin.testRecommendations || [];
-  var card = document.getElementById('gapCard');
-  if (gaps.length === 0) { card.style.display = 'none'; return; }
-  card.style.display = 'block';
-  var p1Count = twin.p1GapCount || 0;
-  document.getElementById('gapCountBadge').textContent = gaps.length + (gaps.length === 1 ? ' test recommended' : ' tests recommended');
-  var depthEl = document.getElementById('depthMessage');
-  if (p1Count > 0) {
-    depthEl.innerHTML = '<strong>Your protocol is running at reduced depth.</strong> ' + p1Count + (p1Count === 1 ? ' priority test' : ' priority tests') + ' would unlock full clinical calibration.';
-  } else {
-    depthEl.innerHTML = '<strong>Your protocol can be sharpened.</strong> The tests below would confirm domains currently based on lifestyle signals only.';
-  }
-  if (p1Count > 0) {
-    document.getElementById('gapCardBody').classList.add('open');
-    document.getElementById('gapCardHeader').classList.add('has-body');
-    document.getElementById('gapToggleIcon').textContent = '▲ Hide';
-  }
-  var listEl = document.getElementById('testRecList');
-  if (recs.length > 0) {
-    listEl.innerHTML = recs.map(renderTestRecCard).join('');
-  } else {
-    listEl.innerHTML = gaps.map(renderGapFallback).join('');
-  }
-}
-function renderTestRecCard(rec) {
-  var pillClass = (rec.priority || 'P3').toLowerCase();
-  var pillLabel = rec.priority === 'P1' ? rec.priority + ' — Required' : rec.priority === 'P2' ? rec.priority + ' — Recommended' : rec.priority + ' — Optional';
-  return '<div class="test-rec-card">' +
-    '<div class="test-rec-top"><span class="test-rec-name">' + esc(rec.panel_name) + '</span><span class="priority-pill ' + pillClass + '">' + pillLabel + '</span></div>' +
-    (rec.biomarkers ? '<div class="test-rec-biomarkers">🧪 ' + esc(rec.biomarkers) + '</div>' : '') +
-    '<div class="test-rec-reason">' + esc(rec.reason) + '</div>' +
-    '<div class="test-rec-meta">' + (rec.estimated_cost ? '<span class="test-meta-tag">💰 AED ' + esc(rec.estimated_cost) + '</span>' : '') + '<span class="test-meta-tag">📍 ' + esc(rec.domain) + ' domain</span></div>' +
-    (rec.how_to_get_tested ? '<div class="test-rec-how">📋 <strong>How to get tested:</strong> ' + esc(rec.how_to_get_tested) + '</div>' : '') + '</div>';
-}
-function renderGapFallback(gap) {
-  var pillClass  = (gap.priority || 'P3').toLowerCase();
-  var domainLabel = (gap.domain || '').charAt(0).toUpperCase() + (gap.domain || '').slice(1);
-  return '<div class="test-rec-card"><div class="test-rec-top"><span class="test-rec-name">' + esc(domainLabel) + ' Panel</span><span class="priority-pill ' + pillClass + '">' + esc(gap.priority) + '</span></div><div class="test-rec-reason">' + esc(gap.reason) + '</div><div class="test-rec-meta"><span class="test-meta-tag">📍 ' + esc(gap.domain) + ' domain</span></div></div>';
+function renderGapCard(twin){
+  var gaps=twin.gaps||[],recs=twin.testRecommendations||[],card=document.getElementById('gapCard');
+  if(gaps.length===0){ card.style.display='none'; return; }
+  card.style.display='block';
+  document.getElementById('gapCountBadge').textContent=gaps.length+(gaps.length===1?' test':' tests');
+  var p1=twin.p1GapCount||0;
+  document.getElementById('depthMessage').innerHTML=p1>0?'<strong>Protocol running at reduced depth.</strong> '+p1+' priority test'+(p1>1?'s':'')+' would unlock full clinical calibration.':'<strong>Your protocol can be sharpened.</strong> The tests below would confirm domains currently estimated from lifestyle signals.';
+  if(p1>0){ document.getElementById('gapCardBody').classList.add('open'); document.getElementById('gapCardHeader').classList.add('has-body'); document.getElementById('gapToggleIcon').textContent='▲ Hide'; }
+  document.getElementById('testRecList').innerHTML=(recs.length>0?recs:gaps).map(function(r){
+    if(r.panel_name){
+      var pc=(r.priority||'P3').toLowerCase();
+      return '<div class="test-rec-card"><div class="test-rec-top"><span class="test-rec-name">'+esc(r.panel_name)+'</span><span class="priority-pill '+pc+'">'+esc(r.priority)+'</span></div>'+(r.biomarkers?'<div class="test-rec-biomarkers">🧪 '+esc(r.biomarkers)+'</div>':'')+'<div class="test-rec-reason">'+esc(r.reason)+'</div><div class="test-rec-meta">'+(r.estimated_cost?'<span class="test-meta-tag">💰 AED '+esc(r.estimated_cost)+'</span>':'')+'<span class="test-meta-tag">📍 '+esc(r.domain)+'</span></div>'+(r.how_to_get_tested?'<div class="test-rec-how">📋 <strong>How to get tested:</strong> '+esc(r.how_to_get_tested)+'</div>':'')+'</div>';
+    }
+    var pc=(r.priority||'P3').toLowerCase(), dl=(r.domain||''); dl=dl.charAt(0).toUpperCase()+dl.slice(1);
+    return '<div class="test-rec-card"><div class="test-rec-top"><span class="test-rec-name">'+esc(dl)+' Panel</span><span class="priority-pill '+pc+'">'+esc(r.priority)+'</span></div><div class="test-rec-reason">'+esc(r.reason)+'</div></div>';
+  }).join('');
 }
 
-// ═══════════════════════════════════════════════════
-// REGISTRATION FLOW
-// ═══════════════════════════════════════════════════
-var regCurrentStep = 1;
-function goRegStep(n) {
-  if (n > regCurrentStep && !validateRegStep(regCurrentStep)) return;
-  for (var i = 1; i <= 3; i++) {
-    var panel = document.getElementById('rpanel_' + i);
-    var step  = document.getElementById('rstep_' + i);
-    if (panel) panel.classList.toggle('active', i === n);
-    if (!step) continue;
-    step.classList.remove('active', 'done');
-    if (i < n) step.classList.add('done');
-    if (i === n) step.classList.add('active');
-  }
-  if (n === 3) {
-    var email = document.getElementById('r_email').value.trim();
-    var name  = document.getElementById('r_name').value.trim();
-    document.getElementById('confirm_email').textContent = email;
-    document.getElementById('confirm_name').textContent  = name || '(not provided)';
-    document.getElementById('regError').style.display   = 'none';
-  }
-  regCurrentStep = n;
+// ════════════════════════════════════════════════════════════
+// CHECK-IN
+// ════════════════════════════════════════════════════════════
+function runCheckin(){
+  if(!Session.isValid()){ showLoginScreen('Session expired.'); return; }
+  var s=Session.get(), ad=parseInt(document.getElementById('ci_adherence').value)*10;
+  var p={email:s.userId,adherence:ad,energy_score:document.getElementById('ci_energy').value,sleep_quality:document.getElementById('ci_sleep').value,stress_level:document.getElementById('ci_stress').value};
+  document.getElementById('checkinBtn').style.display='none';
+  document.getElementById('ci_loading').style.display='block';
+  document.getElementById('ci_result').style.display='none';
+  callAPI('checkin',p,20000)
+  .then(function(data){
+    document.getElementById('ci_loading').style.display='none';
+    document.getElementById('checkinBtn').style.display='block';
+    if(data.status==='success'&&data.output){
+      var out=data.output, r=parseFloat(out.responsiveness)||1.0;
+      document.getElementById('ci_result_body').innerHTML='<strong>Cycle '+(out.cycleNumber||'—')+' recalibrated.</strong><br><br>Responsiveness: <strong>'+respToLabel(r).label+'</strong> ('+r.toFixed(1)+'x)<br>Updated trajectory: <strong>'+esc(out.lifecycle||'—')+'</strong><br>90-day projection: <strong>'+(out.projection90d||'—')+'/100</strong><br>Momentum: <strong>'+(out.momentum>=0?'+':'')+(out.momentum||0)+'</strong><br><br><em>'+esc(out.coachMessage||'')+'</em>';
+      document.getElementById('ci_result').style.display='block';
+    } else { showErrorPanel(data.code||'engine_error'); }
+  })
+  .catch(function(err){ document.getElementById('ci_loading').style.display='none'; document.getElementById('checkinBtn').style.display='block'; if(err!=='session_expired') showErrorPanel(err); });
 }
-function validateRegStep(n) {
-  if (n === 1) {
-    var email   = document.getElementById('r_email').value.trim();
-    var emailEl = document.getElementById('r_email');
-    if (!email || email.indexOf('@') === -1 || email.indexOf('.') === -1) {
-      emailEl.classList.add('error'); emailEl.focus(); return false;
-    }
-    emailEl.classList.remove('error'); return true;
+
+function updatePreview(){
+  var a=parseInt(document.getElementById('ci_adherence').value)*10;
+  document.getElementById('lbl_energy').textContent=document.getElementById('ci_energy').value+' / 10';
+  document.getElementById('lbl_sleep').textContent =document.getElementById('ci_sleep').value+' / 10';
+  document.getElementById('lbl_stress').textContent=document.getElementById('ci_stress').value+' / 10';
+  document.getElementById('lbl_adherence').textContent=a+' %';
+  var r=calcR(a),i=respToLabel(r);
+  document.getElementById('prev_resp').textContent=r.toFixed(1);
+  document.getElementById('prev_resp_label').textContent=i.label;
+  document.getElementById('prev_mfx').textContent=i.mfx;
+  document.getElementById('prev_traj').textContent=i.traj;
+  document.getElementById('prev_traj_label').textContent=i.trajLabel;
+  document.getElementById('prev_stmt').textContent='If you submit today: your Twin will recalibrate with a '+i.label+' trajectory.';
+}
+function calcR(a){ if(a>=90)return 1.1; if(a>=70)return 1.0; if(a>=50)return 0.8; return 0.6; }
+function respToLabel(r){
+  if(r>=1.1) return{label:'Accelerating',mfx:'↑ Compounding',traj:'↗',trajLabel:'Improving'};
+  if(r>=1.0) return{label:'Neutral',      mfx:'→ Steady',     traj:'→',trajLabel:'Stable'};
+  if(r>=0.8) return{label:'Slowed',        mfx:'↓ Drag',       traj:'→',trajLabel:'Slowing'};
+  return            {label:'Stagnating',   mfx:'⬇ Blocked',    traj:'↘',trajLabel:'At Risk'};
+}
+
+// ════════════════════════════════════════════════════════════
+// RESET + ERROR
+// ════════════════════════════════════════════════════════════
+function resetAssessment(){
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('formCard').style.display='block';
+  currentPhase=1; goPhase(1);
+  var ep=document.getElementById('errorPanel'); if(ep) ep.remove();
+}
+
+function showErrorPanel(reason){
+  var old=document.getElementById('errorPanel'); if(old) old.remove();
+  var title=reason==='timeout'?'⏱ Request timed out':reason==='network'?'📡 Network error':reason==='rate_limited'?'⏳ Too many requests':'⚠️ Engine error';
+  var panel=document.createElement('div'); panel.id='errorPanel';
+  panel.style.cssText='background:#fff0f0;border:1.5px solid #fca5a5;border-radius:14px;padding:20px 18px;margin-bottom:14px;';
+  panel.innerHTML='<div style="font-family:Syne,sans-serif;font-size:13px;font-weight:700;color:#c53030;margin-bottom:10px;">'+title+'</div><ol style="font-size:12px;line-height:2;padding-left:18px;margin-bottom:14px;"><li>Check GAS deployment is Active with access set to <strong>Anyone</strong></li><li>Use the <strong>/exec</strong> URL — not /dev</li><li>Wait 30 seconds and retry (cold start)</li></ol><button onclick="document.getElementById(\'errorPanel\').remove();" style="width:100%;padding:12px;background:#1a3d2b;color:white;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;">Dismiss &amp; Retry</button>';
+  var target=document.getElementById('formCard');
+  if(target&&target.parentNode) target.parentNode.insertBefore(panel,target);
+}
+
+// ════════════════════════════════════════════════════════════
+// REGISTRATION
+// ════════════════════════════════════════════════════════════
+var regCurrentStep=1;
+function goRegStep(n){
+  if(n>regCurrentStep&&!validateRegStep(regCurrentStep)) return;
+  for(var i=1;i<=3;i++){
+    var p=document.getElementById('rpanel_'+i),s=document.getElementById('rstep_'+i);
+    if(p) p.classList.toggle('active',i===n);
+    if(!s) continue;
+    s.classList.remove('active','done'); if(i<n)s.classList.add('done'); if(i===n)s.classList.add('active');
   }
-  if (n === 2) {
-    var pin   = document.getElementById('r_pin').value.trim();
-    var pinC  = document.getElementById('r_pin_confirm').value.trim();
-    var pinEl = document.getElementById('r_pin');
-    if (!pin || pin.length < 6) { pinEl.classList.add('error'); pinEl.focus(); return false; }
-    if (pin !== pinC) {
-      document.getElementById('r_pin_confirm').classList.add('error');
-      document.getElementById('pinMatchMsg').textContent = '✗ PINs do not match';
-      document.getElementById('pinMatchMsg').className   = 'pin-match-msg nomatch';
-      document.getElementById('r_pin_confirm').focus();
-      return false;
-    }
-    return true;
+  if(n===3){
+    document.getElementById('confirm_email').textContent=document.getElementById('r_email').value.trim();
+    document.getElementById('confirm_name').textContent=document.getElementById('r_name').value.trim()||'(not provided)';
+    document.getElementById('regError').style.display='none';
   }
+  regCurrentStep=n;
+}
+function validateRegStep(n){
+  if(n===1){ var e=document.getElementById('r_email'); if(!e.value.trim()||e.value.indexOf('@')===-1||e.value.indexOf('.')===-1){ e.classList.add('error'); e.focus(); return false; } e.classList.remove('error'); return true; }
+  if(n===2){ var p=document.getElementById('r_pin'),pc=document.getElementById('r_pin_confirm'); if(!p.value||p.value.length<6){ p.classList.add('error'); p.focus(); return false; } if(p.value!==pc.value){ pc.classList.add('error'); document.getElementById('pinMatchMsg').textContent='✗ PINs do not match'; document.getElementById('pinMatchMsg').className='pin-match-msg nomatch'; pc.focus(); return false; } return true; }
   return true;
 }
-function checkPinStrength() {
-  var pin   = document.getElementById('r_pin').value;
-  var fill  = document.getElementById('pinStrengthFill');
-  var label = document.getElementById('pinStrengthText');
-  if (!pin) { fill.style.width = '0'; label.textContent = ''; return; }
-  var score = 0;
-  if (pin.length >= 6)  score++;
-  if (pin.length >= 8)  score++;
-  if (pin.length >= 10) score++;
-  if (/[^0-9]/.test(pin)) score++;
-  if (score <= 1) { fill.style.width = '33%'; fill.style.background = '#c53030'; label.textContent = 'Weak'; label.className = 'pin-strength-text weak'; }
-  else if (score <= 2) { fill.style.width = '66%'; fill.style.background = '#d97706'; label.textContent = 'Moderate'; label.className = 'pin-strength-text medium'; }
-  else { fill.style.width = '100%'; fill.style.background = '#4caf71'; label.textContent = 'Strong'; label.className = 'pin-strength-text strong'; }
+function checkPinStrength(){
+  var p=document.getElementById('r_pin').value,f=document.getElementById('pinStrengthFill'),l=document.getElementById('pinStrengthText');
+  if(!p){ f.style.width='0'; l.textContent=''; return; }
+  var sc=0; if(p.length>=6)sc++; if(p.length>=8)sc++; if(p.length>=10)sc++; if(/[^0-9]/.test(p))sc++;
+  if(sc<=1){ f.style.width='33%'; f.style.background='#c53030'; l.textContent='Weak'; l.className='pin-strength-text weak'; }
+  else if(sc<=2){ f.style.width='66%'; f.style.background='#d97706'; l.textContent='Moderate'; l.className='pin-strength-text medium'; }
+  else{ f.style.width='100%'; f.style.background='#4caf71'; l.textContent='Strong'; l.className='pin-strength-text strong'; }
   checkPinMatch();
 }
-function checkPinMatch() {
-  var pin    = document.getElementById('r_pin').value;
-  var pinC   = document.getElementById('r_pin_confirm').value;
-  var msg    = document.getElementById('pinMatchMsg');
-  var pinCEl = document.getElementById('r_pin_confirm');
-  if (!pinC) { msg.textContent = ''; msg.className = 'pin-match-msg'; return; }
-  if (pin === pinC) {
-    msg.textContent = '✓ PINs match'; msg.className = 'pin-match-msg match';
-    pinCEl.classList.remove('error'); pinCEl.classList.add('success');
-  } else {
-    msg.textContent = '✗ PINs do not match'; msg.className = 'pin-match-msg nomatch';
-    pinCEl.classList.remove('success'); pinCEl.classList.add('error');
-  }
+function checkPinMatch(){
+  var p=document.getElementById('r_pin').value,pc=document.getElementById('r_pin_confirm').value,m=document.getElementById('pinMatchMsg'),ce=document.getElementById('r_pin_confirm');
+  if(!pc){ m.textContent=''; m.className='pin-match-msg'; return; }
+  if(p===pc){ m.textContent='✓ PINs match'; m.className='pin-match-msg match'; ce.classList.remove('error'); ce.classList.add('success'); }
+  else{ m.textContent='✗ PINs do not match'; m.className='pin-match-msg nomatch'; ce.classList.remove('success'); ce.classList.add('error'); }
 }
-
-// ═══════════════════════════════════════════════════
-// SUBMIT REGISTRATION  ← v29.2 PATCH APPLIED HERE
-// ═══════════════════════════════════════════════════
-function submitRegistration() {
-  var email = document.getElementById('r_email').value.trim();
-  var name  = document.getElementById('r_name').value.trim();
-  var pin   = document.getElementById('r_pin').value.trim();
-  var errEl = document.getElementById('regError');
-  var btn   = document.getElementById('createBtn');
-
-  errEl.style.display = 'none';
-  btn.disabled = true;
-  btn.innerHTML = '<span class="btn-spinner"></span>Creating...';
-
-  postToGAS({ action: 'register', email: email, name: name, pin: pin }, 20000)
-  .then(function(data) {
-    btn.disabled = false; btn.textContent = 'Create Account';
-
-    if (data.status === 'ok') {
-      // ✅ New account created successfully
-      showRegSuccess(pin, email);
-
-    } else if (data.status === 'existing') {
-      // ✅ v29.2 PATCH: email already registered → redirect to login
-      var loginEmailEl = document.getElementById('login_email');
-      if (loginEmailEl) loginEmailEl.value = email;
-      showLoginScreen('Account already exists. Please sign in with your PIN.');
-
-    } else {
-      // ❌ Error cases
-      var msgs = {
-        'USER_EXISTS':         'An account with this email already exists. Sign in instead.',
-        'INVALID_EMAIL':       'Please enter a valid email address.',
-        'PIN_TOO_SHORT':       'PIN must be at least 6 characters.',
-        'REGISTRATION_CLOSED': 'New registrations are currently closed.',
-        'SERVICE_UNAVAILABLE': 'Service is temporarily offline. Please try again shortly.',
-        'MISSING_FIELDS':      'Email and PIN are required.'
-      };
-      errEl.textContent   = msgs[data.code] || (data.message || 'Registration failed. Please try again.');
-      errEl.style.display = 'block';
-    }
+function submitRegistration(){
+  var email=document.getElementById('r_email').value.trim(),name=document.getElementById('r_name').value.trim(),pin=document.getElementById('r_pin').value.trim();
+  var errEl=document.getElementById('regError'),btn=document.getElementById('createBtn');
+  errEl.style.display='none'; btn.disabled=true; btn.innerHTML='<span class="btn-spinner"></span>Creating...';
+  postToGAS({action:'register',email:email,name:name,pin:pin},20000)
+  .then(function(d){
+    btn.disabled=false; btn.textContent='Create Account';
+    if(d.status==='ok'){ showRegSuccess(pin,email); }
+    else if(d.status==='existing'){ var le=document.getElementById('login_email'); if(le) le.value=email; showLoginScreen('Account already exists. Please sign in with your PIN.'); }
+    else{ var msgs={'USER_EXISTS':'An account with this email already exists.','INVALID_EMAIL':'Please enter a valid email.','PIN_TOO_SHORT':'PIN must be at least 6 characters.','SERVICE_UNAVAILABLE':'Service temporarily offline.'}; errEl.textContent=msgs[d.code]||(d.message||'Registration failed. Please try again.'); errEl.style.display='block'; }
   })
-  .catch(function(err) {
-    btn.disabled = false; btn.textContent = 'Create Account';
-    errEl.textContent   = err === 'timeout' ? 'Request timed out. Please try again.' : 'Connection error. Please check your network.';
-    errEl.style.display = 'block';
-  });
+  .catch(function(err){ btn.disabled=false; btn.textContent='Create Account'; errEl.textContent=err==='timeout'?'Request timed out.':'Connection error.'; errEl.style.display='block'; });
 }
-
-function showRegSuccess(pin, email) {
-  document.getElementById('registerScreen').style.display   = 'none';
-  document.getElementById('regSuccessScreen').style.display = 'block';
-  document.getElementById('success_pin_display').textContent = pin;
-  var loginEmailEl = document.getElementById('login_email');
-  if (loginEmailEl) loginEmailEl.value = email;
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+function showRegSuccess(pin,email){
+  document.getElementById('registerScreen').style.display='none';
+  document.getElementById('regSuccessScreen').style.display='block';
+  document.getElementById('success_pin_display').textContent=pin;
+  var le=document.getElementById('login_email'); if(le) le.value=email;
+  window.scrollTo({top:0,behavior:'smooth'});
 }
-
-function afterRegSuccess() {
-  document.getElementById('regSuccessScreen').style.display = 'none';
-  document.getElementById('loginScreen').style.display      = 'block';
-  var errEl = document.getElementById('loginError');
-  if (errEl) { errEl.textContent = '✓ Account created! Sign in with your email and PIN.'; errEl.style.cssText = 'display:block;background:#f0fdf4;border-color:#bbf7d0;color:#166534;'; }
+function afterRegSuccess(){
+  document.getElementById('regSuccessScreen').style.display='none';
+  document.getElementById('loginScreen').style.display='block';
+  var e=document.getElementById('loginError'); if(e){ e.textContent='✓ Account created! Sign in with your email and PIN.'; e.style.cssText='display:block;background:#f0fdf4;border-color:#bbf7d0;color:#166534;'; }
 }
 </script>
 </body>
